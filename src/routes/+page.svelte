@@ -1,21 +1,60 @@
-
 <script lang="ts">
-  import { Button } from "$lib/components/ui/button";
-  import Sun from "lucide-svelte/icons/sun";
-  import Moon from "lucide-svelte/icons/moon";
- 
-  import { toggleMode } from "mode-watcher";
-  // import { Button } from "$lib/components/ui/button/index.js";
+	import type { PageData } from './$types';
+	export let data: PageData;
+
+	let timer: NodeJS.Timeout;
+	let searchTerm = '';
+
+	function fetchTracks() {
+		fetch(`/api/searchTracks?searchTerm=${searchTerm}`)
+			.then((res) => res.json())
+			.then((data) => {
+				tracks = data;
+			});
+	}
+
+	function handleSearch(e: Event) {
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			const target = e.target as HTMLInputElement;
+			searchTerm = target.value;
+			fetchTracks();
+		}, 300);
+	}
+
+	let tracks = data.tracks;
 </script>
- 
-<Button> Click me </Button>
- 
-<Button on:click={toggleMode} variant="outline" size="icon">
-  <Sun
-    class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
-  />
-  <Moon
-    class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
-  />
-  <span class="sr-only">Toggle theme</span>
-</Button>
+
+<div class="px-4">
+	<h1 class="is-size-1 mb-5">Tracks</h1>
+
+	<input
+		type="search"
+		placeholder="Search..."
+		class="input mb-5"
+		style="max-width: 80ch;"
+		value={searchTerm}
+		on:keyup={handleSearch}
+	/>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Track</th>
+				<th>Artist</th>
+				<th>Album</th>
+				<th>Genre</th>
+			</tr>
+		</thead>
+		<tbody>
+			{#each tracks as track}
+				<tr>
+					<td>{track.trackName}</td>
+					<td>{track.artistName}</td>
+					<td><a href={`/album/${track.albumId}`}>{track.albumTitle}</a></td>
+					<td>{track.genre}</td>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+</div>

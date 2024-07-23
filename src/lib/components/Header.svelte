@@ -1,5 +1,5 @@
 <script>
-    import { openModal } from "../store";
+    import { openModal } from "../../store";
 </script>
 
 <header class="flex flex-col relative z-20">
@@ -34,7 +34,7 @@
                 >FAQs</a
             >
             <button class="specialBtn">
-                <p>Start free today</p>
+                <p>Start free todazzy</p>
             </button>
         </nav>
     </div>

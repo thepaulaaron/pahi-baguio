@@ -6,8 +6,8 @@
     import SectionWrapper from "./SectionWrapper.svelte";
 </script>
 
-<SectionWrapper>
-    <Header />
+<!-- <SectionWrapper> -->
+    <!-- <Header/> -->
     <div
         class="flex flex-col gap-10 flex-1 items-center justify-center pb-10 md:pb-14"
     >
@@ -29,4 +29,4 @@
         <p class="italic">Makibahagi. Maglingkod. Mag<span class="text-pahi-blue">Pahinungod</span>.
         </p>
     </div>
-</SectionWrapper>
+<!-- </SectionWrapper> -->

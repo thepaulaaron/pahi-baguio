@@ -25,11 +25,9 @@
 <p>Ugnayan ng Pahinungód</p>
 <p>Volunteer Database</p> -->
 
-<script>
+<script lang="ts">
   import About from "../lib/components/About.svelte";
   import Hero from "../lib/components/Hero.svelte";
-
-  // export let name = "Home";
 </script>
 
 <main class="flex flex-col">

@@ -14,6 +14,7 @@
 	import "../app.css";
 	// @ts-ignore
 	import CtAs from "../lib/components/CTAs.svelte";
+    import About from "../lib/components/About.svelte";
 	// import Footer from "../lib/components/Footer.svelte";
 
 	import { openModal } from "../store";
@@ -66,7 +67,7 @@
 	<svelte:component this={currentHeader} />
 	<div></div>
 	<svelte:component this={currentHero} />
-	
+	<!-- <About/> -->
 </SectionWrapper>
 
 <!-- Modal Header -->

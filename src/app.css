@@ -4,6 +4,12 @@
  
 @layer base {
   :root {
+
+    --pahi-blue: #214A7D;
+    --pahi-red: #D42F2E;
+    --pahi-yellow: #EEB825;
+    --pahi-gray: #121515;
+
     --background: 0 0% 100%;
     --foreground: 224 71.4% 4.1%;
  
@@ -74,5 +80,111 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  font-family: 'Open Sans', sans-serif;
+}
+
+h1,
+h2,
+h3,
+.poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+span {
+  font-family: inherit;
+  font-weight: inherit;
+}
+
+
+/* PAHI Colors */
+
+.text-pahi-blue {
+  color: var(--pahi-blue);
+}
+
+.text-pahi-yellow {
+  color: var(--pahi-yellow);
+}
+
+.text-pahi-red {
+  color: var(--pahi-red);
+}
+
+/*  */
+
+.bgGrid {
+  background-size: 40px 40px;
+  background-image: linear-gradient(to right, grey 1px, transparent 1px), linear-gradient(to bottom, grey 1px, transparent 1px);
+}
+
+button,
+.button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+button:hover {
+  border-color: var(--pahi-blue);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+
+.specialBtn {
+  border-color: black;
+  border-width: 1px;
+  transition: all 0.4s ease;
+}
+
+.specialBtn:hover {
+  border-color: blue;
+  color: var(--pahi-blue);
+}
+
+.specialBtnDark {
+  background: var(--pahi-blue);
+  color: white;
+  transition: all 0.4s ease;
+}
+
+.specialBtnDark:hover {
+  background: var(--pahi-yellow);
+  border-color: white;
+  color: black;
+}
+
+.dropShadow {
+  filter: drop-shadow(-10.8923px 14.523px 35.0973px rgba(29, 140, 242, 0.2));
+}
+
+.fadeIn {
+  animation: fadeIn 300ms ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+
+  to {
+      opacity: 1;
   }
 }

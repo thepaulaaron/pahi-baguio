@@ -7,7 +7,7 @@
   import { Button } from "$lib/components/ui/button";
   import { Badge } from "$lib/components/ui/badge";
 
-  import type { PageData } from "./$types";
+  import type { PageData } from "../$types";
 	import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
   import TestNav from "$lib/components/dashboard/test-nav2.svelte";
 
@@ -19,13 +19,14 @@
 <!-- <Header/> -->
 <Dashboard/>
 
+<!--
 <main>
   <div class="grid grid-cols-3 gap-8 p-6 bg-gray-800">
     {#each volunteers as student}
       <Card.Root class="flex flex-col justify-between">
         <Card.Header class="flex-row gap-4 items-center">
           <Avatar.Root>
-            <Avatar.Image src="/images/pahi-logo.png"/>
+            <Avatar.Image src="../images/pahi-logo.png"/>
             <Avatar.Fallback>
               {student.Name.slice(0,2)}
             </Avatar.Fallback>
@@ -48,6 +49,7 @@
     {/each}
   </div>
 </main>
+-->
 
 <nav>
   <a href="/">Home</a>

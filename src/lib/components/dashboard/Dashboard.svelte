@@ -7,7 +7,7 @@
 	import Download from "lucide-svelte/icons/download";
 	import Users from "lucide-svelte/icons/users";
 	import {
-		DashboardMainNav,
+		// DashboardMainNav,
 		// Overview,
 		// RecentSales,
 		Search,
@@ -26,7 +26,7 @@
 	<div class="border-b">
 		<div class="flex h-16 items-center px-4">
 			<!-- <TeamSwitcher /> -->
-			<DashboardMainNav class="mx-6" />
+			<!-- <DashboardMainNav class="mx-6" /> -->
 			<div class="ml-auto flex items-center space-x-4">
 				<Search />
 				<UserNav />

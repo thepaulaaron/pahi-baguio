@@ -9,7 +9,7 @@
 
   import type { PageData } from "./$types";
 	import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
-  import TestNav from "$lib/components/dashboard/test-nav2.svelte";
+  import TestNav from "$lib/components/dashboard/main-nav.svelte";
 
   export let data: PageData;
   $: volunteers = data.volunteers;

@@ -126,10 +126,10 @@
 
 <!-- For lingering header -->
 
-{#if y > outerHeight}
+<!-- {#if y > outerHeight}
     <div class="bg-white fixed top-0 left-0 w-full flex flex-col z-20 px-4 fadeIn">
 			<svelte:component this={currentHeader} />
     </div>
-{/if}
+{/if} -->
 <slot />
 <svelte:window bind:scrollY={y} bind:outerHeight />

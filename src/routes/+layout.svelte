@@ -63,12 +63,11 @@
 
 <!-- Main Header -->
 
-<SectionWrapper>
+<!-- <SectionWrapper>
 	<svelte:component this={currentHeader} />
 	<div></div>
 	<svelte:component this={currentHero} />
-	<!-- <About/> -->
-</SectionWrapper>
+</SectionWrapper> -->
 
 <!-- Modal Header -->
 

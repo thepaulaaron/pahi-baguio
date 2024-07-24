@@ -26,14 +26,18 @@
 <p>Volunteer Database</p> -->
 
 <script lang="ts">
+	import SectionWrapper from "$lib/components/SectionWrapper.svelte";
   import About from "../lib/components/About.svelte";
   import Hero from "../lib/components/Hero.svelte";
+  import Header from "../lib/components/Header.svelte";
 </script>
 
-<main class="flex flex-col">
-  <!-- <Hero/> -->
-  <About/>
-</main>
+<SectionWrapper id="landing">
+  <Header/>
+  <Hero/>
+</SectionWrapper>
+
+ <About/>
 
 <nav>
   <a href="/">Home</a>

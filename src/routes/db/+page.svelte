@@ -1,12 +1,13 @@
 <script lang="ts">
-  import About from "../../lib/components/About.svelte";
+  import Header from "$lib/components/Header.svelte";
   import * as Card from "$lib/components/ui/card";
 
   import type { PageData } from "./$types";
-
   export let data: PageData;
   $: volunteers = data.volunteers;
 </script>
+
+<Header/>
 
 <main>
   <div class="grid grid-cols-3 gap-8 p-6 bg-gray-800">

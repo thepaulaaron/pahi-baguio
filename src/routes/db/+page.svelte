@@ -8,12 +8,14 @@
   import { Badge } from "$lib/components/ui/badge";
 
   import type { PageData } from "./$types";
+	import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
 
   export let data: PageData;
   $: volunteers = data.volunteers;
 </script>
 
-<Header/>
+<!-- <Header/> -->
+<Dashboard/>
 
 <main>
   <div class="grid grid-cols-3 gap-8 p-6 bg-gray-800">
@@ -48,7 +50,7 @@
 <nav>
   <a href="/">Home</a>
   <a href="/db">databasss</a>
-  <!-- <a href="/contact">Contact</a>
-  <a href="/user/1">User 1 Profile</a>
+  <a href="/dash">Dshboard</a>
+  <!-- <a href="/user/1">User 1 Profile</a>
   <a href="/user/2">User 2 Profile</a> -->
 </nav>

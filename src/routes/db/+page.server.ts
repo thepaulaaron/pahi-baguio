@@ -9,7 +9,8 @@ export const load: PageServerLoad = async function() {
     // Serialize the data
     const serializedData = data.map(serializeDocument);
 
-    console.log('data', serializedData);
+    // Print data:
+    // console.log('data', serializedData);
 
     return {
         volunteers: serializedData

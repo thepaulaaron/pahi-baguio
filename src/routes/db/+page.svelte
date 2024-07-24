@@ -1,6 +1,6 @@
 <script lang="ts">
   import About from "../../lib/components/About.svelte";
-  import Hero from "../../lib/components/Hero.svelte";
+  import * as Card from "$lib/components/ui/card";
 
   import type { PageData } from "./$types";
 
@@ -8,17 +8,28 @@
   $: volunteers = data.volunteers;
 </script>
 
-{#each volunteers as volunteer}
-  <div>
-    {#each Object.entries(volunteer) as [key, value]}
-      <p><strong>{key}:</strong> {value}</p>
+<main>
+  <div class="grid grid-cols-3 gap-8 p-6 bg-gray-800">
+    {#each volunteers as student}
+      <Card.Root class="flex flex-col justify-between">
+        <Card.Header class="flex-row gap-4 items-center">
+          <div>
+            <Card.Title>{student.Name}</Card.Title>
+            <Card.Description>{student._id}</Card.Description>
+          </div>
+        </Card.Header>
+        <Card.Content>
+          <p>{student.Birthday}</p>
+          <p>{student.DegProg}</p>
+          <p>{student.MobNum}</p>
+        </Card.Content>
+        <Card.Footer class="flex justify-between">
+          <button>View student</button>
+            <p>Hey!</p>
+        </Card.Footer>
+      </Card.Root>
     {/each}
   </div>
-{/each}
-
-<main class="flex flex-col">
-  <div>heasd</div>
-  <About/>
 </main>
 
 <nav>

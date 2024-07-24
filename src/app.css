@@ -218,18 +218,25 @@ button:focus-visible {
 }
 
 
-/* shadcn */
+/* From Shadcn */
 
 * {
   @apply border-border;
 }
+
 body {
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
+ 
   @apply bg-background text-foreground;
   /* font-feature-settings: "rlig" 1, "calt" 1; */
   font-synthesis-weight: none;
   text-rendering: optimizeLegibility;
 }
+
+/* Fix issue #1: Left-shift upon dropdown click */
+  body[data-melt-scroll-lock] {
+    padding-right: 0 !important;
+  }
 
 /* Mobile tap highlight */
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-tap-highlight-color */

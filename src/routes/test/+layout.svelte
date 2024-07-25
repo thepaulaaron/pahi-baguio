@@ -2,11 +2,11 @@
 
 <script lang="ts">
   // import "../../app.css";
-	import TestNav2 from "$lib/components/dashboard/main-nav.svelte";
+	import TestNav2 from "$comp/dashboard/main-nav.svelte";
 
-	// import { Announcement, ExamplesNav } from "$lib/components/docs/index.js";
-  import TestNav from "$lib/components/dashboard/main-nav.svelte";
-	// import * as PageHeader from "$lib/components/docs/page-header/index.js";
+	// import { Announcement, ExamplesNav } from "$comp/docs/index.js";
+  import TestNav from "$comp/dashboard/main-nav.svelte";
+	// import * as PageHeader from "$comp/docs/page-header/index.js";
 	// import { Button } from "$lib/registry/default/ui/button/index.js";
 </script>
 

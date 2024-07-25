@@ -5,7 +5,7 @@
   import Moon from "lucide-svelte/icons/moon";
  
   import { toggleMode } from "mode-watcher";
-  import { Button } from "$lib/components/ui/button/index.js";
+  import { Button } from "$comp/ui/button/index.js";
 
   const logoURL = new URL('../assets/pahi-logo.png', import.meta.url).href;
 </script>
@@ -26,7 +26,7 @@
 <p>Volunteer Database</p> -->
 
 <script lang="ts">
-	import SectionWrapper from "$lib/components/SectionWrapper.svelte";
+	import SectionWrapper from "$comp/SectionWrapper.svelte";
   import About from "../lib/components/About.svelte";
   import Hero from "../lib/components/Hero.svelte";
   import Header from "../lib/components/Header.svelte";

@@ -39,8 +39,8 @@
 	import HeaderDefault from "../lib/components/Header.svelte";
   import HeaderAdmin from "../lib/components/HeaderAdmin.svelte";
 	// import Header from "../lib/components/Header.svelte";
-	import SectionWrapper from "$lib/components/SectionWrapper.svelte";
-	import Hero from "$lib/components/Hero.svelte";
+	import SectionWrapper from "$comp/SectionWrapper.svelte";
+	import Hero from "$comp/Hero.svelte";
 
 	/**
 	 * @type {typeof HeaderAdmin}

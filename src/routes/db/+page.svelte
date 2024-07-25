@@ -1,25 +1,62 @@
 <script lang="ts">
-  import Header from "$lib/components/Header.svelte";
+  //@ts-nocheck
+  import Header from "$comp/Header.svelte";
+  import Dashboard from "$comp/dashboard/Dashboard.svelte";
+  import TestNav from "$comp/dashboard/main-nav.svelte";
 
   // Shadcn-Svelte imports
-	import * as Avatar from "$lib/components/ui/avatar";
-  import * as Card from "$lib/components/ui/card";
-  import { Button } from "$lib/components/ui/button";
-  import { Badge } from "$lib/components/ui/badge";
+	import * as Avatar from "$comp/ui/avatar";
+  import * as Card from "$comp/ui/card";
+  import { Button } from "$comp/ui/button";
+  import { Badge } from "$comp/ui/badge";
+  import * as Table from "$comp/ui/table";
 
   import type { PageData } from "./$types";
-	import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
-  import TestNav from "$lib/components/dashboard/main-nav.svelte";
+	
 
   export let data: PageData;
-  $: volunteers = data.volunteers;
+   // Initialize the array store with data from server
+  $: array.set(data.volunteers);
+
+  // For Sorting
+  import { array, setSort } from './sort';
+
+  // Function to handle sorting
+  function handleSort(column: string) {
+    setSort(column);
+  }
+
 </script>
 
 <TestNav/>
 <!-- <Header/> -->
-<Dashboard/>
+<!-- <Dashboard/> -->
 
-<main>
+<Table.Root>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>
+        Name
+        <Button on:click={() => handleSort("Name")}>sort</Button>
+      </Table.Head>
+
+      <Table.Head>
+        bday
+        <Button on:click={() => handleSort("Birthday")}>sort</Button>
+      </Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    {#each $array as row}
+      <Table.Row>
+        <Table.Cell>{row.Name}</Table.Cell>
+        <Table.Cell>{row.Birthday}</Table.Cell>
+      </Table.Row>
+    {/each}
+  </Table.Body>
+</Table.Root>
+
+<!-- <main>
   <div class="grid grid-cols-3 gap-8 p-6 bg-gray-800">
     {#each volunteers as student}
       <Card.Root class="flex flex-col justify-between">
@@ -47,7 +84,7 @@
       </Card.Root>
     {/each}
   </div>
-</main>
+</main> -->
 
 <nav>
   <a href="/">Home</a>

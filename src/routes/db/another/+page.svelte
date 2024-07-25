@@ -1,15 +1,15 @@
 <script lang="ts">
-  import Header from "$lib/components/Header.svelte";
+  import Header from "$comp/Header.svelte";
 
   // Shadcn-Svelte imports
-	import * as Avatar from "$lib/components/ui/avatar";
-  import * as Card from "$lib/components/ui/card";
-  import { Button } from "$lib/components/ui/button";
-  import { Badge } from "$lib/components/ui/badge";
+	import * as Avatar from "$comp/ui/avatar";
+  import * as Card from "$comp/ui/card";
+  import { Button } from "$comp/ui/button";
+  import { Badge } from "$comp/ui/badge";
 
   import type { PageData } from "../$types";
-	import Dashboard from "$lib/components/dashboard/Dashboard.svelte";
-  import TestNav from "$lib/components/dashboard/main-nav.svelte";
+	import Dashboard from "$comp/dashboard/Dashboard.svelte";
+  import TestNav from "$comp/dashboard/main-nav.svelte";
 
   export let data: PageData;
   $: volunteers = data.volunteers;

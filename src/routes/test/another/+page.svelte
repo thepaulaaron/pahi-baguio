@@ -1,51 +1,38 @@
+<!-- MainPage.svelte -->
+
 <script>
-	import Button from "$lib/components/ui/button/button.svelte";
-import * as  Table from "$lib/components/ui/table";
+// @ts-nocheck
 
-	// Initialize the data array
-	let array = [
-		{id: 1, val: "hello"},
-		{id: 2, val: "world"},
-		{id: 3, val: "sorted"},
-		{id: 4, val: "table"},
-	];
-	
-	// Holds table sort state, initialized to reflect table sorted by id column ascending
-	let sortBy = {col: "id", ascending: true};
+  import Button from "$lib/components/ui/button/button.svelte";
+  import * as Table from "$lib/components/ui/table";
+  import { array, setSort } from './sort.js'; // Import sorting logic
 
-	// Reactive statement for sorting the array based on a specified column
-	$: sort = (column) => {
-		// Toggle the sort order if the column is already the same, otherwise set it to ascending
-		sortBy = { col: column, ascending: sortBy.col === column ? !sortBy.ascending : true };
-
-		// Determine the sort order multiplier (1 for ascending, -1 for descending)
-		const sortModifier = sortBy.ascending ? 1 : -1;
-
-		// Sort the array using a simple comparator function
-		array = array.sort((a, b) => (a[column] > b[column] ? 1 : -1) * sortModifier);
-	}
+  // Function to handle sorting
+  function handleSort(column) {
+    setSort(column);
+  }
 </script>
 
 <Table.Root>
-	<Table.Header>
-		<Table.Row>
-			<Table.Head>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>
         id
-        <Button on:click={() => sort("id")}>sort</Button>
+        <Button on:click={() => handleSort("id")}>sort</Button>
       </Table.Head>
 
-			<Table.Head>
+      <Table.Head>
         val
-        <Button on:click={() => sort("val")}>sort</Button>
+        <Button on:click={() => handleSort("val")}>sort</Button>
       </Table.Head>
-		</Table.Row>
-	</Table.Header>
-	<Table.Body>
-		{#each array as row}
-			<Table.Row>
-				<Table.Cell>{row.id}</Table.Cell>
-				<Table.Cell>{row.val}</Table.Cell>
-			</Table.Row>
-		{/each}
-	</Table.Body>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    {#each $array as row}
+      <Table.Row>
+        <Table.Cell>{row.id}</Table.Cell>
+        <Table.Cell>{row.val}</Table.Cell>
+      </Table.Row>
+    {/each}
+  </Table.Body>
 </Table.Root>

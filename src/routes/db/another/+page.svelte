@@ -8,7 +8,7 @@
   import { Badge } from "$comp/ui/badge";
 
   import type { PageData } from "../$types";
-	import Dashboard from "$comp/dashboard/Dashboard.svelte";
+	import Dashboard from "$routes/db/Dashboard.svelte";
   import TestNav from "$comp/dashboard/main-nav.svelte";
 
   export let data: PageData;
@@ -17,7 +17,7 @@
 
 <TestNav/>
 <!-- <Header/> -->
-<Dashboard/>
+<!-- <Dashboard/> -->
 
 <!--
 <main>

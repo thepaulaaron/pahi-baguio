@@ -6,20 +6,32 @@
 	import DollarSign from "lucide-svelte/icons/dollar-sign";
 	import Download from "lucide-svelte/icons/download";
 	import Users from "lucide-svelte/icons/users";
+	
 	import {
-		// DashboardMainNav,
-		// Overview,
-		// RecentSales,
+		// Datable,
 		Search,
-		// TeamSwitcher,
 		UserNav,
-	} from "./index.js";
-	import { Button } from "../ui/button";
-	import * as Card from "../ui/card";
-	import * as Tabs from "../ui/tabs";
+	} from "../../lib/components/dashboard/index.js";
+
+	// Shadcn Components
+
+	import { Button } from "../../lib/components/ui/button/index.js";
+	import * as Card from "../../lib/components/ui/card/index.js";
+	import * as Tabs from "../../lib/components/ui/tabs/index.js";
 	// import DatePickerWithRange from "$lib/registry/new-york/example/date-picker-with-range.svelte";
 	// import DashboardLight from "$lib/img/examples/dashboard-light.png?enhanced";
 	// import DashboardDark from "$lib/img/examples/dashboard-dark.png?enhanced";
+
+	// For Datable
+  import Datable from "./datable.svelte"
+
+  // For Sorting
+  import { array, setSort } from './sort';
+  export const data: {
+		Name: string;
+		Birthday: string
+	}[] = [];
+
 </script>
 
 <div class="hidden flex-col md:flex">
@@ -47,10 +59,13 @@
 		<Tabs.Root value="overview" class="space-y-4">
 			<Tabs.List>
 				<Tabs.Trigger value="overview">Overview</Tabs.Trigger>
-				<Tabs.Trigger value="analytics" disabled>Analytics</Tabs.Trigger>
+				<Tabs.Trigger value="database">Database</Tabs.Trigger>
 				<Tabs.Trigger value="reports" disabled>Reports</Tabs.Trigger>
 				<Tabs.Trigger value="notifications" disabled>Notifications</Tabs.Trigger>
 			</Tabs.List>
+
+			<!-- OVERVIEW -->
+
 			<Tabs.Content value="overview" class="space-y-4">
 				<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 					<Card.Root>
@@ -122,6 +137,13 @@
 					</Card.Root>
 				</div>
 			</Tabs.Content>
+
+			<!-- Database -->
+
+			<Tabs.Content value="database" class="space-y-4">
+				<Datable data={$array} />
+			</Tabs.Content>
+
 		</Tabs.Root>
 	</div>
 </div>

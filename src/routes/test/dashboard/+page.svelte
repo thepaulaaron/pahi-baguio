@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Dashboard from "$comp/dashboard/Dashboard.svelte";
+  import Dashboard from "$routes/db/Dashboard.svelte";
 </script>
 dashboardd
-<Dashboard/>
+<!-- <Dashboard/> -->

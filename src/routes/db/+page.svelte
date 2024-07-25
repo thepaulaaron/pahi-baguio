@@ -1,8 +1,9 @@
 <script lang="ts">
   //@ts-nocheck
   import Header from "$comp/Header.svelte";
-  import Dashboard from "$comp/dashboard/Dashboard.svelte";
+  import Dashboard from "./Dashboard.svelte";
   import TestNav from "$comp/dashboard/main-nav.svelte";
+  import Datable from "./datable.svelte"
 
   // Shadcn-Svelte imports
 	import * as Avatar from "$comp/ui/avatar";
@@ -21,18 +22,15 @@
   // For Sorting
   import { array, setSort } from './sort';
 
-  // Function to handle sorting
-  function handleSort(column: string) {
-    setSort(column);
-  }
-
 </script>
 
 <TestNav/>
 <!-- <Header/> -->
-<!-- <Dashboard/> -->
+<Dashboard data={$array}/>
 
-<Table.Root>
+<!-- <Datable data={$array} /> -->
+
+<!-- <Table.Root>
   <Table.Header>
     <Table.Row>
       <Table.Head>
@@ -54,7 +52,7 @@
       </Table.Row>
     {/each}
   </Table.Body>
-</Table.Root>
+</Table.Root> -->
 
 <!-- <main>
   <div class="grid grid-cols-3 gap-8 p-6 bg-gray-800">

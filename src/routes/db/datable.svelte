@@ -69,6 +69,18 @@
           },
         },
       }),
+      table.column({
+        accessor: "_id",
+        header: "id",
+        plugins: {
+          sort: {
+            disable: true,
+          },
+          filter: {
+            exclude: true,
+          },
+        },
+      }),
     ]);
   
     const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } =

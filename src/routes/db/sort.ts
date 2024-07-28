@@ -2,7 +2,7 @@
 import { writable } from 'svelte/store';
 
 export interface Volunteer {
-  id: number;
+  _id: number;
   Name: string;
   Birthday: string;
   // Add other fields as needed

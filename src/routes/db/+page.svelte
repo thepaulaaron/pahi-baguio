@@ -13,15 +13,24 @@
   import * as Table from "$comp/ui/table";
 
   import type { PageData } from "./$types";
-	
 
-  export let data: PageData;
-   // Initialize the array store with data from server
-  $: array.set(data.volunteers);
+  // Set dark mode as default
+  import { onMount } from 'svelte';
 
-  // For Sorting
-  import { array } from './sort';
+  function setDarkMode() {
+    const userPrefersDark = localStorage.getItem('theme') === 'dark';
+    const html = document.documentElement;
 
+    if (userPrefersDark || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+  }
+
+  onMount(() => {
+    setDarkMode();
+  });
 </script>
 
-<Dashboard data={$array}/>
+<Dashboard/>

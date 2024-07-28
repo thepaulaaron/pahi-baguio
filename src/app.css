@@ -95,6 +95,10 @@ html {
   scroll-behavior: smooth;
 }
 
+/* html::-webkit-scrollbar {
+  display: none;
+} */
+
 * {
   font-family: 'Open Sans', sans-serif;
 }
@@ -338,9 +342,10 @@ body {
 }
 
 /* Fix issue #1: Left-shift upon dropdown click */
-  body[data-melt-scroll-lock] {
+/* suddenly works fine without */
+  /* body[data-melt-scroll-lock] {
     padding-right: 0 !important;
-  }
+  } */
 
 /* Mobile tap highlight */
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-tap-highlight-color */

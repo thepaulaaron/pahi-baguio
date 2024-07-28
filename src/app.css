@@ -11,8 +11,10 @@
     --pahi-gray: #121515;
 
     --paul-white: #ebebeb;
-    --paul-blue: #1b416e;
+    --paul-blue: #092e5b;
+    --paul-blue-light:#3578ca;
     --paul-yellow-light:#eec34d;
+    --paul-gray: #a3a3a3;
     --paul-gray-light: #dbdddd;
 
 
@@ -109,6 +111,11 @@ span {
   font-weight: inherit;
 }
 
+h1, h2, h3, span, p {
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
 
 /* PAHI Colors */
 
@@ -162,6 +169,8 @@ span {
   transition: all 0.4s ease;
 }
 
+/* BUTTON PRIM */
+
 .btn.primary {
   color: white;
   background-color: var(--pahi-blue);
@@ -183,10 +192,25 @@ span {
 }
 
 .btn.primary-dark {
-  /* color: var(--paul-white); */
-  color: red;
-  background-color: var(--paul-blue);
+  color: var(--paul-white);
+  background-color: var(--pahi-blue);
 }
+
+.btn.primary-dark:hover {
+  background: var(--pahi-yellow);
+  border-color: black;
+  color: black;
+}
+
+.btn.primary-dark:active {
+  border-color: var(--paul-yellow-light);
+  /* background-color: var(--pahi-gray); */
+  /* color: var(--pahi-yellow); */
+  color: black;
+  transition: 0s;
+}
+
+/* BUTTON SECO */
 
 .btn.secondary {
   color: var(--paul-blue);
@@ -208,10 +232,24 @@ span {
   transition: 0s;
 }
 
-.btn.primary-dark {
-  /* color: var(--paul-white); */
-  color: red;
-  background-color: var(--paul-blue);
+.btn.secondary-dark {
+  color: var(--paul-blue-light);
+  border-color: var(--pahi-blue);
+  /* background-color: var(--paul-blue); */
+}
+
+.btn.secondary-dark:hover {
+  background: var(--paul-gray);
+  /* border-width: 2px; */
+  border-color: black;
+  color: black;
+}
+
+.btn.secondary-dark:active {
+  border-color: var(--pahi-blue);
+  background-color: var(--pahi-blue);
+  color: white;
+  transition: 0s;
 }
 
 .specialBtn {

@@ -1,13 +1,3 @@
-<!-- <script lang="ts">
-  import "../app.css";
-  import { ModeWatcher } from "mode-watcher";
-  // import Footer from "../lib/components/Footer.svelte";
-</script>
- 
-<ModeWatcher />
-<slot />
-<Footer/> -->
-
 <script>
 // @ts-nocheck
 

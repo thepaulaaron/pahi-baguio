@@ -25,29 +25,20 @@
 
 	// For Datable
   import Datable from "./datable.svelte"
-	import Datable2 from "./datable2.svelte"
+	import { array } from './sort';
+	import type { Volunteer } from './sort';
 
-  // For Sorting
-	import Datable3 from "./datable3.svelte";
-    import { array } from './sort'; // Import the store from sort.ts
-    import type { Volunteer } from './sort'; // Import the type directly from sort.ts
+	let data: Volunteer[] = [];
 
-    let data: Volunteer[] = [];
+	// Subscribe to the store to get data updates
+	const unsubscribe = array.subscribe(value => {
+			data = value;
+	});
 
-    // Subscribe to the store to get data updates
-    const unsubscribe = array.subscribe(value => {
-        data = value;
-    });
-
-    // Cleanup subscription on component destroy
-    onDestroy(() => {
-        unsubscribe();
-    });
-
-    // export let data: PageData;
-
-    // // Update the store whenever data changes
-    // $: array.set(data.volunteers);
+	// Cleanup subscription on component destroy
+	onDestroy(() => {
+			unsubscribe();
+	});
 
 	// For Dark Mode
 
@@ -175,8 +166,7 @@
 			<!-- Database -->
 
 			<Tabs.Content value="database" class="space-y-4">
-				<Datable3 {data}/>
-				<!-- <Datable data={$array} /> -->
+				<Datable {data} />
 			</Tabs.Content>
 
 		</Tabs.Root>

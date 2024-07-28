@@ -25,6 +25,7 @@
 
 	// For Datable
   import Datable from "./datable.svelte"
+	import Datable2 from "./datable2.svelte"
 
   // For Sorting
   import { array, setSort } from './sort';
@@ -158,7 +159,8 @@
 			<!-- Database -->
 
 			<Tabs.Content value="database" class="space-y-4">
-				<Datable data={$array} />
+				<Datable2 />
+				<!-- <Datable data={$array} /> -->
 			</Tabs.Content>
 
 		</Tabs.Root>

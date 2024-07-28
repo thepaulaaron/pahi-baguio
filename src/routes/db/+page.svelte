@@ -20,7 +20,7 @@
   $: array.set(data.volunteers);
 
   // For Sorting
-  import { array, setSort } from './sort';
+  import { array } from './sort';
 
 </script>
 

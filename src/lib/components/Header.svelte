@@ -20,19 +20,19 @@
         </button>
         <nav class="hidden md:flex items-center gap-4 lg:gap-6">
             <a
+                href="#faqs"
+                class="duration-200 hover:text-indigo-400 cursor-pointer"
+                >About</a
+            >
+            <a
                 href="#product"
                 class="duration-200 hover:text-indigo-400 cursor-pointer"
-                >Product</a
+                >Contact</a
             >
             <a
                 href="#reviews"
                 class="duration-200 hover:text-indigo-400 cursor-pointer"
                 >Reviews</a
-            >
-            <a
-                href="#faqs"
-                class="duration-200 hover:text-indigo-400 cursor-pointer"
-                >FAQs</a
             >
             <DarkToggle/>
             <!-- <button class="specialBtn">

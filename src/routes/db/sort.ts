@@ -1,7 +1,7 @@
 // sort.js
 import { writable } from 'svelte/store';
 
-interface Volunteer {
+export interface Volunteer {
   id: number;
   Name: string;
   Birthday: string;

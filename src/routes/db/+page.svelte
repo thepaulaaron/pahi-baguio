@@ -13,6 +13,10 @@
   import * as Table from "$comp/ui/table";
 
   import type { PageData } from "./$types";
+  import { array } from './sort';
+  export let data: PageData;
+   // Initialize the array store with data from server
+  $: array.set(data.volunteers);
 
   // Set dark mode as default
   import { onMount } from 'svelte';
@@ -33,4 +37,4 @@
   });
 </script>
 
-<Dashboard/>
+<Dashboard data={$array}/>

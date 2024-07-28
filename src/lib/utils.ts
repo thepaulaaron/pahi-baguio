@@ -221,3 +221,9 @@ export function updateTheme(activeTheme: string, path: string) {
 		return document.body.classList.add(`theme-${theme}`);
 	}
 }
+
+// modeDetector.ts
+export function checkBodyDark(): boolean {
+  const colorScheme = getComputedStyle(document.documentElement).getPropertyValue('color-scheme').trim();
+  return colorScheme === 'dark';
+}

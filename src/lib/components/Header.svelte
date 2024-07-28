@@ -1,5 +1,7 @@
 <script>
     import { openModal } from "../../store";
+    import DarkToggle from "./dark-toggle.svelte";
+	import Button from "./ui/button/button.svelte";
 </script>
 
 <header class="flex flex-col relative z-20">
@@ -33,9 +35,10 @@
                 class="duration-200 hover:text-indigo-400 cursor-pointer"
                 >FAQs</a
             >
-            <button class="specialBtn">
+            <DarkToggle/>
+            <!-- <button class="specialBtn">
                 <p>Start free todazzy</p>
-            </button>
+            </button> -->
         </nav>
     </div>
 </header>

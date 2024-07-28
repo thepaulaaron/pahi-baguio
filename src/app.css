@@ -9,6 +9,9 @@
     --pahi-red: #D42F2E;
     --pahi-yellow: #EEB825;
     --pahi-gray: #121515;
+    --paul-white: #ebebeb;
+    --paul-blue: #1b416e;
+
 
     --background: 0 0% 100%;
     --foreground: 224 71.4% 4.1%;
@@ -125,9 +128,13 @@ span {
   background-image: linear-gradient(to right, grey 1px, transparent 1px), linear-gradient(to bottom, grey 1px, transparent 1px);
 }
 
-button,
 .button {
-  border-radius: 8px;
+  font-size: 1em;
+  font-weight: 500;
+  padding: 0.5em 0.8em;
+  border-radius: 10px;
+
+  /* border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
@@ -136,17 +143,35 @@ button,
   background-color: white;
   cursor: pointer;
   transition: border-color 0.2s;
+  outline: none !important; */
 }
 
-button:hover {
+.button:hover {
   border-color: var(--pahi-blue);
 }
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.btn {
+  font-size: 1em;
+  font-weight: 500;
+  padding: 0.5em 1.2em;
+  border-radius: 10px;
+  transition: all 0.4s ease;
 }
 
+.btn.primary {
+  color: white;
+  background-color: var(--pahi-blue);
+}
+
+.btn.primary-dark {
+  /* color: var(--paul-white); */
+  color: red;
+  background-color: var(--paul-blue);
+}
+
+.btn:hover {
+  border-color: var(--pahi-blue);
+}
 
 .specialBtn {
   border-color: black;
@@ -171,8 +196,8 @@ button:focus-visible {
   color: black;
 }
 
-.dropShadow {
-  filter: drop-shadow(-10.8923px 14.523px 35.0973px rgba(29, 140, 242, 0.2));
+.bg-redd {
+  background-color: var(--pahi-red);
 }
 
 .fadeIn {

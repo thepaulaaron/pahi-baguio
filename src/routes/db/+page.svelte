@@ -16,17 +16,24 @@
   import { array } from './sort';
   export let data: PageData;
 
-  // Helper function to compute Name
-  const computeName = (volunteer: Volunteer): string => `${volunteer.Fname} ${volunteer.Midname} ${volunteer.Surname}, ${volunteer.Suffixname} `;
+  const computeName = (volunteer: Volunteer): string => {
+    const { Fname, Midname, Surname, Suffixname } = volunteer;
+    
+    // Handle null names
+    const suffix = Suffixname ? `, ${Suffixname}` : '';
+    const midname = Midname ? ` ${Midname}` : '';
+
+    return `${Fname}${midname} ${Surname}${suffix}`;
+  };
 
   // Reactive statement to update the store with computed Name
   $: {
     if (data && data.volunteers) {
-      const volunteerName = data.volunteers.map(volunteer => ({
+      const volunteerNames = data.volunteers.map(volunteer => ({
         ...volunteer,
         Name: computeName(volunteer)
       }));
-      array.set(volunteerName);
+      array.set(volunteerNames);
     }
   }
 

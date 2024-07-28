@@ -27,7 +27,7 @@
 
         <div class={(dark ? "text-[#ebebeb]" : "text-black")}>
           <p
-          class="text-xl sm:text-2xl md:text-3xl text-center max-w-[1000px] mx-auto w-full"
+          class="text-xl sm:text-2xl md:text-3xl text-center max-w-[1000px] mx-auto w-full font-merri"
           >
           Volunteer Database of 
           <span class="italic">Ugnayan ng Pahinungód</span>

@@ -53,23 +53,12 @@
 </script>
 
 <div class="hidden flex-col md:flex">
-
-	<!-- <div class="border-b">
-		<div class="flex h-16 items-center px-8">
-			<span class="font-base">PahiBaguio</span>
-			<div class="ml-auto flex items-center space-x-4">
-				<Search />
-				<DarkToggle/>
-				<UserNav />
-			</div>
-		</div>
-	</div> -->
 	
 	<div class="flex-1 space-y-4 p-8 pt-6">
 		<div class="flex items-center justify-between space-y-2">
-			<h2 class="text-3xl font-bold">
+			<h2 class="text-3xl font-bold flex items-center">
 				<span class={(dark ? "text-[#3578ca]" : "text-pahi-blue")}>Pahi</span><span class={(dark ? "text-[#ebebeb]" : "text-black-300")}>Baguio</span>
-				<span class="text-xl font-normal" style="font-family: Open Sans, sans-serif;"> | Dashboard</span>
+				<span class="text-xl font-normal">&nbsp;|&nbsp;Dashboard</span>
 			</h2>
 			
 			<div class="flex items-center space-x-2">
@@ -101,7 +90,7 @@
 							<DollarSign class="h-4 w-4 text-muted-foreground" />
 						</Card.Header>
 						<Card.Content>
-							<div class="text-2xl font-bold">$45,231.89</div>
+							<div class="text-2xl font-bold">$45,2s31.89</div>
 							<p class="text-xs text-muted-foreground">+20.1% from last month</p>
 						</Card.Content>
 					</Card.Root>

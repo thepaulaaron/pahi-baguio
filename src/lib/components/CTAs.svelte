@@ -42,10 +42,10 @@
 				<Dialog.Content class="p-10">
 					<Dialog.Header>
 						<Dialog.Title>
-							<i class="fa-solid fa-exclamation-triangle text-l">&nbsp;</i>
+							<i class="fa-solid fa-exclamation-triangle text-l text-[var(--pahi-red)]">&nbsp;</i>
 							Admin Access Only</Dialog.Title>
 						<Dialog.Description class="pt-4 text-justify text-base">
-							This system is only for authorized users of the Pahinungód. Unauthorized access is prohibited and may result in legal action under the Data Privacy Act of the Philippines.
+							This system is for authorized users of the Pahinungód. Unauthorized access is strictly prohibited and may result in legal action under the Data Privacy Act of the Philippines.
 						</Dialog.Description>
 					</Dialog.Header>
 					<div class="grid gap-4 py-3">

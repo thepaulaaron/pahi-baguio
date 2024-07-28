@@ -15,7 +15,6 @@
     addTableFilter
   } from "svelte-headless-table/plugins";
   import { readable } from "svelte/store";
-  import ArrowUpDown from "lucide-svelte/icons/arrow-up-down";
   import * as Table from "$lib/components/ui/table";
   import DatableActions from "./datable-actions.svelte";
   import { Button } from "$lib/components/ui/button";
@@ -120,7 +119,6 @@
                       <i class="fa-solid fa-sort"></i>
                     </Button>
                   </div>
-                    
                     
                   <!-- {:else if cell.id === "email"} -->
                   {:else}

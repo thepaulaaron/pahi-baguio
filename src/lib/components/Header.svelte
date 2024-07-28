@@ -8,7 +8,7 @@
         class="max-w-[1400px] mx-auto w-full flex items-center justify-between p-4 py-6"
     >
         <a href="/">
-            <h1 class="font-medium">
+            <h1 class="font-semibold">
                UP | Baguio
             </h1>
         </a>
@@ -21,7 +21,7 @@
         <nav class="hidden md:flex items-center gap-4 lg:gap-6">
             <a
                 href="#faqs"
-                class="duration-200 hover:text-indigo-400 cursor-pointer"
+                class="duration-200 hover:text-indigo-400 cursor-pointer font-poppins"
                 >About</a
             >
             <a

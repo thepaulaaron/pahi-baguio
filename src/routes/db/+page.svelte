@@ -15,8 +15,20 @@
   import type { PageData } from "./$types";
   import { array } from './sort';
   export let data: PageData;
-   // Initialize the array store with data from server
-  $: array.set(data.volunteers);
+
+  // Helper function to compute Name
+  const computeName = (volunteer: Volunteer): string => `${volunteer.Fname} ${volunteer.Midname} ${volunteer.Surname}, ${volunteer.Suffixname} `;
+
+  // Reactive statement to update the store with computed Name
+  $: {
+    if (data && data.volunteers) {
+      const volunteerName = data.volunteers.map(volunteer => ({
+        ...volunteer,
+        Name: computeName(volunteer)
+      }));
+      array.set(volunteerName);
+    }
+  }
 
   // Set dark mode as default
   import { onMount } from 'svelte';

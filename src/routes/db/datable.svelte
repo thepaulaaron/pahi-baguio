@@ -11,13 +11,13 @@
     addPagination,
     addSelectedRows,
     addSortBy,
-    addTableFilter
+    addTableFilter,
   } from "svelte-headless-table/plugins";
   import { readable, type Writable } from "svelte/store";
   import * as Table from "$lib/components/ui/table";
   import DatableActions from "./datable-actions.svelte";
-  import { Button } from "$lib/components/ui/button";
-  import SearchBar from "./search-bar.svelte";
+  import { Button } from "$comp/ui/button";
+  import * as DropdownMenu from "$comp/ui/dropdown-menu";
 
   import type { Volunteer } from './sort'; // Import the type directly from sort.ts
 
@@ -31,6 +31,7 @@
       fn: ({ filterValue, value }) =>
         value.toLowerCase().includes(filterValue.toLowerCase()),
     }),
+    hide: addHiddenColumns()
   });
 
   const columns = table.createColumns([
@@ -60,6 +61,18 @@
       },
     }),
     table.column({
+      accessor: "VolType",
+      header: "Volunteer Type",
+      plugins: {
+        sort: {
+          disable: true,
+        },
+        filter: {
+          exclude: false,
+        },
+      },
+    }),
+    table.column({
       accessor: "_id",
       header: "id",
       plugins: {
@@ -73,7 +86,7 @@
     }),
   ]);
 
-  const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } =
+  const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates, flatColumns, } =
     table.createViewModel(columns);
 
     const { pageIndex, hasNextPage, hasPreviousPage } = pluginStates.page;
@@ -87,7 +100,38 @@
   function handleFilterInput(event: { detail: string; }) {
     filterValue.set(event.detail);
   }
+
+  const { hiddenColumnIds } = pluginStates.hide;
+  const ids = flatColumns.map((col) => col.id);
+  // let hideForId = Object.fromEntries(ids.map((id) => [id, true]));
+
+  // Initially hide columns
+  let hideForId = Object.fromEntries(ids.map((id) => [id, !['_id', 'cum_twrr_cons'].includes(id)]));
+
+  $: $hiddenColumnIds = Object.entries(hideForId)
+    .filter(([, hide]) => !hide)
+    .map(([id]) => id);
+
+  const hidableCols = ["Birthday", "VolType", "_id"];
 </script>
+
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger asChild let:builder>
+    <Button variant="outline" class="ml-auto" builders={[builder]}>
+      Columns&nbsp;
+      <i class="fa-solid fa-chevron-down text-l]"></i>
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content>
+    {#each flatColumns as col}
+      {#if hidableCols.includes(col.id)}
+        <DropdownMenu.CheckboxItem bind:checked={hideForId[col.id]}>
+          {col.header}
+        </DropdownMenu.CheckboxItem>
+      {/if}
+    {/each}
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
 
 <div class="rounded-md border">
   <Table.Root {...$tableAttrs}>

@@ -1,23 +1,13 @@
-<script>
+<script lang="ts">
 // @ts-nocheck
-
 	import { Button } from "./ui/button";
 	import * as Dialog from "./ui/dialog";
 	import {Input} from "./ui/input";
 	import {Label} from "./ui/label";
 
-	import { darkMode } from '$str';
-
-	// To use the store in the component
-	let dark;
-	darkMode.subscribe(value => {
-		dark = value;
-	});
-
-	function toggleDarkMode() {
-		darkMode.update(value => !value);
-		console.log("Toggled dark mode");
-	}
+	import { mode } from 'mode-watcher';
+	let dark: boolean;
+	$: dark = $mode !== 'light';
 </script>
 
 <div class="flex items-center gap-4">

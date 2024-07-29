@@ -1,4 +1,3 @@
 import { writable } from "svelte/store";
 
-export const openModal = writable(false)
-export const darkMode = writable(false);
+export const openModal = writable(false);

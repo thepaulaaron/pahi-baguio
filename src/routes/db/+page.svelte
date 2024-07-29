@@ -39,21 +39,11 @@
 
   // Set dark mode as default
   import { onMount } from 'svelte';
+  import { userPrefersMode } from 'mode-watcher';
 
-  function setDarkMode() {
-    const userPrefersDark = localStorage.getItem('theme') === 'dark';
-    const html = document.documentElement;
-
-    if (userPrefersDark || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      html.classList.add('dark');
-    } else {
-      html.classList.remove('dark');
-    }
-  }
-
-  onMount(() => {
-    setDarkMode();
-  });
+  // onMount(() => {
+    userPrefersMode.set('dark');
+  // });
 </script>
 
 <Dashboard data={$array}/>

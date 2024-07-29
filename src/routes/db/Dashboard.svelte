@@ -37,17 +37,14 @@
 	});
 
 	// For Dark Mode
-	import { darkMode } from '$str';
-	import { onDestroy } from "svelte";
-	// To use the store in the component
+	import { mode } from 'mode-watcher';
 	let dark: boolean;
-	darkMode.subscribe(value => {
-			dark = value;
-	});
+	$: dark = $mode !== 'light';
 
 	// For Database Search
 	import { writable } from 'svelte/store';
 	import SearchBar from "./search-bar.svelte";
+	import { onDestroy } from "svelte";
   let activeTab = writable('overview');
 
 	const filterValue = writable('');

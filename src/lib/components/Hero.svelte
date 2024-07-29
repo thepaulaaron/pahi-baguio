@@ -1,16 +1,12 @@
-<script>
+<script lang="ts">
 // @ts-nocheck
-
     import CtAs from "./CTAs.svelte";
     import Header from "./Header.svelte";
     import SectionWrapper from "./SectionWrapper.svelte";
-    import { darkMode } from '$str';
 
-    // To use the store in the component
-    let dark;
-    darkMode.subscribe(value => {
-        dark = value;
-    });
+    import { mode } from 'mode-watcher';
+	let dark: boolean;
+	$: dark = $mode !== 'light';
 </script>
 
 <!-- <SectionWrapper> -->

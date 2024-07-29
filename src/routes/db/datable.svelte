@@ -51,7 +51,8 @@
       header: "Birthday",
       plugins: {
         sort: {
-          disable: true,
+          // [ ] TODO: correct sort, correct format
+          disable: false,
         },
         filter: {
           exclude: false,
@@ -102,7 +103,7 @@
               let:props
             >
               <Table.Head {...attrs}>
-                {#if cell.id === "Name"}
+                {#if cell.id === "Name" || cell.id === "Birthday"}
                 <div class="flex items-center justify-between">
                   <Render of={cell.render()} />
                   <Button

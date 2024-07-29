@@ -13,7 +13,7 @@
     addSortBy,
     addTableFilter,
   } from "svelte-headless-table/plugins";
-  import { readable, type Writable } from "svelte/store";
+  import { readable, writable, type Writable } from "svelte/store";
   import * as Table from "$lib/components/ui/table";
   import DatableActions from "./datable-actions.svelte";
   import { Button } from "$comp/ui/button";
@@ -113,7 +113,27 @@
     .map(([id]) => id);
 
   const hidableCols = ["Birthday", "VolType", "_id"];
+
+    // Define volunteer types
+    const volTypes = ['Student', 'Faculty', 'Staff', 'Alumni', 'Friend'];
+
+      // Store for selected volunteer types
+  const selectedVolTypes = writable(new Set<string>());
+
+  // Function to handle checkbox changes
+  function toggleVolType(volType: string, checked: boolean) {
+    selectedVolTypes.update(set => {
+      if (checked) {
+        set.add(volType);
+      } else {
+        set.delete(volType);
+      }
+      return set;
+    });
+  }
 </script>
+
+<!-- Columns -->
 
 <DropdownMenu.Root>
   <DropdownMenu.Trigger asChild let:builder>
@@ -129,6 +149,23 @@
           {col.header}
         </DropdownMenu.CheckboxItem>
       {/if}
+    {/each}
+  </DropdownMenu.Content>
+</DropdownMenu.Root>
+
+<!-- VolType Filter Dropdown -->
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger asChild let:builder>
+    <Button variant="outline" class="ml-auto" builders={[builder]}>
+      Type&nbsp;
+      <i class="fa-solid fa-chevron-down"></i>
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content>
+    {#each volTypes as volType}
+      <DropdownMenu.CheckboxItem>
+        {volType}
+      </DropdownMenu.CheckboxItem>
     {/each}
   </DropdownMenu.Content>
 </DropdownMenu.Root>

@@ -114,22 +114,15 @@
 
   const hidableCols = ["Birthday", "VolType", "_id"];
 
-    // Define volunteer types
-    const volTypes = ['Student', 'Faculty', 'Staff', 'Alumni', 'Friend'];
+  // List of volunteer types
+  const volTypes = ['Student', 'Faculty', 'Staff', 'Alumnus', 'Friend'];
 
-      // Store for selected volunteer types
-  const selectedVolTypes = writable(new Set<string>());
+  // Store for the selected volunteer type
+  const selectedVolType = writable<string>('');
 
-  // Function to handle checkbox changes
-  function toggleVolType(volType: string, checked: boolean) {
-    selectedVolTypes.update(set => {
-      if (checked) {
-        set.add(volType);
-      } else {
-        set.delete(volType);
-      }
-      return set;
-    });
+  function handleTypeSelect(type: string) {
+    selectedVolType.set(type);
+    tableFilterValue.set(type); // Update table filter immediately
   }
 </script>
 
@@ -163,9 +156,9 @@
   </DropdownMenu.Trigger>
   <DropdownMenu.Content>
     {#each volTypes as volType}
-      <DropdownMenu.CheckboxItem>
+      <DropdownMenu.Item on:click={() => handleTypeSelect(volType)}>
         {volType}
-      </DropdownMenu.CheckboxItem>
+      </DropdownMenu.Item>
     {/each}
   </DropdownMenu.Content>
 </DropdownMenu.Root>

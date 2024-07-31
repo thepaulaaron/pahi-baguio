@@ -25,8 +25,10 @@
   export let filterValue: Writable<string>;
   export let selectedVolType: Writable<string>;
 
-  // Create a writable store for filtered data
-  const filteredData = writable(data);
+  const rowsPerPage   = 12; // Define the number of rows per page
+  const currentPage   = writable(0);
+  const filteredData  = writable<Volunteer[]>(data);
+  const paginatedData = writable<Volunteer[]>([]);
 
   // Reactive statement to update filteredData when selectedVolType or filterValue changes
   $: {
@@ -42,8 +44,18 @@
     });
   }
 
-  const table = createTable(filteredData, {
-    page: addPagination(),
+  // Reactive statement to update paginatedData when filteredData or currentPage changes
+  $: {
+    $filteredData;
+    $currentPage;
+    const start = $currentPage * rowsPerPage;
+    const end = start + rowsPerPage;
+    paginatedData.set(
+      $filteredData.slice(start, end)
+    );
+  }
+
+  const table = createTable(paginatedData, {
     sort: addSortBy(),
     filter: addTableFilter({
       fn: ({ value }) => {
@@ -59,63 +71,55 @@
       accessor: "Name",
       header: "Name",
       plugins: {
-        sort: {
-          disable: false,
-        },
-        filter: {
-          exclude: false,
-        },
+        sort: { disable: false },
+        filter: { exclude: false },
       },
     }),
     table.column({
       accessor: "Birthday",
       header: "Birthday",
       plugins: {
-        sort: {
-          // [ ] TODO: correct sort, correct format
-          disable: false,
-        },
-        filter: {
-          exclude: false,
-        },
+        sort: { disable: false },
+        filter: { exclude: false },
       },
     }),
     table.column({
       accessor: "VolType",
       header: "Volunteer Type",
       plugins: {
-        sort: {
-          disable: true,
-        },
-        filter: {
-          exclude: false,
-        },
+        sort: { disable: true },
+        filter: { exclude: false },
       },
     }),
     table.column({
       accessor: "_id",
       header: "id",
       plugins: {
-        sort: {
-          disable: true,
-        },
-        filter: {
-          exclude: true,
-        },
+        sort: { disable: true },
+        filter: { exclude: true },
       },
     }),
   ]);
 
-
   const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates, flatColumns } =
     table.createViewModel(columns);
 
-  const { pageIndex, hasNextPage, hasPreviousPage } = pluginStates.page;
   const { filterValue: tableFilterValue } = pluginStates.filter;
 
   filterValue.subscribe(value => {
     tableFilterValue.set(value);
   });
+
+  function nextPage() {
+    currentPage.update(n => {
+      const totalPages = Math.ceil($filteredData.length / rowsPerPage);
+      return n < totalPages - 1 ? n + 1 : n;
+    });
+  }
+
+  function prevPage() {
+    currentPage.update(n => Math.max(n - 1, 0));
+  }
 
   function handleFilterInput(event: { detail: string; }) {
     filterValue.set(event.detail);
@@ -132,20 +136,37 @@
   const hidableCols = ["Birthday", "VolType", "_id"];
   const volTypes = ['Student', 'Faculty', 'Staff', 'Alumnus', 'Friend'];
 
-    let selectedTypeDisplay = 'All';
+  let selectedTypeDisplay = 'All';
   $: {
     selectedVolType.subscribe(type => {
       selectedTypeDisplay = type || 'All';
     });
   }
 
-  // Handle the selection of a volunteer type
   function handleTypeSelect(type: string) {
     selectedVolType.set(type);
   }
 
 </script>
-
+<!-- Pagination controls -->
+<div class="flex items-center justify-end space-x-4 py-4">
+  <Button
+    variant="outline"
+    size="sm"
+    on:click={prevPage}
+    disabled={$currentPage === 0}
+  >
+    Previous
+  </Button>
+  <Button
+    variant="outline"
+    size="sm"
+    on:click={nextPage}
+    disabled={($currentPage + 1) * rowsPerPage >= $filteredData.length}
+  >
+    Next
+  </Button>
+</div>
 <!-- Columns -->
 
 <DropdownMenu.Root>
@@ -235,23 +256,4 @@
       {/each}
     </Table.Body>
   </Table.Root>
-</div>
-
-<div class="flex items-center justify-end space-x-4 py-4">
-  <Button
-    variant="outline"
-    size="sm"
-    on:click={() => ($pageIndex = $pageIndex - 1)}
-    disabled={!$hasPreviousPage}
-  >
-    Previous
-  </Button>
-  <Button
-    variant="outline"
-    size="sm"
-    disabled={!$hasNextPage}
-    on:click={() => ($pageIndex = $pageIndex + 1)}
-  >
-    Next
-  </Button>
 </div>

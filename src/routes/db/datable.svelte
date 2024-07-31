@@ -1,5 +1,4 @@
 <script lang="ts">
-  
   import {
     Render,
     Subscribe,
@@ -24,9 +23,10 @@
   export let filterValue: Writable<string>;
   export let selectedVolType: Writable<string>;
 
-  const rowsPerPage   = 12; // Define the number of rows per page
-  const currentPage   = writable(0);
-  const filteredData  = writable<Volunteer[]>(data);
+  const rowsPerPage = 12;
+  const currentPage = writable(0);
+  const filteredData = writable<Volunteer[]>(data);
+  const sortedData = writable<Volunteer[]>([]);
   const paginatedData = writable<Volunteer[]>([]);
 
   // Reactive statement to update filteredData when selectedVolType or filterValue changes
@@ -43,25 +43,30 @@
     });
   }
 
-  // Reactive statement to update paginatedData when filteredData or currentPage changes
+  // Reactive statement to sort filteredData and update sortedData
   $: {
     $filteredData;
+    const sorted = [...$filteredData].sort((a, b) => {
+      // Default sorting logic (sort by Name)
+      return a.Name.localeCompare(b.Name);
+    });
+    sortedData.set(sorted);
+  }
+
+  // Reactive statement to update paginatedData when sortedData or currentPage changes
+  $: {
+    $sortedData;
     $currentPage;
     const start = $currentPage * rowsPerPage;
     const end = start + rowsPerPage;
     paginatedData.set(
-      $filteredData.slice(start, end)
+      $sortedData.slice(start, end)
     );
   }
 
   const table = createTable(paginatedData, {
-    sort: addSortBy(),
-    filter: addTableFilter({
-      fn: ({ value }) => {
-        console.log(value);
-        return true;
-      }
-    }),
+    sort: addSortBy(),  // Default sort configuration without custom `fn`
+    filter: addTableFilter(),
     hide: addHiddenColumns()
   });
 
@@ -103,7 +108,7 @@
 
   function nextPage() {
     currentPage.update(n => {
-      const totalPages = Math.ceil($filteredData.length / rowsPerPage);
+      const totalPages = Math.ceil($sortedData.length / rowsPerPage);
       return n < totalPages - 1 ? n + 1 : n;
     });
   }
@@ -133,7 +138,6 @@
   function handleTypeSelect(type: string) {
     selectedVolType.set(type);
   }
-
 </script>
 
 <!-- Pagination controls -->
@@ -151,7 +155,7 @@
     variant="outline"
     size="sm"
     on:click={nextPage}
-    disabled={($currentPage + 1) * rowsPerPage >= $filteredData.length}
+    disabled={($currentPage + 1) * rowsPerPage >= $sortedData.length}
   >
     Next
   </Button>

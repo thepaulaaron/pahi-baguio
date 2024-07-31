@@ -13,7 +13,7 @@
     addSortBy,
     addTableFilter,
   } from "svelte-headless-table/plugins";
-  import { readable, writable, type Writable } from "svelte/store";
+  import { get, readable, writable, type Writable } from "svelte/store";
   import * as Table from "$lib/components/ui/table";
   import DatableActions from "./datable-actions.svelte";
   import { Button } from "$comp/ui/button";
@@ -23,18 +23,33 @@
 
   export let data: Volunteer[];
   export let filterValue: Writable<string>;
+  export let selectedVolType: Writable<string>;
 
-  const table = createTable(readable(data), {
+  // Create a writable store for filtered data
+  const filteredData = writable(data);
+
+  // Reactive statement to update filteredData when selectedVolType or filterValue changes
+  $: {
+    selectedVolType.subscribe(volType => {
+      const currentFilterValue = $filterValue.toLowerCase();
+      filteredData.set(
+        data.filter(item => {
+          const matchesSearch = item.Name.toLowerCase().includes(currentFilterValue);
+          const matchesVolType = volType === 'All' || item.VolType === volType;
+          return matchesSearch && matchesVolType;
+        })
+      );
+    });
+  }
+
+  const table = createTable(filteredData, {
     page: addPagination(),
     sort: addSortBy(),
     filter: addTableFilter({
-      fn: ({ filterValue, value }) => {
-        if (filterValue === 'All') {
-          return true; // Show all data when "All" is selected
-        } else {
-          return value.toLowerCase().includes(filterValue.toLowerCase()); // Default filtering logic
-        }
-      },
+      fn: ({ value }) => {
+        console.log(value);
+        return true;
+      }
     }),
     hide: addHiddenColumns()
   });
@@ -91,13 +106,13 @@
     }),
   ]);
 
-  const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates, flatColumns, } =
+
+  const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates, flatColumns } =
     table.createViewModel(columns);
 
-    const { pageIndex, hasNextPage, hasPreviousPage } = pluginStates.page;
-    const { filterValue: tableFilterValue } = pluginStates.filter;
+  const { pageIndex, hasNextPage, hasPreviousPage } = pluginStates.page;
+  const { filterValue: tableFilterValue } = pluginStates.filter;
 
-  // Update table filter value when the filterValue store changes
   filterValue.subscribe(value => {
     tableFilterValue.set(value);
   });
@@ -108,30 +123,26 @@
 
   const { hiddenColumnIds } = pluginStates.hide;
   const ids = flatColumns.map((col) => col.id);
-  // let hideForId = Object.fromEntries(ids.map((id) => [id, true]));
 
-  // Initially hide columns
   let hideForId = Object.fromEntries(ids.map((id) => [id, !['_id', 'cum_twrr_cons'].includes(id)]));
-
   $: $hiddenColumnIds = Object.entries(hideForId)
     .filter(([, hide]) => !hide)
     .map(([id]) => id);
 
   const hidableCols = ["Birthday", "VolType", "_id"];
-
-  // List of volunteer types
   const volTypes = ['Student', 'Faculty', 'Staff', 'Alumnus', 'Friend'];
-  const selectedVolType = writable<string>('All'); // Store for the selected volunteer type
 
-  function handleTypeSelect(type: string) {
-    selectedVolType.set(type);
-    tableFilterValue.set(type); // Update table filter immediately
+    let selectedTypeDisplay = 'All';
+  $: {
+    selectedVolType.subscribe(type => {
+      selectedTypeDisplay = type || 'All';
+    });
   }
 
-  let selectedTypeDisplay = 'All'; // Initial display text
-  selectedVolType.subscribe((type) => {
-    selectedTypeDisplay = type;
-  });
+  // Handle the selection of a volunteer type
+  function handleTypeSelect(type: string) {
+    selectedVolType.set(type);
+  }
 
 </script>
 

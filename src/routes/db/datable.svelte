@@ -28,8 +28,13 @@
     page: addPagination(),
     sort: addSortBy(),
     filter: addTableFilter({
-      fn: ({ filterValue, value }) =>
-        value.toLowerCase().includes(filterValue.toLowerCase()),
+      fn: ({ filterValue, value }) => {
+        if (filterValue === 'All') {
+          return true; // Show all data when "All" is selected
+        } else {
+          return value.toLowerCase().includes(filterValue.toLowerCase()); // Default filtering logic
+        }
+      },
     }),
     hide: addHiddenColumns()
   });
@@ -155,6 +160,7 @@
     </Button>
   </DropdownMenu.Trigger>
   <DropdownMenu.Content>
+    <DropdownMenu.Item on:click={() => handleTypeSelect('All')}>All</DropdownMenu.Item>
     {#each volTypes as volType}
       <DropdownMenu.Item on:click={() => handleTypeSelect(volType)}>
         {volType}

@@ -121,14 +121,18 @@
 
   // List of volunteer types
   const volTypes = ['Student', 'Faculty', 'Staff', 'Alumnus', 'Friend'];
-
-  // Store for the selected volunteer type
-  const selectedVolType = writable<string>('');
+  const selectedVolType = writable<string>('All'); // Store for the selected volunteer type
 
   function handleTypeSelect(type: string) {
     selectedVolType.set(type);
     tableFilterValue.set(type); // Update table filter immediately
   }
+
+  let selectedTypeDisplay = 'All'; // Initial display text
+  selectedVolType.subscribe((type) => {
+    selectedTypeDisplay = type;
+  });
+
 </script>
 
 <!-- Columns -->
@@ -155,7 +159,7 @@
 <DropdownMenu.Root>
   <DropdownMenu.Trigger asChild let:builder>
     <Button variant="outline" class="ml-auto" builders={[builder]}>
-      Type&nbsp;
+      {selectedTypeDisplay}&nbsp;
       <i class="fa-solid fa-chevron-down"></i>
     </Button>
   </DropdownMenu.Trigger>

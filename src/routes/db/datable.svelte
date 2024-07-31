@@ -66,40 +66,32 @@
     hide: addHiddenColumns()
   });
 
-  const columns = table.createColumns([
-    table.column({
-      accessor: "Name",
-      header: "Name",
-      plugins: {
-        sort: { disable: false },
-        filter: { exclude: false },
-      },
-    }),
-    table.column({
-      accessor: "Birthday",
-      header: "Birthday",
-      plugins: {
-        sort: { disable: false },
-        filter: { exclude: false },
-      },
-    }),
-    table.column({
-      accessor: "VolType",
-      header: "Volunteer Type",
-      plugins: {
-        sort: { disable: true },
-        filter: { exclude: false },
-      },
-    }),
-    table.column({
-      accessor: "_id",
-      header: "id",
-      plugins: {
-        sort: { disable: true },
-        filter: { exclude: true },
-      },
-    }),
-  ]);
+  type ColumnConfig = {
+    accessor: keyof Volunteer;
+    header: string;
+    sort: boolean;
+    filter: boolean;
+  };
+
+  const columnsConfig: ColumnConfig[] = [
+    { accessor: "Name", header: "Name", sort: true, filter: true },
+    { accessor: "Birthday", header: "Birthday", sort: true, filter: true },
+    { accessor: "VolType", header: "Volunteer Type", sort: false, filter: true },
+    { accessor: "_id", header: "id", sort: false, filter: false }
+  ];
+
+  const columns = table.createColumns(
+    columnsConfig.map(({ accessor, header, sort, filter }) =>
+      table.column({
+        accessor,
+        header,
+        plugins: {
+          sort: { disable: !sort },
+          filter: { exclude: !filter }
+        }
+      })
+    )
+  );
 
   const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates, flatColumns } =
     table.createViewModel(columns);

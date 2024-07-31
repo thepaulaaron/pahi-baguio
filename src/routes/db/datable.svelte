@@ -1,24 +1,23 @@
 <script lang="ts">
+  
   import {
-    DisplayBodyCell,
     Render,
     Subscribe,
-    createRender,
     createTable
   } from "svelte-headless-table";
   import {
     addHiddenColumns,
-    addPagination,
-    addSelectedRows,
     addSortBy,
-    addTableFilter,
+    addTableFilter
   } from "svelte-headless-table/plugins";
-  import { get, readable, writable, type Writable } from "svelte/store";
+  import { writable, type Writable } from "svelte/store";
+
+  // UI components
   import * as Table from "$lib/components/ui/table";
-  import DatableActions from "./datable-actions.svelte";
   import { Button } from "$comp/ui/button";
   import * as DropdownMenu from "$comp/ui/dropdown-menu";
 
+  // Types
   import type { Volunteer } from './sort'; // Import the type directly from sort.ts
 
   export let data: Volunteer[];
@@ -113,10 +112,6 @@
     currentPage.update(n => Math.max(n - 1, 0));
   }
 
-  function handleFilterInput(event: { detail: string; }) {
-    filterValue.set(event.detail);
-  }
-
   const { hiddenColumnIds } = pluginStates.hide;
   const ids = flatColumns.map((col) => col.id);
 
@@ -140,7 +135,9 @@
   }
 
 </script>
+
 <!-- Pagination controls -->
+ 
 <div class="flex items-center justify-end space-x-4 py-4">
   <Button
     variant="outline"
@@ -159,6 +156,7 @@
     Next
   </Button>
 </div>
+
 <!-- Columns -->
 
 <DropdownMenu.Root>

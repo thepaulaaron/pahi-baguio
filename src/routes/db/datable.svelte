@@ -180,8 +180,8 @@
 <!-- VolType Filter Dropdown -->
 <DropdownMenu.Root>
   <DropdownMenu.Trigger asChild let:builder>
-    <Button variant="outline" class="ml-auto" builders={[builder]}>
-      {selectedTypeDisplay}&nbsp;
+    <Button variant="outline" class="ml-auto min-w-[7.5rem] justify-between items-center" builders={[builder]}>
+      <div>{selectedTypeDisplay}&nbsp;</div>
       <i class="fa-solid fa-chevron-down"></i>
     </Button>
   </DropdownMenu.Trigger>

@@ -12,6 +12,18 @@
   import { Badge } from "$comp/ui/badge";
   import * as Table from "$comp/ui/table";
 
+  // Load only when verified admin
+  import { isAuthenticated } from '$str/auth';
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
+  import { get } from 'svelte/store';
+
+  onMount(() => {
+    if (typeof window !== 'undefined' && !get(isAuthenticated)) {
+      goto('/'); // Redirect to the login page if not authenticated
+    }
+  });
+
   import type { PageData } from "./$types";
   import { array } from './sort';
   export let data: PageData;
@@ -38,8 +50,9 @@
   }
 
   // Set dark mode as default
-  import { onMount } from 'svelte';
+  // import { onMount } from 'svelte';
   import { userPrefersMode } from 'mode-watcher';
+	import Logout from "./logout.svelte";
 
   // onMount(() => {
     userPrefersMode.set('dark');
@@ -47,3 +60,4 @@
 </script>
 
 <Dashboard data={$array}/>
+<Logout/>

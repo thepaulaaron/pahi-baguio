@@ -5,6 +5,7 @@
   import { Label } from "./ui/label";
   import { mode } from 'mode-watcher';
   import { goto } from '$app/navigation';
+  import { isAuthenticated } from '$str/auth';
 
   let dark: boolean;
   $: dark = $mode !== 'light';
@@ -19,9 +20,10 @@
 
   function handleSignIn() {
     if (username === acceptedCredentials.username && password === acceptedCredentials.password) {
-      goto('/db'); // Redirects to the dashboard page
+      isAuthenticated.set(true); // Update authentication state
+      goto('/db');
     } else {
-      alert('Invalid username or password!');
+      alert('Invalid username or password');
     }
   }
 </script>

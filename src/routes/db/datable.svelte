@@ -27,6 +27,8 @@
   const rowsPerPage = 12;
   const currentPage = writable(0);
   const totalPages = writable(0);
+  const canGoPrev = writable(true);
+  const canGoNext = writable(true);
 
   const filteredData = writable<Volunteer[]>([]);
   const paginatedData = writable<Volunteer[]>([]);
@@ -65,6 +67,10 @@
       const endIndex = Math.min(startIndex + rowsPerPage, numFilteredItems);
       paginatedData.set($filteredData.slice(startIndex, endIndex));
     }
+
+    // Determine if the previous and next buttons should be enabled
+    canGoPrev.set($currentPage > 0 && numFilteredItems > 0);
+    canGoNext.set($currentPage < $totalPages - 1 && numFilteredItems > 0);
   }
 
   // Create table with paginated data
@@ -232,7 +238,7 @@
 
 <!-- Pagination Controls -->
 <div class="pagination-controls">
-  <Button on:click={() => changePage($currentPage - 1)} disabled={$currentPage === 0}>Previous</Button>
+  <Button on:click={() => changePage($currentPage - 1)} disabled={!$canGoPrev}>Previous</Button>
   <span>Page {$currentPage + 1} of {$totalPages}</span>
-  <Button on:click={() => changePage($currentPage + 1)} disabled={$currentPage === $totalPages - 1}>Next</Button>
+  <Button on:click={() => changePage($currentPage + 1)} disabled={!$canGoNext}>Next</Button>
 </div>

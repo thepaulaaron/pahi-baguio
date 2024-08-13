@@ -305,6 +305,19 @@ h1, h2, h3, span, p {
   }
 }
 
+/* Button : Logout */
+
+.btn-logout {
+  color: var(--pahi-red) !important;
+  transition: all ease-in-out 0.1s;
+}
+
+.btn-logout:hover {
+  color: white !important;
+  background-color: var(--pahi-red) !important;
+  cursor: pointer;
+}
+
 .typer-box {
   height: 14vh;
   width: 75vh;

@@ -2,13 +2,21 @@
 	import * as Avatar from "../ui/avatar";
 	import { Button } from "../ui/button";
 	import * as DropdownMenu from "../ui/dropdown-menu";
+
+	import { isAuthenticated } from '$str/auth';
+	import { goto } from '$app/navigation';
+
+	function handleLogout() {
+		isAuthenticated.set(false); // Reset authentication state
+		goto('/'); // Redirect to the login page
+	}
 </script>
 
 <DropdownMenu.Root>
 	<DropdownMenu.Trigger asChild let:builder>
 		<Button variant="ghost" builders={[builder]} class="relative h-8 w-8 rounded-full">
 			<Avatar.Root class="h-8 w-8">
-				<Avatar.Image src="/images/pahi-logo.png"/>
+				<Avatar.Image src="/images/pahi-logo.png" style="background-color:azure;"/>
 				<Avatar.Fallback>SC</Avatar.Fallback>
 			</Avatar.Root>
 		</Button>
@@ -22,24 +30,8 @@
 		</DropdownMenu.Label>
 		<DropdownMenu.Separator />
 		<DropdownMenu.Group>
-			<DropdownMenu.Item>
-				Profile
-				<DropdownMenu.Shortcut>⇧⌘P</DropdownMenu.Shortcut>
-			</DropdownMenu.Item>
-			<DropdownMenu.Item>
-				Billing
-				<DropdownMenu.Shortcut>⌘B</DropdownMenu.Shortcut>
-			</DropdownMenu.Item>
-			<DropdownMenu.Item>
-				Settings
-				<DropdownMenu.Shortcut>⌘S</DropdownMenu.Shortcut>
-			</DropdownMenu.Item>
-			<DropdownMenu.Item>New Team</DropdownMenu.Item>
+			<DropdownMenu.Item class="cursor-pointer">Settings</DropdownMenu.Item>
+			<DropdownMenu.Item class="btn-logout" on:click={handleLogout}>Sign Out</DropdownMenu.Item>
 		</DropdownMenu.Group>
-		<DropdownMenu.Separator />
-		<DropdownMenu.Item>
-			Log out
-			<DropdownMenu.Shortcut>⇧⌘Q</DropdownMenu.Shortcut>
-		</DropdownMenu.Item>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

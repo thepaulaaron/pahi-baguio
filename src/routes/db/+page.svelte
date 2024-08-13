@@ -52,7 +52,6 @@
   // Set dark mode as default
   // import { onMount } from 'svelte';
   import { userPrefersMode } from 'mode-watcher';
-	import Logout from "./logout.svelte";
 
   // onMount(() => {
     userPrefersMode.set('dark');
@@ -60,4 +59,3 @@
 </script>
 
 <Dashboard data={$array}/>
-<Logout/>

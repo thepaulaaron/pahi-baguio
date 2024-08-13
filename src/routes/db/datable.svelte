@@ -23,11 +23,11 @@
   export let filterValue: Writable<string>;
   export let selectedVolType: Writable<string>;
 
-  const rowsPerPage = 12;
-  const currentPage = writable(0);
+  // Comment out pagination logic
+  // const rowsPerPage = 12;
+  // const currentPage = writable(0);
   const filteredData = writable<Volunteer[]>(data);
   const sortedData = writable<Volunteer[]>([]);
-  const paginatedData = writable<Volunteer[]>([]);
 
   // Reactive statement to update filteredData when selectedVolType or filterValue changes
   $: {
@@ -53,18 +53,8 @@
     sortedData.set(sorted);
   }
 
-  // Reactive statement to update paginatedData when sortedData or currentPage changes
-  $: {
-    $sortedData;
-    $currentPage;
-    const start = $currentPage * rowsPerPage;
-    const end = start + rowsPerPage;
-    paginatedData.set(
-      $sortedData.slice(start, end)
-    );
-  }
-
-  const table = createTable(paginatedData, {
+  // Create table with full data
+  const table = createTable(sortedData, {
     sort: addSortBy(),  // Default sort configuration without custom `fn`
     filter: addTableFilter(),
     hide: addHiddenColumns()
@@ -106,17 +96,6 @@
     tableFilterValue.set(value);
   });
 
-  function nextPage() {
-    currentPage.update(n => {
-      const totalPages = Math.ceil($sortedData.length / rowsPerPage);
-      return n < totalPages - 1 ? n + 1 : n;
-    });
-  }
-
-  function prevPage() {
-    currentPage.update(n => Math.max(n - 1, 0));
-  }
-
   const { hiddenColumnIds } = pluginStates.hide;
   const ids = flatColumns.map((col) => col.id);
 
@@ -140,26 +119,7 @@
   }
 </script>
 
-<!-- Pagination controls -->
- 
-<div class="flex items-center justify-end space-x-4 py-4">
-  <Button
-    variant="outline"
-    size="sm"
-    on:click={prevPage}
-    disabled={$currentPage === 0}
-  >
-    Previous
-  </Button>
-  <Button
-    variant="outline"
-    size="sm"
-    on:click={nextPage}
-    disabled={($currentPage + 1) * rowsPerPage >= $sortedData.length}
-  >
-    Next
-  </Button>
-</div>
+<!-- Remove pagination controls -->
 
 <!-- Columns -->
 

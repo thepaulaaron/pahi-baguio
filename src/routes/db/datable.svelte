@@ -23,39 +23,53 @@
   export let filterValue: Writable<string>;
   export let selectedVolType: Writable<string>;
 
-  // Comment out pagination logic
-  // const rowsPerPage = 12;
-  // const currentPage = writable(0);
-  const filteredData = writable<Volunteer[]>(data);
-  const sortedData = writable<Volunteer[]>([]);
+  // Pagination state
+  const rowsPerPage = 12;
+  const currentPage = writable(0);
+  const totalPages = writable(0);
 
-  // Reactive statement to update filteredData when selectedVolType or filterValue changes
+  const filteredData = writable<Volunteer[]>([]);
+  const paginatedData = writable<Volunteer[]>([]);
+
+  // Update filteredData when selectedVolType or filterValue changes
   $: {
     selectedVolType.subscribe(volType => {
       const currentFilterValue = $filterValue.toLowerCase();
-      filteredData.set(
-        data.filter(item => {
-          const matchesSearch = item.Name.toLowerCase().includes(currentFilterValue);
-          const matchesVolType = volType === 'All' || item.VolType === volType;
-          return matchesSearch && matchesVolType;
-        })
-      );
+      const newFilteredData = data.filter(item => {
+        const matchesSearch = item.Name.toLowerCase().includes(currentFilterValue);
+        const matchesVolType = volType === 'All' || item.VolType === volType;
+        return matchesSearch && matchesVolType;
+      });
+
+      filteredData.set(newFilteredData);
+
+      // Reset page and total pages on new filter
+      currentPage.set(0);
+      totalPages.set(Math.ceil(newFilteredData.length / rowsPerPage));
     });
   }
 
-  // Reactive statement to sort filteredData and update sortedData
+  // Update paginatedData when filteredData or currentPage changes
   $: {
     $filteredData;
-    const sorted = [...$filteredData].sort((a, b) => {
-      // Default sorting logic (sort by Name)
-      return a.Name.localeCompare(b.Name);
-    });
-    sortedData.set(sorted);
+    const numFilteredItems = $filteredData.length;
+    $totalPages = Math.ceil(numFilteredItems / rowsPerPage);
+
+    // Adjust currentPage if it is out of range
+    $currentPage = Math.min($currentPage, $totalPages - 1);
+
+    if (numFilteredItems === 0) {
+      paginatedData.set([]);
+    } else {
+      const startIndex = $currentPage * rowsPerPage;
+      const endIndex = Math.min(startIndex + rowsPerPage, numFilteredItems);
+      paginatedData.set($filteredData.slice(startIndex, endIndex));
+    }
   }
 
-  // Create table with full data
-  const table = createTable(sortedData, {
-    sort: addSortBy(),  // Default sort configuration without custom `fn`
+  // Create table with paginated data
+  const table = createTable(paginatedData, {
+    sort: addSortBy(),
     filter: addTableFilter(),
     hide: addHiddenColumns()
   });
@@ -117,9 +131,13 @@
   function handleTypeSelect(type: string) {
     selectedVolType.set(type);
   }
-</script>
 
-<!-- Remove pagination controls -->
+  function changePage(newPage: number) {
+    if (newPage >= 0 && newPage < $totalPages) {
+      currentPage.set(newPage);
+    }
+  }
+</script>
 
 <!-- Columns -->
 
@@ -210,4 +228,11 @@
       {/each}
     </Table.Body>
   </Table.Root>
+</div>
+
+<!-- Pagination Controls -->
+<div class="pagination-controls">
+  <Button on:click={() => changePage($currentPage - 1)} disabled={$currentPage === 0}>Previous</Button>
+  <span>Page {$currentPage + 1} of {$totalPages}</span>
+  <Button on:click={() => changePage($currentPage + 1)} disabled={$currentPage === $totalPages - 1}>Next</Button>
 </div>

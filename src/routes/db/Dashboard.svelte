@@ -41,6 +41,24 @@
   function handleFilterInput(event: { detail: any; }) {
     filterValue.set(event.detail);
   }
+
+  // Save
+  function saveChanges(index: number) {
+  const updatedVolunteer = data[index];
+  
+  console.log('Updated Volunteer:', updatedVolunteer);
+
+  fetch(`/api/volunteers/${updatedVolunteer._id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updatedVolunteer),
+})
+.then(response => response.json())
+.then(data => console.log('Data saved:', data))
+.catch(error => console.error('Error saving data:', error));
+
+}
+
 </script>
 
 <div class="hidden flex-col md:flex">
@@ -76,6 +94,21 @@
       </Tabs.Content>
 
       <Tabs.Content value="database" class="space-y-4">
+        <div>
+
+          {#each data as volunteer, index}
+  <div class="volunteer">
+    <input bind:value={volunteer.Name} placeholder="Name" />
+    <input bind:value={volunteer.VolType} placeholder="Volunteer Type" />
+    <button on:click={() => saveChanges(index)}>Save</button>
+  </div>
+{/each}
+
+        </div>
+
+        
+
+
         <Datable {data} {filterValue} {selectedVolType}/>
       </Tabs.Content>
     </Tabs.Root>

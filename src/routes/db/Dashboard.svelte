@@ -16,6 +16,7 @@
 
   let data: Volunteer[] = [];
   const unsubscribe = array.subscribe(value => {
+    // data = value.sort(); // sort already
     data = value;
   });
 

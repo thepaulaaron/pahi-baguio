@@ -33,6 +33,11 @@
   const filteredData = writable<Volunteer[]>([]);
   const paginatedData = writable<Volunteer[]>([]);
 
+ // [ ] TODO: Better sort
+ // Builtin sort is not very good, i.e., toggle between 3 modes
+ // asc, original, descending. That's why you can't init the data
+ // asc, because by then orig = asc. Then, it seems like glitch.
+
   // Update filteredData when selectedVolType or filterValue changes
   $: {
     selectedVolType.subscribe(volType => {

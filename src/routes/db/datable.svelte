@@ -24,7 +24,7 @@
   export let selectedVolType: Writable<string>;
 
   // Pagination state
-  const rowsPerPage = 12;
+  const rowsPerPage = 14;
   const currentPage = writable(0);
   const totalPages = writable(0);
   const canGoPrev = writable(true);
@@ -145,43 +145,80 @@
   }
 </script>
 
-<!-- Columns -->
+<div class="flex justify-between items-center -mt-5 -mb-5">
 
-<DropdownMenu.Root>
-  <DropdownMenu.Trigger asChild let:builder>
-    <Button variant="outline" class="ml-auto" builders={[builder]}>
-      Columns&nbsp;
-      <i class="fa-solid fa-chevron-down text-l]"></i>
-    </Button>
-  </DropdownMenu.Trigger>
-  <DropdownMenu.Content>
-    {#each flatColumns as col}
-      {#if hidableCols.includes(col.id)}
-        <DropdownMenu.CheckboxItem bind:checked={hideForId[col.id]}>
-          {col.header}
-        </DropdownMenu.CheckboxItem>
-      {/if}
-    {/each}
-  </DropdownMenu.Content>
-</DropdownMenu.Root>
+  <div id="left">
+    <!-- Columns -->
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild let:builder>
+        <Button 
+          variant="outline"
+          class="ml-auto py-4"
+          size="sm" builders={[builder]}>
+          Columns&nbsp;
+          <i class="fa-solid fa-chevron-down text-l]"></i>
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        {#each flatColumns as col}
+          {#if hidableCols.includes(col.id)}
+            <DropdownMenu.CheckboxItem bind:checked={hideForId[col.id]}>
+              {col.header}
+            </DropdownMenu.CheckboxItem>
+          {/if}
+        {/each}
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
 
-<!-- VolType Filter Dropdown -->
-<DropdownMenu.Root>
-  <DropdownMenu.Trigger asChild let:builder>
-    <Button variant="outline" class="ml-auto min-w-[7.5rem] justify-between items-center" builders={[builder]}>
-      <div>{selectedTypeDisplay}&nbsp;</div>
-      <i class="fa-solid fa-chevron-down"></i>
+    <!-- VolType Filter Dropdown -->
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild let:builder>
+        <Button
+        variant="outline"
+        class="ml-auto py-4 min-w-[6.2rem] justify-between items-center"
+        size="sm" builders={[builder]}>
+          <div>{selectedTypeDisplay}&nbsp;</div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        <DropdownMenu.Item on:click={() => handleTypeSelect('All')}>All</DropdownMenu.Item>
+        {#each volTypes as volType}
+          <DropdownMenu.Item on:click={() => handleTypeSelect(volType)}>
+            {volType}
+          </DropdownMenu.Item>
+        {/each}
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  </div>
+
+  <!-- Pagination Controls -->
+  <div class="pagination-controls flex justify-between items-center space-x-2 py-4">
+    <Button 
+      variant="outline"
+      size="sm"
+      on:click={() => changePage($currentPage - 1)} 
+      disabled={!$canGoPrev}
+    >
+      Prev
     </Button>
-  </DropdownMenu.Trigger>
-  <DropdownMenu.Content>
-    <DropdownMenu.Item on:click={() => handleTypeSelect('All')}>All</DropdownMenu.Item>
-    {#each volTypes as volType}
-      <DropdownMenu.Item on:click={() => handleTypeSelect(volType)}>
-        {volType}
-      </DropdownMenu.Item>
-    {/each}
-  </DropdownMenu.Content>
-</DropdownMenu.Root>
+    <span class="text-sm w-10 text-center">
+      {$currentPage + 1} of {$totalPages}
+    </span>
+    <Button
+      variant="outline"
+      size="sm"
+      on:click={() => changePage($currentPage + 1)} 
+      disabled={!$canGoNext}
+    >
+      Next
+    </Button>
+  </div>
+  
+  
+</div>
+
+<!-- Table -->
 
 <div class="rounded-md border">
   <Table.Root {...$tableAttrs}>
@@ -234,11 +271,4 @@
       {/each}
     </Table.Body>
   </Table.Root>
-</div>
-
-<!-- Pagination Controls -->
-<div class="pagination-controls">
-  <Button on:click={() => changePage($currentPage - 1)} disabled={!$canGoPrev}>Previous</Button>
-  <span>Page {$currentPage + 1} of {$totalPages}</span>
-  <Button on:click={() => changePage($currentPage + 1)} disabled={!$canGoNext}>Next</Button>
 </div>

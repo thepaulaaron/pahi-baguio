@@ -2,30 +2,67 @@
   import Ellipsis from "lucide-svelte/icons/ellipsis";
   import * as DropdownMenu from "$comp/ui/dropdown-menu";
   import { Button } from "$comp/ui/button";
-	import { createEventDispatcher } from "svelte";
-	import Label from "$lib/components/ui/label/label.svelte";
-	import DropdownMenuLabel from "$lib/components/ui/dropdown-menu/dropdown-menu-label.svelte";
+  import { onMount } from "svelte";
+  import Label from "$lib/components/ui/label/label.svelte";
+  import DropdownMenuLabel from "$lib/components/ui/dropdown-menu/dropdown-menu-label.svelte";
+  import * as Dialog from "$comp/ui/dialog";
+  import { writable } from 'svelte/store';
  
   export let id: string;
-  // export let onAction: (id: string) => void;
 
-  // function handleAction(action: string) {
-  //   if (action === 'copy') {
-  //     navigator.clipboard.writeText(id);
-  //   } else {
-  //     onAction(id);
-  //   }
-  // }
+  // State to control dialog open/close
+  const isOpen = writable(false);
+  let dialogWrapper: HTMLDivElement; // Use HTMLDivElement for the wrapper
 
-  // function handleCopyId() {
-  //   navigator.clipboard.writeText(id);
-  //   // Emit an event to the parent component
-  //   dispatch('action', { id });
-  // }
+  // Function to open the dialog
+  function openDialog() {
+    isOpen.set(true);
+  }
 
-  // const dispatch = createEventDispatcher();
+  // Function to close the dialog
+  function closeDialog() {
+    isOpen.set(false);
+  }
+
+  function handleClickOutside(event: MouseEvent) {
+    if (dialogWrapper && !dialogWrapper.contains(event.target as Node)) {
+      closeDialog();
+    }
+  }
+
+  function handleCopyId() {
+    navigator.clipboard.writeText(id);
+    console.log(id);
+    openDialog();
+  }
+
+  onMount(() => {
+    // Add event listener to handle clicks outside the dialog
+    window.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      // Clean up the event listener on component destruction
+      window.removeEventListener('mousedown', handleClickOutside);
+    };
+  });
 </script>
- 
+
+<Dialog.Root open={$isOpen} onOpenChange={(open) => { if (!open) closeDialog(); }}>
+  <div bind:this={dialogWrapper} class="dialog-wrapper">
+    <Dialog.Content class="sm:max-w-[425px]">
+      <Dialog.Header>
+        <Dialog.Title>Edit profile</Dialog.Title>
+        <Dialog.Description>
+          Make changes to your profile here. Click save when you're done.
+          <div class="mt-4">
+            <strong>Payment ID:</strong> {id}
+          </div>
+        </Dialog.Description>
+      </Dialog.Header>
+    </Dialog.Content>
+  </div>
+</Dialog.Root>
+
 <DropdownMenu.Root>
   <DropdownMenu.Trigger asChild let:builder>
     <Button
@@ -34,14 +71,13 @@
       size="icon"
       class="relative h-5 w-8 items-center"
     >
-      <!-- <span class="sr-only">Open menu</span> -->
       <Ellipsis class="h-4 w-7 items-center" />
     </Button>
   </DropdownMenu.Trigger>
   <DropdownMenu.Content>
     <DropdownMenu.Group>
       <DropdownMenu.Label>Actions</DropdownMenu.Label>
-      <DropdownMenu.Item on:click={() => navigator.clipboard.writeText(id)}>
+      <DropdownMenu.Item on:click={handleCopyId}>
         Copy payment ID
       </DropdownMenu.Item>
       <!-- <DropdownMenu.Item on:click={() => handleAction('')}>

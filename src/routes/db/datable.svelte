@@ -2,7 +2,8 @@
   import {
     Render,
     Subscribe,
-    createTable
+    createTable,
+    createRender,
   } from "svelte-headless-table";
   import {
     addHiddenColumns,
@@ -15,57 +16,75 @@
   import * as Table from "$lib/components/ui/table";
   import { Button } from "$comp/ui/button";
   import * as DropdownMenu from "$comp/ui/dropdown-menu";
+  import * as Dialog from "$comp/ui/dialog";
+  import DatableActions from "./datable-actions.svelte";
 
   // Types
   import type { Volunteer } from './sort'; // Import the type directly from sort.ts
+	import { Alert } from "$lib/components/ui/alert";
 
   export let data: Volunteer[];
   export let filterValue: Writable<string>;
   export let selectedVolType: Writable<string>;
 
-  const rowsPerPage = 12;
+  // Pagination state
+  const rowsPerPage = 13;
   const currentPage = writable(0);
-  const filteredData = writable<Volunteer[]>(data);
-  const sortedData = writable<Volunteer[]>([]);
+  const totalPages = writable(0);
+  const canGoPrev = writable(true);
+  const canGoNext = writable(true);
+
+  const filteredData = writable<Volunteer[]>([]);
   const paginatedData = writable<Volunteer[]>([]);
 
-  // Reactive statement to update filteredData when selectedVolType or filterValue changes
+ // [ ] TODO: Better sort
+ // Builtin sort is not very good, i.e., toggle between 3 modes
+ // asc, original, descending. That's why you can't init the data
+ // asc, because by then orig = asc. Then, it seems like glitch.
+
+  // Update filteredData when selectedVolType or filterValue changes
   $: {
     selectedVolType.subscribe(volType => {
       const currentFilterValue = $filterValue.toLowerCase();
-      filteredData.set(
-        data.filter(item => {
-          const matchesSearch = item.Name.toLowerCase().includes(currentFilterValue);
-          const matchesVolType = volType === 'All' || item.VolType === volType;
-          return matchesSearch && matchesVolType;
-        })
-      );
+      const newFilteredData = data.filter(item => {
+        const matchesSearch = item.Name.toLowerCase().includes(currentFilterValue);
+        const matchesVolType = volType === 'All' || item.VolType === volType;
+        return matchesSearch && matchesVolType;
+      });
+
+      filteredData.set(newFilteredData);
+
+      // Reset page and total pages on new filter
+      currentPage.set(0);
+      totalPages.set(Math.ceil(newFilteredData.length / rowsPerPage));
     });
   }
 
-  // Reactive statement to sort filteredData and update sortedData
+  // Update paginatedData when filteredData or currentPage changes
   $: {
     $filteredData;
-    const sorted = [...$filteredData].sort((a, b) => {
-      // Default sorting logic (sort by Name)
-      return a.Name.localeCompare(b.Name);
-    });
-    sortedData.set(sorted);
+    const numFilteredItems = $filteredData.length;
+    $totalPages = Math.ceil(numFilteredItems / rowsPerPage);
+
+    // Adjust currentPage if it is out of range
+    $currentPage = Math.min($currentPage, $totalPages - 1);
+
+    if (numFilteredItems === 0) {
+      paginatedData.set([]);
+    } else {
+      const startIndex = $currentPage * rowsPerPage;
+      const endIndex = Math.min(startIndex + rowsPerPage, numFilteredItems);
+      paginatedData.set($filteredData.slice(startIndex, endIndex));
+    }
+
+    // Determine if the previous and next buttons should be enabled
+    canGoPrev.set($currentPage > 0 && numFilteredItems > 0);
+    canGoNext.set($currentPage < $totalPages - 1 && numFilteredItems > 0);
   }
 
-  // Reactive statement to update paginatedData when sortedData or currentPage changes
-  $: {
-    $sortedData;
-    $currentPage;
-    const start = $currentPage * rowsPerPage;
-    const end = start + rowsPerPage;
-    paginatedData.set(
-      $sortedData.slice(start, end)
-    );
-  }
-
+  // Create table with paginated data
   const table = createTable(paginatedData, {
-    sort: addSortBy(),  // Default sort configuration without custom `fn`
+    sort: addSortBy(),
     filter: addTableFilter(),
     hide: addHiddenColumns()
   });
@@ -75,23 +94,26 @@
     header: string;
     sort: boolean;
     filter: boolean;
+    customRender?: (value: any) => any; // Optional custom render function
   };
 
   const columnsConfig: ColumnConfig[] = [
     { accessor: "Name", header: "Name", sort: true, filter: true },
     { accessor: "Birthday", header: "Birthday", sort: true, filter: true },
     { accessor: "VolType", header: "Volunteer Type", sort: false, filter: true },
-    { accessor: "_id", header: "id", sort: false, filter: false }
+    // { accessor: "_id", header: "id", sort: false, filter: false },
+    { accessor: "_id", header: "", sort: false, filter: false, customRender: (value) => createRender(DatableActions, { id: value }) },
   ];
 
   const columns = table.createColumns(
-    columnsConfig.map(({ accessor, header, sort, filter }) =>
+    columnsConfig.map(({ accessor, header, sort, filter, customRender }) =>
       table.column({
         accessor,
         header,
+        cell: customRender ? ({ value }) => customRender(value) : undefined,
         plugins: {
           sort: { disable: !sort },
-          filter: { exclude: !filter }
+          filter: { exclude: !filter },
         }
       })
     )
@@ -106,27 +128,18 @@
     tableFilterValue.set(value);
   });
 
-  function nextPage() {
-    currentPage.update(n => {
-      const totalPages = Math.ceil($sortedData.length / rowsPerPage);
-      return n < totalPages - 1 ? n + 1 : n;
-    });
-  }
-
-  function prevPage() {
-    currentPage.update(n => Math.max(n - 1, 0));
-  }
-
   const { hiddenColumnIds } = pluginStates.hide;
   const ids = flatColumns.map((col) => col.id);
 
-  let hideForId = Object.fromEntries(ids.map((id) => [id, !['_id', 'cum_twrr_cons'].includes(id)]));
+  const hidableCols = ["Birthday", "VolType"];
+  const volTypes = ['Student', 'Faculty', 'Staff', 'Alumnus', 'Friend'];
+
+  const initiallyVisibleColumns = ['Name', 'Birthday', 'VolType', "_id"];
+  let hideForId = Object.fromEntries(ids.map((id) => [id, initiallyVisibleColumns.includes(id)]));
+
   $: $hiddenColumnIds = Object.entries(hideForId)
     .filter(([, hide]) => !hide)
     .map(([id]) => id);
-
-  const hidableCols = ["Birthday", "VolType", "_id"];
-  const volTypes = ['Student', 'Faculty', 'Staff', 'Alumnus', 'Friend'];
 
   let selectedTypeDisplay = 'All';
   $: {
@@ -138,66 +151,89 @@
   function handleTypeSelect(type: string) {
     selectedVolType.set(type);
   }
+
+  function changePage(newPage: number) {
+    if (newPage >= 0 && newPage < $totalPages) {
+      currentPage.set(newPage);
+    }
+  }
+
 </script>
 
-<!-- Pagination controls -->
- 
-<div class="flex items-center justify-end space-x-4 py-4">
-  <Button
-    variant="outline"
-    size="sm"
-    on:click={prevPage}
-    disabled={$currentPage === 0}
-  >
-    Previous
-  </Button>
-  <Button
-    variant="outline"
-    size="sm"
-    on:click={nextPage}
-    disabled={($currentPage + 1) * rowsPerPage >= $sortedData.length}
-  >
-    Next
-  </Button>
+<div class="flex justify-between items-center -mt-5 -mb-5">
+
+  <div id="left">
+    <!-- Columns -->
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild let:builder>
+        <Button 
+          variant="outline"
+          class="ml-auto py-4"
+          size="sm" builders={[builder]}>
+          Columns&nbsp;
+          <i class="fa-solid fa-chevron-down text-l]"></i>
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        {#each flatColumns as col}
+          {#if hidableCols.includes(col.id)}
+            <DropdownMenu.CheckboxItem bind:checked={hideForId[col.id]}>
+              {col.header}
+            </DropdownMenu.CheckboxItem>
+          {/if}
+        {/each}
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+
+    <!-- VolType Filter Dropdown -->
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild let:builder>
+        <Button
+        variant="outline"
+        class="ml-auto py-4 min-w-[6.2rem] justify-between items-center"
+        size="sm" builders={[builder]}>
+          <div>{selectedTypeDisplay}&nbsp;</div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        <DropdownMenu.Item on:click={() => handleTypeSelect('All')}>All</DropdownMenu.Item>
+        {#each volTypes as volType}
+          <DropdownMenu.Item on:click={() => handleTypeSelect(volType)}>
+            {volType}
+          </DropdownMenu.Item>
+        {/each}
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  </div>
+
+  <!-- Pagination Controls -->
+  <div class="pagination-controls flex justify-between items-center space-x-2 py-4">
+    <Button 
+      variant="outline"
+      size="sm"
+      on:click={() => changePage($currentPage - 1)} 
+      disabled={!$canGoPrev}
+    >
+      Prev
+    </Button>
+    <span class="text-sm w-10 text-center">
+      {$currentPage + 1} of {$totalPages}
+    </span>
+    <Button
+      variant="outline"
+      size="sm"
+      on:click={() => changePage($currentPage + 1)} 
+      disabled={!$canGoNext}
+    >
+      Next
+    </Button>
+  </div>
+  
+  
 </div>
 
-<!-- Columns -->
-
-<DropdownMenu.Root>
-  <DropdownMenu.Trigger asChild let:builder>
-    <Button variant="outline" class="ml-auto" builders={[builder]}>
-      Columns&nbsp;
-      <i class="fa-solid fa-chevron-down text-l]"></i>
-    </Button>
-  </DropdownMenu.Trigger>
-  <DropdownMenu.Content>
-    {#each flatColumns as col}
-      {#if hidableCols.includes(col.id)}
-        <DropdownMenu.CheckboxItem bind:checked={hideForId[col.id]}>
-          {col.header}
-        </DropdownMenu.CheckboxItem>
-      {/if}
-    {/each}
-  </DropdownMenu.Content>
-</DropdownMenu.Root>
-
-<!-- VolType Filter Dropdown -->
-<DropdownMenu.Root>
-  <DropdownMenu.Trigger asChild let:builder>
-    <Button variant="outline" class="ml-auto min-w-[7.5rem] justify-between items-center" builders={[builder]}>
-      <div>{selectedTypeDisplay}&nbsp;</div>
-      <i class="fa-solid fa-chevron-down"></i>
-    </Button>
-  </DropdownMenu.Trigger>
-  <DropdownMenu.Content>
-    <DropdownMenu.Item on:click={() => handleTypeSelect('All')}>All</DropdownMenu.Item>
-    {#each volTypes as volType}
-      <DropdownMenu.Item on:click={() => handleTypeSelect(volType)}>
-        {volType}
-      </DropdownMenu.Item>
-    {/each}
-  </DropdownMenu.Content>
-</DropdownMenu.Root>
+<!-- Table -->
 
 <div class="rounded-md border">
   <Table.Root {...$tableAttrs}>

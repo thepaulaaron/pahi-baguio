@@ -14,20 +14,12 @@
   const isOpen = writable(false);
   let dialogWrapper: HTMLDivElement; // Use HTMLDivElement for the wrapper
 
-  // Function to open the dialog
   function openDialog() {
     isOpen.set(true);
   }
-
-  // Function to close the dialog
+  
   function closeDialog() {
     isOpen.set(false);
-  }
-
-  function handleClickOutside(event: MouseEvent) {
-    if (dialogWrapper && !dialogWrapper.contains(event.target as Node)) {
-      closeDialog();
-    }
   }
 
   function handleCopyId() {
@@ -35,16 +27,6 @@
     console.log(id);
     openDialog();
   }
-
-  onMount(() => {
-    // Add event listener to handle clicks outside the dialog
-    window.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      // Clean up the event listener on component destruction
-      window.removeEventListener('mousedown', handleClickOutside);
-    };
-  });
 </script>
 
 <Dialog.Root open={$isOpen} onOpenChange={(open) => { if (!open) closeDialog(); }}>

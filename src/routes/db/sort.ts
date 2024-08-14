@@ -2,9 +2,9 @@
 import { derived, writable } from 'svelte/store';
 
 export interface Volunteer {
-  _id: number;
+  _id: string;
   Name: string;
-  FName: string;
+  Fname: string;
   Midname: string;
   Surname: string;
   Suffixname: string;

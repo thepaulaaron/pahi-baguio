@@ -1,8 +1,8 @@
 import { MongoClient, Collection } from 'mongodb';
-import { MONGO_URL } from '$env/static/private';
+// import { MONGO_URL } from '$env/static/private';
 
 // Create a single MongoDB client
-const client = new MongoClient(MONGO_URL);
+const client = new MongoClient('mongodb://localhost:27017');
 const dbName = 'pahi';
 const collName = 'volunteers';
 const collection = client.db(dbName).collection(collName);

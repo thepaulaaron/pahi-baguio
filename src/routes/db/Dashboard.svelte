@@ -44,20 +44,26 @@
 
   // Save
   function saveChanges(index: number) {
-  const updatedVolunteer = data[index];
-  
-  console.log('Updated Volunteer:', updatedVolunteer);
+  const updatedVolunteer = { ...data[index] };
+  const { _id, ...updateData } = updatedVolunteer;
 
-  fetch(`/api/volunteers/${updatedVolunteer._id}`, {
+  console.log('Saving volunteer with ID:', _id); // Debug log
+
+  fetch(`/api/volunteers/${_id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(updatedVolunteer),
-})
-.then(response => response.json())
-.then(data => console.log('Data saved:', data))
-.catch(error => console.error('Error saving data:', error));
-
+    body: JSON.stringify(updateData),
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => console.log('Data saved:', data))
+    .catch(error => console.error('Error saving data:', error));
 }
+
 
 </script>
 
@@ -98,7 +104,7 @@
 
           {#each data as volunteer, index}
   <div class="volunteer">
-    <input bind:value={volunteer.Name} placeholder="Name" />
+    <input bind:value={volunteer.Fname} placeholder="Name" />
     <input bind:value={volunteer.VolType} placeholder="Volunteer Type" />
     <button on:click={() => saveChanges(index)}>Save</button>
   </div>

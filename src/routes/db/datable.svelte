@@ -2,7 +2,8 @@
   import {
     Render,
     Subscribe,
-    createTable
+    createTable,
+    createRender,
   } from "svelte-headless-table";
   import {
     addHiddenColumns,
@@ -15,16 +16,19 @@
   import * as Table from "$lib/components/ui/table";
   import { Button } from "$comp/ui/button";
   import * as DropdownMenu from "$comp/ui/dropdown-menu";
+  import * as Dialog from "$comp/ui/dialog";
+  import DatableActions from "./datable-actions.svelte";
 
   // Types
   import type { Volunteer } from './sort'; // Import the type directly from sort.ts
+	import { Alert } from "$lib/components/ui/alert";
 
   export let data: Volunteer[];
   export let filterValue: Writable<string>;
   export let selectedVolType: Writable<string>;
 
   // Pagination state
-  const rowsPerPage = 14;
+  const rowsPerPage = 13;
   const currentPage = writable(0);
   const totalPages = writable(0);
   const canGoPrev = writable(true);
@@ -90,23 +94,26 @@
     header: string;
     sort: boolean;
     filter: boolean;
+    customRender?: (value: any) => any; // Optional custom render function
   };
 
   const columnsConfig: ColumnConfig[] = [
     { accessor: "Name", header: "Name", sort: true, filter: true },
     { accessor: "Birthday", header: "Birthday", sort: true, filter: true },
     { accessor: "VolType", header: "Volunteer Type", sort: false, filter: true },
-    { accessor: "_id", header: "id", sort: false, filter: false }
+    // { accessor: "_id", header: "id", sort: false, filter: false },
+    { accessor: "_id", header: "", sort: false, filter: false, customRender: (value) => createRender(DatableActions, { id: value }) },
   ];
 
   const columns = table.createColumns(
-    columnsConfig.map(({ accessor, header, sort, filter }) =>
+    columnsConfig.map(({ accessor, header, sort, filter, customRender }) =>
       table.column({
         accessor,
         header,
+        cell: customRender ? ({ value }) => customRender(value) : undefined,
         plugins: {
           sort: { disable: !sort },
-          filter: { exclude: !filter }
+          filter: { exclude: !filter },
         }
       })
     )
@@ -124,13 +131,15 @@
   const { hiddenColumnIds } = pluginStates.hide;
   const ids = flatColumns.map((col) => col.id);
 
-  let hideForId = Object.fromEntries(ids.map((id) => [id, !['_id', 'cum_twrr_cons'].includes(id)]));
+  const hidableCols = ["Birthday", "VolType"];
+  const volTypes = ['Student', 'Faculty', 'Staff', 'Alumnus', 'Friend'];
+
+  const initiallyVisibleColumns = ['Name', 'Birthday', 'VolType', "_id"];
+  let hideForId = Object.fromEntries(ids.map((id) => [id, initiallyVisibleColumns.includes(id)]));
+
   $: $hiddenColumnIds = Object.entries(hideForId)
     .filter(([, hide]) => !hide)
     .map(([id]) => id);
-
-  const hidableCols = ["Birthday", "VolType", "_id"];
-  const volTypes = ['Student', 'Faculty', 'Staff', 'Alumnus', 'Friend'];
 
   let selectedTypeDisplay = 'All';
   $: {
@@ -148,6 +157,7 @@
       currentPage.set(newPage);
     }
   }
+
 </script>
 
 <div class="flex justify-between items-center -mt-5 -mb-5">

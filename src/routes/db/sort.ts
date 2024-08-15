@@ -34,3 +34,7 @@ export interface Volunteer {
 // Initialize the data array with a type
 const initialVolunteers: Volunteer[] = []; // Initialize with empty array or your default data
 export const array = writable<Volunteer[]>(initialVolunteers);
+
+export function updateData(newData: Volunteer[]) {
+  array.set(newData);
+}

@@ -3,6 +3,8 @@
   import ConfirmDialog from "$comp/confirm-dialog.svelte";
   import type { Volunteer } from "./sort";
   import { selectedVolunteerId } from '$lib/context'; // Ensure this path is correct
+
+  let editedData: Volunteer[] = [];
   import { activeTab } from "$str";
 
   export let data: Volunteer[];
@@ -10,7 +12,6 @@
   let volunteerId: string | undefined;
   $: $selectedVolunteerId, volunteerId = $selectedVolunteerId;
 
-  // Use volunteerId as needed
   let selectedVolunteer: Volunteer | undefined;
   $: selectedVolunteer = data.find(volunteer => volunteer._id === volunteerId);
 
@@ -22,7 +23,14 @@
     showDialog.set(true);
   }
 
+  function updateLocalData(updatedVolunteer: Volunteer) {
+    data = data.map(volunteer =>
+      volunteer._id === updatedVolunteer._id ? updatedVolunteer : volunteer
+    );
+  }
+
   function saveChanges(index: number) {
+    // Prepare the data to be passed to the function stored in the store
     const updatedVolunteer = { ...data[index] };
     const { _id, ...updateData } = updatedVolunteer;
 
@@ -39,7 +47,17 @@
         }
         return response.json();
       })
-      .then(data => console.log('Data saved:', data))
+      .then(updatedData => {
+        console.log('Data saved:', updatedData);
+
+        // Update the local data array with the updated volunteer
+        updateLocalData({ ...updatedVolunteer, ...updatedData });
+
+        // Also update the selectedVolunteer directly
+        if (selectedVolunteer) {
+          Object.assign(selectedVolunteer, updatedData);
+        }
+      })
       .catch(error => console.error('Error saving data:', error));
   }
 
@@ -90,27 +108,14 @@
   <p>No volunteer selected</p>
 {/if}
 
-<div>
-  {#if $showDialog}
-    <ConfirmDialog
-      content="Are you sure you want to proceed?"
-      buttonText="Yes"
-      open={$showDialog}
-      onConfirm={handleConfirm}
-      onCancel={handleCancel}
-      confirmParam={currentIndex}
-      on:close={handleDialogClose}
-    />
-  {/if}
-
-  <!-- Uncomment and use if you need to list all volunteers with a save button -->
-  <!--
-  {#each data as volunteer, index}
-    <div class="volunteer">
-      <input bind:value={volunteer.Fname} placeholder="Name" />
-      <input bind:value={volunteer.VolType} placeholder="Volunteer Type" />
-      <button on:click={() => openDialog(index)}>Save</button>
-    </div>
-  {/each}
-  -->
-</div>
+{#if $showDialog}
+  <ConfirmDialog
+    content="Are you sure you want to proceed?"
+    buttonText="Yes"
+    open={$showDialog}
+    onConfirm={handleConfirm}
+    onCancel={handleCancel}
+    confirmParam={currentIndex}
+    on:close={handleDialogClose}
+  />
+{/if}

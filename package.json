@@ -52,6 +52,7 @@
 		"mongodb": "^6.8.0",
 		"sqlite3": "^5.1.7",
 		"svelte-radix": "^1.1.0",
+		"svelte-sonner": "^0.3.27",
 		"tailwind-merge": "^2.4.0",
 		"tailwind-variants": "^0.2.1"
 	}

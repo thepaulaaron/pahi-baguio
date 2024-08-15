@@ -31,6 +31,7 @@
 	// import Header from "../lib/components/Header.svelte";
 	import SectionWrapper from "$comp/SectionWrapper.svelte";
 	import Hero from "$comp/Hero.svelte";
+	import { Toaster } from "$lib/components/ui/sonner";
 
 	/**
 	 * @type {typeof HeaderAdmin}
@@ -121,5 +122,6 @@
 			<svelte:component this={currentHeader} />
     </div>
 {/if} -->
+<Toaster/>
 <slot />
 <svelte:window bind:scrollY={y} bind:outerHeight />

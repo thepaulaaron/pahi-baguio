@@ -3,6 +3,7 @@
   import Ellipsis from "lucide-svelte/icons/ellipsis";
   import * as DropdownMenu from "$comp/ui/dropdown-menu";
   import { Button } from "$comp/ui/button";
+  import { toast } from "svelte-sonner";
   import { Separator } from "$lib/components/ui/separator";
   import type { Volunteer } from './sort';
   import { array } from './sort';
@@ -54,12 +55,20 @@
     return selectedVolunteer?.[property] ?? "N/A";
   }
 
+  let editWhat = "Editing " + selectedVolunteer?.Name;
+
   async function editVolunteer() {
     if (selectedVolunteer) {
-      await closeDialogAsync();
+      toast.loading("Edit Mode", {
+      description: editWhat,
+      duration: 1900,
+    });
+      // await closeDialogAsync();
       selectedVolunteerId.set(selectedVolunteer._id);
-      activeTab.set('editor');
-      
+      closeDialog();
+      setTimeout(() => {
+        activeTab.set('editor');
+      }, 800)
     }
   }
 
@@ -163,6 +172,7 @@
       </DropdownMenu.Item>
     </DropdownMenu.Group>
     <Separator />
-    <DropdownMenu.Item on:click={editVolunteer}>Edit details</DropdownMenu.Item>
+    <DropdownMenu.Item on:click={
+    editVolunteer}>Edit details</DropdownMenu.Item>
   </DropdownMenu.Content>
 </DropdownMenu.Root>

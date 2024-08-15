@@ -74,11 +74,11 @@
     />
   {/if}
 
-  {#each data as volunteer, index}
+  <!-- {#each data as volunteer, index}
     <div class="volunteer">
       <input bind:value={volunteer.Fname} placeholder="Name" />
       <input bind:value={volunteer.VolType} placeholder="Volunteer Type" />
       <button on:click={() => openDialog(index)}>Save</button>
     </div>
-  {/each}
+  {/each} -->
 </div>

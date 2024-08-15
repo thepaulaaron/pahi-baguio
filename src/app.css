@@ -412,3 +412,30 @@ html.dark {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.volunteer-dialog {
+  /* width: 80%; */
+  max-width: 1200px;
+  height: 600px;
+}
+
+.volunteer-dialog .dialog-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: bolder;
+  font-size: 2rem; /* Example: Change font size */
+  color: #3578ca;       /* Example: Change text color */
+}
+
+.volunteer-dialog .vert {
+  height: 100%;
+  width: 33%;
+  /* background-color: yellow; */
+}
+
+.volunteer-dialog .vert .box {
+  /* background-color: blue; */
+}
+
+.whiten {
+  color: var(--paul-gray-light);
+}

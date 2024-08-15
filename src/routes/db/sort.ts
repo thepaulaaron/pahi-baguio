@@ -3,6 +3,23 @@ import { derived, writable } from 'svelte/store';
 
 export interface Volunteer {
   _id: string;
+  MobileNum: any;
+  PersonalMail: any;
+  Address: any;
+  UPMail: any;
+  StudentNumber: any;
+  DegreeProgram: any;
+  College: any;
+  Department: any;
+  Designation: any;
+  EmergencyContactName: any;
+  EmergencyContactRelationship: any;
+  EmergencyContactNumber: any;
+  VolunteerStatus: any;
+  VolunteerSince: any;
+  DatabaseID: any;
+  Notes: any;
+  
   Name: string;
   Fname: string;
   Midname: string;

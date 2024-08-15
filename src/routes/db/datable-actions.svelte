@@ -18,6 +18,8 @@
 
   import { array } from './sort';
   import type { Volunteer } from './sort';
+	import { Separator } from "$lib/components/ui/separator";
+	import { SeparatorVertical } from "lucide";
 
   const unsubscribe = array.subscribe(value => {
     data = value;
@@ -52,22 +54,77 @@
 
     {#if selectedVolunteer}
 
-      <Dialog.Content class="sm:max-w-[425px]">
-        <Dialog.Header>
-          <Dialog.Title>{selectedVolunteer.Name}</Dialog.Title>
-          <Dialog.Description>
-            <div>
-              <strong>Volunteer Details:</strong>
-              <p>First Name: {selectedVolunteer.Fname}</p>
-              <p>Middle Name: {selectedVolunteer.Midname}</p>
-              <p>Surname: {selectedVolunteer.Surname}</p>
-              <p>Suffix: {selectedVolunteer.Suffixname}</p>
-              <p>Type: {selectedVolunteer.VolType}</p> 
-              <p>Birthday: {selectedVolunteer.Birthday}</p>
+    <Dialog.Content class="volunteer-dialog p-10">
+      <Dialog.Header>
+        <Dialog.Title class="dialog-title">{selectedVolunteer.Name}</Dialog.Title>
+        <Dialog.Description>
+
+          <Separator class="my-5" />
+
+          <div class="flex space-x-4 text-base">
+            
+            <!-- Personal Info -->
+            <div class="vert">
+              <strong class="text-lg whiten">Personal Info</strong>
+              <div class="space-y-2 mt-2">
+                <p>First Name: {selectedVolunteer.Fname}</p>
+                <p>Middle Name: {selectedVolunteer.Midname}</p>
+                <p>Surname: {selectedVolunteer.Surname}</p>
+                <p>Suffix: {selectedVolunteer.Suffixname}</p>
+                <p>Birthday: {selectedVolunteer.Birthday}</p>
+                <p>Mobile Num: {selectedVolunteer.MobileNum}</p>
+                <p>Personal Mail: {selectedVolunteer.PersonalMail}</p>
+                <p>Address: {selectedVolunteer.Address}</p>
+              </div>
             </div>
-          </Dialog.Description>
-        </Dialog.Header>
-      </Dialog.Content>
+
+            <!-- <Separator orientation="vertical"/> -->
+            
+            <!-- Campus Info -->
+            <div class="vert">
+              <strong class="text-lg whiten">Campus Info</strong>
+              <div class="space-y-2 mt-2">
+                <p>UP Mail: {selectedVolunteer.UPMail}</p>
+                <p>Student Number: {selectedVolunteer.StudentNumber}</p>
+                <p>Degree Program: {selectedVolunteer.DegreeProgram}</p>
+                <p>College: {selectedVolunteer.College}</p>
+                <p>Department: {selectedVolunteer.Department}</p>
+                <p>Designation: {selectedVolunteer.Designation}</p>
+              </div>
+            </div>
+            
+            <!-- <Separator orientation="vertical"/> -->
+
+            <div class="vert space-y-10">
+              <!-- Emergency Contact -->
+              <div class="box">
+                <strong class="text-lg whiten">Emergency Contact</strong>
+                <div class="space-y-2 mt-2">
+                  <p>Name: {selectedVolunteer.EmergencyContactName}</p>
+                  <p>Relationship: {selectedVolunteer.EmergencyContactRelationship}</p>
+                  <p>Contact Number: {selectedVolunteer.EmergencyContactNumber}</p>
+                </div>
+              </div>
+
+              <!-- <Separator class="my-5" /> -->
+            
+              <!-- Others -->
+              <div class="box">
+                <strong class="text-lg whiten">Others</strong>
+                <div class="space-y-2 mt-2">
+                  <p>Volunteer Status: {selectedVolunteer.VolunteerStatus}</p>
+                  <p>Volunteer Since: {selectedVolunteer.VolunteerSince}</p>
+                  <p>Database ID: {selectedVolunteer.DatabaseID}</p>
+                  <p>Notes: {selectedVolunteer.Notes}</p>
+                </div>
+              </div>
+            </div>            
+
+            
+          </div>
+        </Dialog.Description>
+      </Dialog.Header>
+    </Dialog.Content>    
 
     {:else}
       <p>No volunteer found with this ID.</p>

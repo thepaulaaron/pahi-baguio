@@ -2,12 +2,15 @@
   import Ellipsis from "lucide-svelte/icons/ellipsis";
   import * as DropdownMenu from "$comp/ui/dropdown-menu";
   import { Button } from "$comp/ui/button";
-  import { onDestroy, onMount } from "svelte";
+  import { onDestroy } from "svelte";
+  import { writable } from 'svelte/store';
   import Label from "$lib/components/ui/label/label.svelte";
   import DropdownMenuLabel from "$lib/components/ui/dropdown-menu/dropdown-menu-label.svelte";
   import * as Dialog from "$comp/ui/dialog";
-  import { writable } from 'svelte/store';
- 
+  import { Separator } from "$lib/components/ui/separator";
+  import type { Volunteer } from './sort';
+  import { array } from './sort';
+
   export let id: string;
 
   // State to control dialog open/close
@@ -15,11 +18,6 @@
   let dialogWrapper: HTMLDivElement; // Use HTMLDivElement for the wrapper
   let data: Volunteer[] = [];
   let selectedVolunteer: Volunteer | undefined;
-
-  import { array } from './sort';
-  import type { Volunteer } from './sort';
-	import { Separator } from "$lib/components/ui/separator";
-	import { SeparatorVertical } from "lucide";
 
   const unsubscribe = array.subscribe(value => {
     data = value;
@@ -39,12 +37,16 @@
   }
 
   function searchVolunteerById() {
-  selectedVolunteer = data.find(volunteer => volunteer._id === id);
-}
+    selectedVolunteer = data.find(volunteer => volunteer._id === id);
+  }
+
+  function getValue(property: keyof Volunteer) {
+    return selectedVolunteer?.[property] ?? "N/A";
+  }
 
   onDestroy(() => {
     unsubscribe();
-  })
+  });
 </script>
 
 <!-- Dialog -->
@@ -53,78 +55,68 @@
   <div bind:this={dialogWrapper} class="dialog-wrapper">
 
     {#if selectedVolunteer}
-
-    <Dialog.Content class="volunteer-dialog p-10">
-      <Dialog.Header>
-        <Dialog.Title class="dialog-title">{selectedVolunteer.Name}</Dialog.Title>
-        <Dialog.Description>
-
-          <Separator class="my-5" />
-
-          <div class="flex space-x-4 text-base">
-            
-            <!-- Personal Info -->
-            <div class="vert">
-              <strong class="text-lg whiten">Personal Info</strong>
-              <div class="space-y-2 mt-2">
-                <p>First Name: {selectedVolunteer.Fname}</p>
-                <p>Middle Name: {selectedVolunteer.Midname}</p>
-                <p>Surname: {selectedVolunteer.Surname}</p>
-                <p>Suffix: {selectedVolunteer.Suffixname}</p>
-                <p>Birthday: {selectedVolunteer.Birthday}</p>
-                <p>Mobile Num: {selectedVolunteer.MobileNum}</p>
-                <p>Personal Mail: {selectedVolunteer.PersonalMail}</p>
-                <p>Address: {selectedVolunteer.Address}</p>
-              </div>
-            </div>
-
-            <!-- <Separator orientation="vertical"/> -->
-            
-            <!-- Campus Info -->
-            <div class="vert">
-              <strong class="text-lg whiten">Campus Info</strong>
-              <div class="space-y-2 mt-2">
-                <p>UP Mail: {selectedVolunteer.UPMail}</p>
-                <p>Student Number: {selectedVolunteer.StudentNumber}</p>
-                <p>Degree Program: {selectedVolunteer.DegreeProgram}</p>
-                <p>College: {selectedVolunteer.College}</p>
-                <p>Department: {selectedVolunteer.Department}</p>
-                <p>Designation: {selectedVolunteer.Designation}</p>
-              </div>
-            </div>
-            
-            <!-- <Separator orientation="vertical"/> -->
-
-            <div class="vert space-y-10">
-              <!-- Emergency Contact -->
-              <div class="box">
-                <strong class="text-lg whiten">Emergency Contact</strong>
+      <Dialog.Content class="volunteer-dialog p-10">
+        <Dialog.Header>
+          <Dialog.Title class="dialog-title">{getValue('Name')}</Dialog.Title>
+          <Dialog.Description>
+            <Separator class="my-5" />
+            <div class="flex space-x-4 text-base">
+              
+              <!-- Personal Info -->
+              <div class="vert">
+                <strong class="text-lg whiten">Personal Info</strong>
                 <div class="space-y-2 mt-2">
-                  <p>Name: {selectedVolunteer.EmergencyContactName}</p>
-                  <p>Relationship: {selectedVolunteer.EmergencyContactRelationship}</p>
-                  <p>Contact Number: {selectedVolunteer.EmergencyContactNumber}</p>
+                  <p>First Name: {getValue('Fname')}</p>
+                  <p>Middle Name: {getValue('Midname')}</p>
+                  <p>Surname: {getValue('Surname')}</p>
+                  <p>Suffix: {getValue('Suffixname')}</p>
+                  <p>Birthday: {getValue('Birthday')}</p>
+                  <p>Mobile Num: {getValue('MobileNum')}</p>
+                  <p>Personal Mail: {getValue('PersonalMail')}</p>
+                  <p>Address: {getValue('Address')}</p>
                 </div>
               </div>
 
-              <!-- <Separator class="my-5" /> -->
-            
-              <!-- Others -->
-              <div class="box">
-                <strong class="text-lg whiten">Others</strong>
+              <!-- Campus Info -->
+              <div class="vert">
+                <strong class="text-lg whiten">Campus Info</strong>
                 <div class="space-y-2 mt-2">
-                  <p>Volunteer Status: {selectedVolunteer.VolunteerStatus}</p>
-                  <p>Volunteer Since: {selectedVolunteer.VolunteerSince}</p>
-                  <p>Database ID: {selectedVolunteer.DatabaseID}</p>
-                  <p>Notes: {selectedVolunteer.Notes}</p>
+                  <p>UP Mail: {getValue('UPMail')}</p>
+                  <p>Student Number: {getValue('StudentNumber')}</p>
+                  <p>Degree Program: {getValue('DegreeProgram')}</p>
+                  <p>College: {getValue('College')}</p>
+                  <p>Department: {getValue('Department')}</p>
+                  <p>Designation: {getValue('Designation')}</p>
                 </div>
               </div>
-            </div>            
 
-            
-          </div>
-        </Dialog.Description>
-      </Dialog.Header>
-    </Dialog.Content>    
+              <div class="vert space-y-10">
+                <!-- Emergency Contact -->
+                <div class="box">
+                  <strong class="text-lg whiten">Emergency Contact</strong>
+                  <div class="space-y-2 mt-2">
+                    <p>Name: {getValue('EmergencyContactName')}</p>
+                    <p>Relationship: {getValue('EmergencyContactRelationship')}</p>
+                    <p>Contact Number: {getValue('EmergencyContactNumber')}</p>
+                  </div>
+                </div>
+
+                <!-- Others -->
+                <div class="box">
+                  <strong class="text-lg whiten">Others</strong>
+                  <div class="space-y-2 mt-2">
+                    <p>Volunteer Status: {getValue('VolunteerStatus')}</p>
+                    <p>Volunteer Since: {getValue('VolunteerSince')}</p>
+                    <p>Database ID: {getValue('DatabaseID')}</p>
+                    <p>Notes: {getValue('Notes')}</p>
+                  </div>
+                </div>
+              </div>            
+
+            </div>
+          </Dialog.Description>
+        </Dialog.Header>
+      </Dialog.Content>    
 
     {:else}
       <p>No volunteer found with this ID.</p>

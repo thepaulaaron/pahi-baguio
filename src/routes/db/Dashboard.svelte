@@ -13,6 +13,7 @@
   import Datable from "./datable.svelte";
   import { array } from './sort';
   import type { Volunteer } from './sort';
+  import { activeTab } from '$str';
 
   let data: Volunteer[] = [];
   const unsubscribe = array.subscribe(value => {
@@ -34,7 +35,7 @@
   import SearchBar from "./search-bar.svelte";
   import { onDestroy } from "svelte";
 	import Editor from "./editor.svelte";
-  let activeTab = writable('overview');
+  // let activeTab = writable('overview');
 
   const filterValue = writable('');
   let selectedVolType = writable('All');

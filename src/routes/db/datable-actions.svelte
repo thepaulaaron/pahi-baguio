@@ -1,23 +1,23 @@
 <script lang="ts">
+  import { writable } from 'svelte/store';
   import Ellipsis from "lucide-svelte/icons/ellipsis";
   import * as DropdownMenu from "$comp/ui/dropdown-menu";
   import { Button } from "$comp/ui/button";
-  import { onDestroy } from "svelte";
-  import { writable } from 'svelte/store';
-  import Label from "$lib/components/ui/label/label.svelte";
-  import DropdownMenuLabel from "$lib/components/ui/dropdown-menu/dropdown-menu-label.svelte";
-  import * as Dialog from "$comp/ui/dialog";
   import { Separator } from "$lib/components/ui/separator";
   import type { Volunteer } from './sort';
   import { array } from './sort';
+  import * as Dialog from "$comp/ui/dialog";
+  import { selectedVolunteerId } from '$lib/context'; // Ensure this path is correct
+  import { onDestroy } from 'svelte';
+	import { activeTab } from '$str';
 
   export let id: string;
+  let selectedVolunteer: Volunteer | undefined;
 
   // State to control dialog open/close
   const isOpen = writable(false);
-  let dialogWrapper: HTMLDivElement; // Use HTMLDivElement for the wrapper
+  let dialogWrapper: HTMLDivElement;
   let data: Volunteer[] = [];
-  let selectedVolunteer: Volunteer | undefined;
 
   const unsubscribe = array.subscribe(value => {
     data = value;
@@ -27,9 +27,19 @@
   function openDialog() {
     isOpen.set(true);
   }
-  
+
   function closeDialog() {
     isOpen.set(false);
+  }
+
+  function closeDialogAsync(): Promise<void> {
+    return new Promise((resolve) => {
+      // Simulate closing dialog with some delay (for demonstration)
+      setTimeout(() => {
+        closeDialog(); // Call the synchronous closeDialog
+        resolve();    // Resolve the promise
+      }, 300); // Adjust the delay as needed
+    });
   }
 
   function handleViewVolunteer() {
@@ -42,6 +52,15 @@
 
   function getValue(property: keyof Volunteer) {
     return selectedVolunteer?.[property] ?? "N/A";
+  }
+
+  async function editVolunteer() {
+    if (selectedVolunteer) {
+      await closeDialogAsync();
+      selectedVolunteerId.set(selectedVolunteer._id);
+      activeTab.set('editor');
+      
+    }
   }
 
   onDestroy(() => {
@@ -143,7 +162,7 @@
         View Volunteer
       </DropdownMenu.Item>
     </DropdownMenu.Group>
-    <DropdownMenu.Separator />
-    <DropdownMenu.Item>View payment details</DropdownMenu.Item>
+    <Separator />
+    <DropdownMenu.Item on:click={editVolunteer}>Edit details</DropdownMenu.Item>
   </DropdownMenu.Content>
 </DropdownMenu.Root>

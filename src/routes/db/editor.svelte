@@ -2,8 +2,15 @@
   import { writable } from "svelte/store";
   import ConfirmDialog from "$comp/confirm-dialog.svelte";
   import type { Volunteer } from "./sort";
+  import { selectedVolunteerId } from '$lib/context'; // Ensure this path is correct
+	import { activeTab } from "$str";
 
   export let data: Volunteer[];
+  
+  let volunteerId: string | undefined;
+  $: $selectedVolunteerId, volunteerId = $selectedVolunteerId;
+
+  // Use volunteerId as needed
 
   const showDialog = writable(false);
   let currentIndex: number | null = null;
@@ -51,6 +58,8 @@
     showDialog.set(false);
   }
 </script>
+
+<p>Selected Volunteer ID: {volunteerId}</p>
 
 <div>
   {#if $showDialog}

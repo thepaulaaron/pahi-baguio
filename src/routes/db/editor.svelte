@@ -2,35 +2,39 @@
   import { writable } from "svelte/store";
   import ConfirmDialog from "$comp/confirm-dialog.svelte";
   import type { Volunteer } from "./sort";
-  import { selectedVolunteerId } from '$lib/context'; // Ensure this path is correct
+  import { selectedVolunteerId } from '$lib/context'; // Import the selected volunteer ID store
+  import { activeTab } from "$str"; // Import active tab store
 
-  let editedData: Volunteer[] = [];
-  import { activeTab } from "$str";
-
+  // Prop received from parent
   export let data: Volunteer[];
 
+  // Track the currently selected volunteer's ID
   let volunteerId: string | undefined;
   $: $selectedVolunteerId, volunteerId = $selectedVolunteerId;
 
+  // Find the selected volunteer based on the ID
   let selectedVolunteer: Volunteer | undefined;
   $: selectedVolunteer = data.find(volunteer => volunteer._id === volunteerId);
 
+  // Dialog visibility state
   const showDialog = writable(false);
   let currentIndex: number | null = null;
 
+  // Open the confirmation dialog for the selected volunteer
   function openDialog(index: number) {
     currentIndex = index;
     showDialog.set(true);
   }
 
+  // Update the local data with the modified volunteer information
   function updateLocalData(updatedVolunteer: Volunteer) {
     data = data.map(volunteer =>
       volunteer._id === updatedVolunteer._id ? updatedVolunteer : volunteer
     );
   }
 
+  // Save changes to the server and update local data
   function saveChanges(index: number) {
-    // Prepare the data to be passed to the function stored in the store
     const updatedVolunteer = { ...data[index] };
     const { _id, ...updateData } = updatedVolunteer;
 
@@ -42,18 +46,14 @@
       body: JSON.stringify(updateData),
     })
       .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         return response.json();
       })
       .then(updatedData => {
         console.log('Data saved:', updatedData);
-
-        // Update the local data array with the updated volunteer
         updateLocalData({ ...updatedVolunteer, ...updatedData });
 
-        // Also update the selectedVolunteer directly
+        // Update selected volunteer directly if it's currently selected
         if (selectedVolunteer) {
           Object.assign(selectedVolunteer, updatedData);
         }
@@ -61,6 +61,7 @@
       .catch(error => console.error('Error saving data:', error));
   }
 
+  // Handle confirmation from the dialog
   function handleConfirm(param: number | null) {
     if (param !== null) {
       saveChanges(param);
@@ -69,11 +70,13 @@
     showDialog.set(false);
   }
 
+  // Handle cancellation of the dialog
   function handleCancel() {
     currentIndex = null;
     showDialog.set(false);
   }
 
+  // Handle closing of the dialog
   function handleDialogClose() {
     showDialog.set(false);
   }
@@ -81,6 +84,7 @@
 
 {#if selectedVolunteer}
   <div class="volunteer">
+    <!-- Bind volunteer data to input fields -->
     <input bind:value={selectedVolunteer.Fname} placeholder="First Name:" />
     <input bind:value={selectedVolunteer.Midname} placeholder="Middle Name:" />
     <input bind:value={selectedVolunteer.Surname} placeholder="Surname:" />
@@ -102,7 +106,10 @@
     <input bind:value={selectedVolunteer.VolunteerSince} placeholder="Volunteer Since:" />
     <input bind:value={selectedVolunteer.DatabaseID} placeholder="Database ID:" />
     <input bind:value={selectedVolunteer.Notes} placeholder="Notes:" />
-    <button on:click={() => openDialog(data.findIndex(volunteer => volunteer._id === selectedVolunteer._id))}>Save</button>
+    <!-- Trigger the save operation -->
+    <button on:click={() => openDialog(data.findIndex(volunteer => volunteer._id === selectedVolunteer._id))}>
+      Save
+    </button>
   </div>
 {:else}
   <p>No volunteer selected</p>

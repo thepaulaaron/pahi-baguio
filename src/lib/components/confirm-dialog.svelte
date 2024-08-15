@@ -1,5 +1,8 @@
 <script lang="ts">
   import * as Dialog from "./ui/dialog";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
 
   export let content: string = "Are you sure?";
   export let buttonText: string = "Confirm";
@@ -8,22 +11,33 @@
   export let onCancel: () => void = () => {};
   export let confirmParam: number | null = null;
 
-  function handleOpenChange(event: Event) {
-    // Emit the event with the open state
-    const openChangeEvent = new CustomEvent<boolean>('openChange', {
-      detail: open
-    });
-    dispatchEvent(openChangeEvent);
+  function handleConfirm() {
+    onConfirm(confirmParam);
+    dispatch('close');
+  }
+
+  function handleCancel() {
+    onCancel();
+    dispatch('close');
+  }
+
+  function handleOverlayClick() {
+    dispatch('close');
+  }
+
+  function handleDialogClose() {
+    dispatch('close');
   }
 </script>
 
-<Dialog.Root open={open} on:openChange={handleOpenChange}>
-  <Dialog.Title>Confirmation</Dialog.Title>
-  <Dialog.Content>
+<Dialog.Root open={open} onOpenChange={(open) => { if (!open) handleDialogClose(); }}>
+  <Dialog.Overlay on:click={handleOverlayClick} />
+  <Dialog.Content class="sm:max-w-[425px]">
+    <Dialog.Title>Confirmation</Dialog.Title>
     <p>{content}</p>
     <div style="margin-top: 1em; text-align: center;">
-      <button on:click={() => { onConfirm(confirmParam); open = false; }}>{buttonText}</button>
-      <button on:click={() => { onCancel(); open = false; }} style="margin-left: 1em;">Cancel</button>
+      <button on:click={handleConfirm}>{buttonText}</button>
+      <button on:click={handleCancel} style="margin-left: 1em;">Cancel</button>
     </div>
   </Dialog.Content>
 </Dialog.Root>

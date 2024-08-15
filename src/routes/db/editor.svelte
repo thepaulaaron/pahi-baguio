@@ -1,18 +1,23 @@
 <script lang="ts">
   import { writable } from "svelte/store";
-  import type { Volunteer } from "./sort";
   import ConfirmDialog from "$comp/confirm-dialog.svelte";
+  import type { Volunteer } from "./sort";
 
   export let data: Volunteer[];
 
-  let currentIndex: number | null = null; // Track the index of the volunteer being edited
+  const showDialog = writable(false);
+  let currentIndex: number | null = null;
 
-  // Function to save changes
+  function openDialog(index: number) {
+    currentIndex = index;
+    showDialog.set(true);
+  }
+
   function saveChanges(index: number) {
     const updatedVolunteer = { ...data[index] };
     const { _id, ...updateData } = updatedVolunteer;
 
-    console.log('Saving volunteer with ID:', _id); // Debug log
+    console.log('Saving volunteer with ID:', _id);
 
     fetch(`/api/volunteers/${_id}`, {
       method: 'PUT',
@@ -29,14 +34,6 @@
       .catch(error => console.error('Error saving data:', error));
   }
 
-  // State for managing the dialog
-  const showDialog = writable(false);
-
-  function openDialog(index: number) {
-    currentIndex = index;
-    showDialog.set(true);
-  }
-
   function handleConfirm(param: number | null) {
     if (param !== null) {
       saveChanges(param);
@@ -50,26 +47,24 @@
     showDialog.set(false);
   }
 
-  function handleDialogOpenChange(event: CustomEvent<boolean>) {
-    showDialog.set(event.detail);  // Correctly extract boolean value from the event
+  function handleDialogClose() {
+    showDialog.set(false);
   }
 </script>
 
 <div>
-  <!-- Dialog for confirmation -->
   {#if $showDialog}
-  <ConfirmDialog
-    content="Are you sure you want to proceed?"
-    buttonText="Yes"
-    open={$showDialog}
-    onConfirm={handleConfirm}
-    onCancel={handleCancel}
-    confirmParam={currentIndex}
-    on:openChange={handleDialogOpenChange}
-  />
-{/if}
+    <ConfirmDialog
+      content="Are you sure you want to proceed?"
+      buttonText="Yes"
+      open={$showDialog}
+      onConfirm={handleConfirm}
+      onCancel={handleCancel}
+      confirmParam={currentIndex}
+      on:close={handleDialogClose}
+    />
+  {/if}
 
-  <!-- List of volunteers -->
   {#each data as volunteer, index}
     <div class="volunteer">
       <input bind:value={volunteer.Fname} placeholder="Name" />

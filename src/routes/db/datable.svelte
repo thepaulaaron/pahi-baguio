@@ -37,11 +37,6 @@
   const filteredData = writable<Volunteer[]>([]);
   const paginatedData = writable<Volunteer[]>([]);
 
- // [ ] TODO: Better sort
- // Builtin sort is not very good, i.e., toggle between 3 modes
- // asc, original, descending. That's why you can't init the data
- // asc, because by then orig = asc. Then, it seems like glitch.
-
   // Update filteredData when selectedVolType or filterValue changes
   $: {
     selectedVolType.subscribe(volType => {
@@ -101,7 +96,6 @@
     { accessor: "Name", header: "Name", sort: true, filter: true },
     { accessor: "Birthday", header: "Birthday", sort: true, filter: true },
     { accessor: "VolType", header: "Volunteer Type", sort: false, filter: true },
-    // { accessor: "_id", header: "id", sort: false, filter: false },
     { accessor: "_id", header: "", sort: false, filter: false, customRender: (value) => createRender(DatableActions, { id: value }) },
   ];
 
@@ -272,8 +266,8 @@
     </Table.Header>
     <Table.Body {...$tableBodyAttrs}>
       {#each $pageRows as row (row.id)}
-        <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-          <Table.Row {...rowAttrs}>
+        <Subscribe rowAttrs={row.attrs()}>
+          <Table.Row {...row.attrs()}>
             {#each row.cells as cell (cell.id)}
               <Subscribe attrs={cell.attrs()} let:attrs>
                 <Table.Cell {...attrs}>

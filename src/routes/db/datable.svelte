@@ -22,6 +22,7 @@
   // Types
   import type { Volunteer } from './sort'; // Import the type directly from sort.ts
 	import { Alert } from "$lib/components/ui/alert";
+	import { Badge } from "$comp/ui/badge";
 
   export let data: Volunteer[];
   export let filterValue: Writable<string>;
@@ -156,6 +157,22 @@
     }
   }
 
+  // For VolType Badges
+
+  // Define a mapping of volunteer types to their corresponding classes
+  const volTypeClasses: Record<string, string> = {
+    Student: 'student',
+    Faculty: 'faculty',
+    Staff: 'staff',
+    Alumnus: 'alumnus',
+    Friend: 'friend'
+  };
+
+  // Function to get the class for a given volunteer type
+  function getBadgeClass(volType: string): string {
+    return "volunteer-badge " + volTypeClasses[volType] || ''; // Return an empty string if no class is found
+  }
+
 </script>
 
 <div class="flex justify-between items-center -mt-5 -mb-5">
@@ -275,13 +292,21 @@
           {#each row.cells as cell (cell.id)}
             <Subscribe attrs={cell.attrs()} let:attrs>
               <Table.Cell {...attrs}>
+                {#if cell.id === "VolType"}
+                <!-- Ensure the content is treated as a string before passing to getBadgeClass -->
+                <Badge variant="secondary" class={getBadgeClass(String(cell.render()))}>
+                  {cell.render()}
+                </Badge>
+              {:else}
+                <!-- Default rendering for other cells -->
                 <Render of={cell.render()} />
+              {/if}
               </Table.Cell>
             </Subscribe>
           {/each}
         </Table.Row>
       </Subscribe>
     {/each}
-  </Table.Body>
+  </Table.Body>  
 </Table.Root>
 </div>

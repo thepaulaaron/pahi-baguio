@@ -7,6 +7,7 @@
 
     --pahi-blue: #214A7D;
     --pahi-red: #D42F2E;
+    --pahi-orange: #df7328;
     --pahi-yellow: #EEB825;
     --pahi-gray: #121515;
 
@@ -16,7 +17,11 @@
     --paul-yellow-light:#eec34d;
     --paul-gray: #a3a3a3;
     --paul-gray-light: #dbdddd;
+    --paul-green: #145c22;
+    --paul-violet: #422271;
 
+    --github-green: #238636;
+    --github-violet: #4d3375;
 
     --background: 0 0% 100%;
     --foreground: 224 71.4% 4.1%;
@@ -437,5 +442,36 @@ html.dark {
 }
 
 .whiten {
+  color: var(--paul-gray-light);
+}
+
+.volunteer-badge {
+  border-radius: 1rem;
+  padding-left: 0.7em;
+  padding-right: 0.7em;
+}
+
+.student {
+  background-color: var(--paul-green);
+  color: var(--paul-gray-light);
+}
+
+.faculty {
+  background-color: var(--pahi-blue);
+  color: var(--paul-gray-light);
+}
+
+.staff {
+  background-color: var(--github-violet);
+  color: var(--paul-gray-light);
+}
+
+.alumnus {
+  background-color: rgb(107, 30, 30);
+  color: var(--paul-gray-light);
+}
+
+.friend {
+  background-color: rgb(120, 72, 25);
   color: var(--paul-gray-light);
 }

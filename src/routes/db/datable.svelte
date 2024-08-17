@@ -38,11 +38,6 @@
   const filteredData = writable<Volunteer[]>([]);
   const paginatedData = writable<Volunteer[]>([]);
 
- // [ ] TODO: Better sort
- // Builtin sort is not very good, i.e., toggle between 3 modes
- // asc, original, descending. That's why you can't init the data
- // asc, because by then orig = asc. Then, it seems like glitch.
-
   // Update data store with incoming data
   $: dataStore.set(data);
 
@@ -275,8 +270,8 @@
   </Table.Header>
   <Table.Body {...$tableBodyAttrs}>
     {#each $pageRows as row (row.id)}
-      <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-        <Table.Row {...rowAttrs}>
+      <Subscribe rowAttrs={row.attrs()}>
+        <Table.Row {...row.attrs()}>
           {#each row.cells as cell (cell.id)}
             <Subscribe attrs={cell.attrs()} let:attrs>
               <Table.Cell {...attrs}>

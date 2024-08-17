@@ -4,45 +4,49 @@
     UserNav,
   } from "../../lib/components/dashboard/index.js";
   import Overview from "./overview.svelte";
-
   import DarkToggle from "$comp/dark-toggle.svelte";
   import { Button } from "$comp/ui/button/index.js";
   import * as Card from "$comp/ui/card/index.js";
   import * as Tabs from "$comp/ui/tabs/index.js";
-
   import Datable from "./datable.svelte";
   import { array } from './sort';
   import type { Volunteer } from './sort';
   import { activeTab } from '$str';
+  import { writable } from 'svelte/store';
+  import SearchBar from "./search-bar.svelte";
+  import Editor from "./editor.svelte";
+  import { onDestroy } from "svelte";
 
   let data: Volunteer[] = [];
+  const filterValue = writable('');
+  let selectedVolType = writable('All');
+  let dark: boolean;
+  
+  // Subscribe to array store to get the initial data
   const unsubscribe = array.subscribe(value => {
-    // data = value.sort(); // sort already
     data = value;
   });
 
-	// console.log('Data being passed to Datable:', data);
-
+  // Cleanup on component destroy
   onDestroy(() => {
     unsubscribe();
   });
 
-  import { mode } from 'mode-watcher';
-  let dark: boolean;
-  $: dark = $mode !== 'light';
-
-  import { writable } from 'svelte/store';
-  import SearchBar from "./search-bar.svelte";
-  import { onDestroy } from "svelte";
-	import Editor from "./editor.svelte";
-  // let activeTab = writable('overview');
-
-  const filterValue = writable('');
-  let selectedVolType = writable('All');
-
+  // Handle filter input changes
   function handleFilterInput(event: { detail: any; }) {
     filterValue.set(event.detail);
   }
+
+  // Reload data function
+  function handleReload() {
+    array.subscribe(value => {
+      data = value; // Update the data with the latest store value
+    });
+  }
+
+  // Watch mode for dark mode
+  import { mode } from 'mode-watcher';
+  $: dark = $mode !== 'light';
 </script>
 
 <div class="hidden flex-col md:flex">
@@ -78,7 +82,7 @@
       </Tabs.Content>
 
       <Tabs.Content value="database" class="space-y-4">
-        <Datable {data} {filterValue} {selectedVolType}/>
+        <Datable on:reload={handleReload} {data} {filterValue} {selectedVolType}/>
       </Tabs.Content>
 
       <Tabs.Content value="editor" class="space-y-4">

@@ -26,6 +26,7 @@
   export let data: Volunteer[];
   export let filterValue: Writable<string>;
   export let selectedVolType: Writable<string>;
+  const dataStore = writable<Volunteer[]>([]);
 
   // Pagination state
   const rowsPerPage = 13;
@@ -42,11 +43,14 @@
  // asc, original, descending. That's why you can't init the data
  // asc, because by then orig = asc. Then, it seems like glitch.
 
+  // Update data store with incoming data
+  $: dataStore.set(data);
+
   // Update filteredData when selectedVolType or filterValue changes
   $: {
     selectedVolType.subscribe(volType => {
       const currentFilterValue = $filterValue.toLowerCase();
-      const newFilteredData = data.filter(item => {
+      const newFilteredData = $dataStore.filter(item => {
         const matchesSearch = item.Name.toLowerCase().includes(currentFilterValue);
         const matchesVolType = volType === 'All' || item.VolType === volType;
         return matchesSearch && matchesVolType;
@@ -101,7 +105,6 @@
     { accessor: "Name", header: "Name", sort: true, filter: true },
     { accessor: "Birthday", header: "Birthday", sort: true, filter: true },
     { accessor: "VolType", header: "Volunteer Type", sort: false, filter: true },
-    // { accessor: "_id", header: "id", sort: false, filter: false },
     { accessor: "_id", header: "", sort: false, filter: false, customRender: (value) => createRender(DatableActions, { id: value }) },
   ];
 
@@ -248,42 +251,42 @@
               props={cell.props()}
               let:props
             >
-              <Table.Head {...attrs}>
-                {#if cell.id === "Name" || cell.id === "Birthday"}
-                <div class="flex items-center justify-between">
-                  <Render of={cell.render()} />
-                  <Button
-                    variant="ghost"
-                    on:click={props.sort.toggle}
-                    class="flex-shrink-0"
-                  >
-                    <i class="fa-solid fa-sort"></i>
-                  </Button>
-                </div>
-                {:else}
+            <Table.Head {...attrs}>
+              {#if cell.id === "Name" || cell.id === "Birthday"}
+              <div class="flex items-center justify-between">
                 <Render of={cell.render()} />
-                {/if}
-              </Table.Head>
+                <Button
+                  variant="ghost"
+                  on:click={props.sort.toggle}
+                  class="flex-shrink-0"
+                >
+                  <i class="fa-solid fa-sort"></i>
+                </Button>
+              </div>
+              {:else}
+              <Render of={cell.render()} />
+              {/if}
+            </Table.Head>
+          </Subscribe>
+          {/each}
+        </Table.Row>
+      </Subscribe>
+    {/each}
+  </Table.Header>
+  <Table.Body {...$tableBodyAttrs}>
+    {#each $pageRows as row (row.id)}
+      <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
+        <Table.Row {...rowAttrs}>
+          {#each row.cells as cell (cell.id)}
+            <Subscribe attrs={cell.attrs()} let:attrs>
+              <Table.Cell {...attrs}>
+                <Render of={cell.render()} />
+              </Table.Cell>
             </Subscribe>
-            {/each}
-          </Table.Row>
-        </Subscribe>
-      {/each}
-    </Table.Header>
-    <Table.Body {...$tableBodyAttrs}>
-      {#each $pageRows as row (row.id)}
-        <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-          <Table.Row {...rowAttrs}>
-            {#each row.cells as cell (cell.id)}
-              <Subscribe attrs={cell.attrs()} let:attrs>
-                <Table.Cell {...attrs}>
-                  <Render of={cell.render()} />
-                </Table.Cell>
-              </Subscribe>
-            {/each}
-          </Table.Row>
-        </Subscribe>
-      {/each}
-    </Table.Body>
-  </Table.Root>
+          {/each}
+        </Table.Row>
+      </Subscribe>
+    {/each}
+  </Table.Body>
+</Table.Root>
 </div>

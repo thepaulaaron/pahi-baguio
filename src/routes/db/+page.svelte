@@ -3,10 +3,10 @@
   import Header from "$comp/Header.svelte";
   import Dashboard from "./Dashboard.svelte";
   import TestNav from "$comp/dashboard/main-nav.svelte";
-  import Datable from "./datable.svelte"
+  import Datable from "./datable.svelte";
 
   // Shadcn-Svelte imports
-	import * as Avatar from "$comp/ui/avatar";
+  import * as Avatar from "$comp/ui/avatar";
   import * as Card from "$comp/ui/card";
   import { Button } from "$comp/ui/button";
   import { Badge } from "$comp/ui/badge";
@@ -24,30 +24,30 @@
     }
   });
 
-  import type { PageData } from "./$types";
-  import { array } from './sort';
+  import type { PageData, Volunteer } from "./$sort";
+  import { array, updateData } from './sort';
   export let data: PageData;
+  import { writable } from 'svelte/store';
 
-  const computeName = (volunteer: Volunteer): string => {
-    const { Fname, Midname, Surname, Suffixname } = volunteer;
-    
-    // Handle null names
-    const suffix = Suffixname ? `, ${Suffixname}` : '';
-    const midname = Midname ? ` ${Midname}` : '';
-
-    return `${Fname}${midname} ${Surname}${suffix}`;
-  };
-
-  // Reactive statement to update the store with computed Name
+  // Update the store when data changes
   $: {
     if (data && data.volunteers) {
-      const volunteerNames = data.volunteers.map(volunteer => ({
-        ...volunteer,
-        Name: computeName(volunteer)
-      }));
-      array.set(volunteerNames);
+      console.log("+page: trying to update");
+      updateData(data.volunteers);
     }
   }
+
+
+  // Reactive statement to update the store with computed Name
+  // $: {
+  //   if (data && data.volunteers) {
+  //     const volunteerNames = data.volunteers.map(volunteer => ({
+  //       ...volunteer,
+  //       Name: computeName(volunteer)
+  //     }));
+  //     array.set(volunteerNames);
+  //   }
+  // }
 
   // Set dark mode as default
   // import { onMount } from 'svelte';

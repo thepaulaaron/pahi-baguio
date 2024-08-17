@@ -1,5 +1,5 @@
-// sort.js
-import { derived, writable } from 'svelte/store';
+// sort.ts
+import { writable } from 'svelte/store';
 
 export interface Volunteer {
   _id: string;
@@ -35,6 +35,22 @@ export interface Volunteer {
 const initialVolunteers: Volunteer[] = []; // Initialize with empty array or your default data
 export const array = writable<Volunteer[]>(initialVolunteers);
 
+const computeName = (volunteer: Volunteer): string => {
+  const { Fname, Midname, Surname, Suffixname } = volunteer;
+  
+  // Handle null names
+  const suffix = Suffixname ? `, ${Suffixname}` : '';
+  const midname = Midname ? ` ${Midname}` : '';
+
+  return `${Fname}${midname} ${Surname}${suffix}`;
+};
+
 export function updateData(newData: Volunteer[]) {
-  array.set(newData);
+  console.log("sort.ts updating data");
+  // Compute the Name field for each volunteer
+  const updatedData = newData.map(volunteer => ({
+    ...volunteer,
+    Name: computeName(volunteer)
+  }));
+  array.set(updatedData);
 }

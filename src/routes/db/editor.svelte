@@ -91,13 +91,13 @@
   }
 </script>
 
-{#if selectedVolunteer}
+<!-- {#if selectedVolunteer} -->
   <div class="volunteer">
 
     <div class="space-y-6">
       <div>
         <div class="text-lg font-medium">Personal Information</div>
-        <p class="text-muted-foreground text-sm">Details of {selectedVolunteer.Name}</p>
+        <!-- <p class="text-muted-foreground text-sm">Details of {selectedVolunteer.Name}</p> -->
         <Separator />
       </div>
 
@@ -107,22 +107,26 @@
         class="flex space-x-4 pahi-input">
         <div class="w-[30%]">
           <p class="text-muted-foreground text-sm">First Name</p>
-          <input bind:value={selectedVolunteer.Fname} placeholder="First Name"/>
+          <!-- <input bind:value={selectedVolunteer.Fname} placeholder="First Name"/> -->
+          <input placeholder="First Name"/>
         </div>
 
         <div class="w-[30%]">
           <p class="text-muted-foreground text-sm">Middle Name</p>
-          <input bind:value={selectedVolunteer.Midname} placeholder="Middle Name"/>
+          <!-- <input bind:value={selectedVolunteer.Midname} placeholder="Middle Name"/> -->
+          <input placeholder="Middle Name"/>
         </div>
 
         <div class="w-[30%]">
           <p class="text-muted-foreground text-sm">Last Name</p>
-          <input bind:value={selectedVolunteer.Surname} placeholder="Last Name"/>
+          <!-- <input bind:value={selectedVolunteer.Surname} placeholder="Last Name"/> -->
+          <input placeholder="Last Name"/>
         </div>
         
         <div class="w-[10%]">
           <p class="text-muted-foreground text-sm">Suffix</p>
-          <input bind:value={selectedVolunteer.Suffixname} placeholder="Suffix"/>
+          <!-- <input bind:value={selectedVolunteer.Suffixname} placeholder="Suffix"/> -->
+          <input placeholder="Suffix"/>
         </div>
       </div>
 
@@ -130,7 +134,8 @@
         class="flex space-x-4 pahi-input">
         <div>
           <p class="text-muted-foreground text-sm">Birthday</p>
-          <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" />
+          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
+          <input placeholder="Birthday:" />
         </div>
       </div>
     </div>
@@ -140,7 +145,7 @@
 
       
       
-      <input bind:value={selectedVolunteer.MobileNum} placeholder="Mobile Num:" />
+      <!-- <input bind:value={selectedVolunteer.MobileNum} placeholder="Mobile Num:" />
       <input bind:value={selectedVolunteer.PersonalMail} placeholder="Personal Mail:" />
       <input bind:value={selectedVolunteer.Address} placeholder="Address:" />
       <input bind:value={selectedVolunteer.UPMail} placeholder="UP Mail:" />
@@ -155,18 +160,20 @@
       <input bind:value={selectedVolunteer.VolunteerStatus} placeholder="Volunteer Status:" />
       <input bind:value={selectedVolunteer.VolunteerSince} placeholder="Volunteer Since:" />
       <input bind:value={selectedVolunteer.DatabaseID} placeholder="Database ID:" />
-      <input bind:value={selectedVolunteer.Notes} placeholder="Notes:" />
+      <input bind:value={selectedVolunteer.Notes} placeholder="Notes:" /> -->
+
       <!-- Trigger the save operation -->
-      <button on:click={() => openDialog(data.findIndex(volunteer => volunteer._id === selectedVolunteer._id))}>
+      <!-- <button on:click={() => openDialog(data.findIndex(volunteer => volunteer._id === selectedVolunteer._id))}> -->
+      <button>
         Save
       </button>
     </div>
 
 
   </div>
-{:else}
-  <p>No volunteer selected</p>
-{/if}
+<!-- {:else} -->
+  <!-- <p>No volunteer selected</p> -->
+<!-- {/if} -->
 
 <!-- {#if $isOpen} -->
   <ConfirmDialog

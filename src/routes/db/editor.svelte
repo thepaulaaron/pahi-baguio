@@ -96,7 +96,16 @@
 
     <div class="space-y-6">
       <div>
-        <div class="text-lg font-medium">Personal Information</div>
+        <div class="flex justify-between">
+          <div class="text-lg font-medium">Personal Information</div>
+          <div>
+            <!-- Trigger the save operation -->
+            <!-- <button on:click={() => openDialog(data.findIndex(volunteer => volunteer._id === selectedVolunteer._id))}> -->
+            <button>
+              Save
+            </button>
+          </div>
+        </div>
         <!-- <p class="text-muted-foreground text-sm">Details of {selectedVolunteer.Name}</p> -->
         <Separator />
       </div>
@@ -289,12 +298,6 @@
       <input bind:value={selectedVolunteer.VolunteerSince} placeholder="Volunteer Since:" />
       <input bind:value={selectedVolunteer.DatabaseID} placeholder="Database ID:" />
       <input bind:value={selectedVolunteer.Notes} placeholder="Notes:" /> -->
-
-      <!-- Trigger the save operation -->
-      <!-- <button on:click={() => openDialog(data.findIndex(volunteer => volunteer._id === selectedVolunteer._id))}> -->
-      <button>
-        Save
-      </button>
     </div>
 
 

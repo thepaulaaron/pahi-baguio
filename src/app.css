@@ -490,3 +490,21 @@ html.dark {
   background-color: #f0ad4e; /* Warning color */
   color: #ff0303;
 }
+
+.pahi-input {
+  height: 40px;
+  margin-top: 30px !important;
+}
+
+.pahi-input input {
+  background-color: inherit;
+  border: 1px solid hsl(var(--muted));
+  border-radius: 0.75rem;
+  padding: 2%;
+  width: 100%;
+  height: 100%;
+}
+
+.pahi-input p {
+  margin-left: 2%;
+}

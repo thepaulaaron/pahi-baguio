@@ -18,13 +18,17 @@
   $: selectedVolunteer = data.find(volunteer => volunteer._id === volunteerId);
 
   // Dialog visibility state
-  const showDialog = writable(false);
+  const isOpen = writable(false);
   let currentIndex: number | null = null;
 
   // Open the confirmation dialog for the selected volunteer
   function openDialog(index: number) {
     currentIndex = index;
-    showDialog.set(true);
+    isOpen.set(true);
+  }
+
+  function closeDialog() {
+    isOpen.set(false);
   }
 
   // Update the local data with the modified volunteer information
@@ -71,18 +75,18 @@
       saveChanges(param);
     }
     currentIndex = null;
-    showDialog.set(false);
+    isOpen.set(false);
   }
 
   // Handle cancellation of the dialog
   function handleCancel() {
     currentIndex = null;
-    showDialog.set(false);
+    isOpen.set(false);
   }
 
   // Handle closing of the dialog
   function handleDialogClose() {
-    showDialog.set(false);
+    isOpen.set(false);
   }
 </script>
 
@@ -119,14 +123,14 @@
   <p>No volunteer selected</p>
 {/if}
 
-{#if $showDialog}
+<!-- {#if $isOpen} -->
   <ConfirmDialog
     content="Are you sure you want to proceed?"
     buttonText="Yes"
-    open={$showDialog}
+    open={$isOpen}
     onConfirm={handleConfirm}
     onCancel={handleCancel}
     confirmParam={currentIndex}
     on:close={handleDialogClose}
   />
-{/if}
+<!-- {/if} -->

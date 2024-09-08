@@ -445,6 +445,8 @@ html.dark {
   color: var(--paul-gray-light);
 }
 
+/* Volunteer Badge */
+
 .volunteer-badge {
   border-radius: 1rem;
   padding-left: 0.7em;
@@ -474,4 +476,17 @@ html.dark {
 .friend {
   background-color: rgb(120, 72, 25);
   color: var(--paul-gray-light);
+}
+
+.volunteer-edit-toast {
+  background-color: #4caf50; /* Custom background color */
+  color: #fff; /* Text color */
+  border-radius: 8px; /* Example of additional styling */
+  padding: 16px;
+  font-size: 16px;
+}
+
+.toast-warning {
+  background-color: #f0ad4e; /* Warning color */
+  color: #ff0303;
 }

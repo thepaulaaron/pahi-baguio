@@ -59,16 +59,16 @@
 
   async function editVolunteer() {
     if (selectedVolunteer) {
-      toast.loading("Edit Mode", {
+      toast.warning("Edit Mode", {
       description: editWhat,
-      duration: 1900,
+      duration: 2500
     });
       // await closeDialogAsync();
       selectedVolunteerId.set(selectedVolunteer._id);
       closeDialog();
       setTimeout(() => {
         activeTab.set('editor');
-      }, 800)
+      }, 100)
     }
   }
 

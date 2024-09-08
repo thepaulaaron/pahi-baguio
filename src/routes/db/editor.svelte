@@ -105,38 +105,166 @@
 
       <div id="name"
         class="flex space-x-4 pahi-input">
-        <div class="w-[30%]">
+        <div class="input-thirty">
           <p class="text-muted-foreground text-sm">First Name</p>
           <!-- <input bind:value={selectedVolunteer.Fname} placeholder="First Name"/> -->
           <input placeholder="First Name"/>
         </div>
 
-        <div class="w-[30%]">
+        <div class="input-thirty">
           <p class="text-muted-foreground text-sm">Middle Name</p>
           <!-- <input bind:value={selectedVolunteer.Midname} placeholder="Middle Name"/> -->
           <input placeholder="Middle Name"/>
         </div>
 
-        <div class="w-[30%]">
+        <div class="input-thirty">
           <p class="text-muted-foreground text-sm">Last Name</p>
           <!-- <input bind:value={selectedVolunteer.Surname} placeholder="Last Name"/> -->
           <input placeholder="Last Name"/>
         </div>
         
-        <div class="w-[10%]">
+        <div class="input-ten">
           <p class="text-muted-foreground text-sm">Suffix</p>
           <!-- <input bind:value={selectedVolunteer.Suffixname} placeholder="Suffix"/> -->
           <input placeholder="Suffix"/>
         </div>
       </div>
 
-      <div id="birthday"
+      <div id="row2"
         class="flex space-x-4 pahi-input">
-        <div>
+
+        <div id="voltype"
+          class="input-ten">
+          <p class="text-muted-foreground text-sm">Volunteer Type</p>
+          <input placeholder="Student, Faculty," />
+        </div>
+
+        <!-- be inclusive of pronouns? -->
+        <div id="sex"
+          style="width: 8rem">
+          <p class="text-muted-foreground text-sm">Sex</p>
+          <input placeholder="Male, Female, etc." />
+        </div>
+
+        <div id="bday"
+          class="input-ten">
           <p class="text-muted-foreground text-sm">Birthday</p>
           <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
-          <input placeholder="Birthday:" />
+          <input placeholder="MM/DD/YY" />
         </div>
+
+        <div id="email1"
+          class="input-thirty">
+          <p class="text-muted-foreground text-sm">UP Mail</p>
+          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
+          <input placeholder="@up.edu.ph" />
+        </div>
+
+        <div id="email2"
+          class="input-thirty">
+          <p class="text-muted-foreground text-sm">Personal Mail</p>
+          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
+          <input placeholder="@gmail.com" />
+        </div>
+
+        <div id="phone-num"
+          class="input-ten">
+          <p class="text-muted-foreground text-sm">Mobile Number</p>
+          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
+          <input placeholder="09xx-xxx-xxxx" />
+        </div>
+
+      </div>
+
+      <div id="row3"
+        class="flex space-x-4 pahi-input">
+
+        <div id="stud-num"
+          class="input-ten">
+          <p class="text-muted-foreground text-sm">Student Number</p>
+          <input placeholder="xxxx-xxxxx" />
+        </div>
+
+        <div id="college"
+          style="width: 8rem">
+          <p class="text-muted-foreground text-sm">College</p>
+          <input placeholder="CS, CAC, CSS" />
+        </div>
+
+        <div id="program"
+          class="input-ten">
+          <p class="text-muted-foreground text-sm">Degree Program</p>
+          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
+          <input placeholder="BS Computer Science" />
+        </div>
+
+        <div id="address"
+          class="input-thirty">
+          <p class="text-muted-foreground text-sm">Address</p>
+          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
+          <input placeholder="Street, City, Province" />
+        </div>
+
+        <div id="emergency-contact"
+          style="width:19rem;">
+          <p class="text-muted-foreground text-sm">Emergency Contact</p>
+          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
+          <input placeholder="Contact Name" />
+        </div>
+
+        <div id="relationship"
+          style="width:10rem;">
+          <p class="text-muted-foreground text-sm">Relationship</p>
+          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
+          <input placeholder="Mother, Father, etc." />
+        </div>
+
+        <div id="phone-num2"
+          class="input-ten">
+          <p class="text-muted-foreground text-sm">Mobile Number</p>
+          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
+          <input placeholder="09xx-xxx-xxxx" />
+        </div>
+      </div>
+
+      <div id="row4"
+        class="flex space-x-4 pahi-input">
+        <div id="department"
+          style="width:14.25rem;">
+          <p class="text-muted-foreground text-sm">Department</p>
+          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
+          <input placeholder="DMCS, DB, DPS, etc." />
+        </div>
+
+        <div id="designation"
+          style="width:14.5rem;">
+          <p class="text-muted-foreground text-sm">Designation</p>
+          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
+          <input placeholder="Professor, Lecturer, etc." />
+        </div>
+
+        <div id="volunteer-status"
+          style="width:14rem;">
+          <p class="text-muted-foreground text-sm">Volunteer Status</p>
+          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
+          <input placeholder="Active, Inactive" />
+        </div>
+
+        <div id="volunteer-since"
+          style="width:15rem;">
+          <p class="text-muted-foreground text-sm">Volunteer Since</p>
+          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
+          <input placeholder="MM/DD/YY" />
+        </div>
+
+        <div id="volunteer-since"
+          style="width:41rem;
+            height:20rem;">
+          <p class="text-muted-foreground text-sm">Notes:</p>
+          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
+          <input/>
+        </div>
+
       </div>
     </div>
   <div>

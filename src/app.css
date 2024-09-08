@@ -493,6 +493,7 @@ html.dark {
 
 .pahi-input {
   height: 40px;
+  /* width: 100%; */
   margin-top: 30px !important;
 }
 
@@ -500,11 +501,22 @@ html.dark {
   background-color: inherit;
   border: 1px solid hsl(var(--muted));
   border-radius: 0.75rem;
-  padding: 2%;
+  padding: 0.6rem;
   width: 100%;
   height: 100%;
 }
 
 .pahi-input p {
-  margin-left: 2%;
+  margin-left: 0.6rem;
+  /* background-color: yellow; */
+}
+
+/* -3 rem to account for the tailwind padding space-x-4 */
+
+.input-thirty {
+  width: calc(.3 * (100% - 3rem));
+}
+
+.input-ten {
+  width: calc(.1 * (100% - 3rem));
 }

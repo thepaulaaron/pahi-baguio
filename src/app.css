@@ -19,9 +19,10 @@
     --paul-gray-light: #dbdddd;
     --paul-green: #145c22;
     --paul-violet: #422271;
+    --paul-violet-dark: #261c37;
 
     --github-green: #238636;
-    --github-violet: #4d3375;
+    --github-violet: #302441;
 
     --background: 0 0% 100%;
     --foreground: 224 71.4% 4.1%;
@@ -498,7 +499,7 @@ html.dark {
 }
 
 .pahi-input input {
-  background-color: inherit;
+  background-color: var(--paul-violet-dark);
   border: 1px solid hsl(var(--muted));
   border-radius: 0.75rem;
   padding: 0.6rem;

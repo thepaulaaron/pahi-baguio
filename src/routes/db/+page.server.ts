@@ -1,18 +1,25 @@
-import { volunteers } from "$db/mongo";
-import type { PageServerLoad } from './$types';
-import { serializeDocument } from '$lib/utils'; // Adjust the path as necessary
+import { startMongo } from '$db/mongo';
 
-export const load: PageServerLoad = async function() {
-    // Fetch the data from MongoDB
-    const data = await volunteers.find().toArray();
+// Exported load function
+export const load = async () => {
+    try {
+        const collection = await startMongo();
+        const volunteers = await collection.find({}).toArray();
 
-    // Serialize the data
-    const serializedData = data.map(serializeDocument);
+        // Convert _id to string
+        const serializedVolunteers = volunteers.map((volunteer) => ({
+            ...volunteer,
+            _id: volunteer._id.toString() // Convert ObjectId to string
+        }));
 
-    // Print data:
-    // console.log('data', serializedData);
-
-    return {
-        volunteers: serializedData
-    };
-}
+        // Return a plain object instead of a Response
+        return {
+            volunteers: serializedVolunteers
+        };
+    } catch (error) {
+        console.error('Error fetching volunteers:', error);
+        return {
+            error: 'Failed to fetch volunteers' // Return error as part of the object
+        };
+    }
+};

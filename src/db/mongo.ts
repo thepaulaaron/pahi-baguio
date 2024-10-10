@@ -1,30 +1,24 @@
 // src/db/mongo.ts
 import { MongoClient, Collection } from 'mongodb';
 
-const mongoURI = 'mongodb+srv://paulgapud:lprXgZ0ZjVEqRxKF@pahibaguio.sazta.mongodb.net/pahi?retryWrites=true&w=majority';
-const client = new MongoClient(mongoURI);
-const dbName = 'pahi';
-const collName = 'volunteers';
+let client: MongoClient | null = null; // Initialize as null
+let collection: Collection | null = null; // Initialize as null
 
-// Function to create and return the volunteers collection
-export async function createMongoClient(): Promise<Collection> {
-    // Connect to the client if not already connected
-    try {
+const uri = 'mongodb+srv://paulgapud:lprXgZ0ZjVEqRxKF@pahibaguio.sazta.mongodb.net/'; // Replace with your actual MongoDB connection string
+
+export const startMongo = async () => {
+    if (!client) {
+        client = new MongoClient(uri);
         await client.connect();
-        console.log('MongoDB connected');
-    } catch (error) {
-        console.error('Error connecting to MongoDB:', error);
-        throw error; // Re-throw to handle it in the caller
+        collection = client.db('pahi').collection('volunteers'); // Replace with your actual DB and collection
     }
-    return client.db(dbName).collection(collName);
-}
+    return collection!;
+};
 
-// Optional: Close MongoDB connection on server shutdown
-process.on('SIGINT', async () => {
-    console.log('Closing MongoDB connection...');
-    await client.close();
-    process.exit(0);
-});
-
-// Export the collection directly if needed
-export const volunteers = client.db(dbName).collection(collName);
+export const closeMongo = async () => {
+    if (client) {
+        await client.close();
+        client = null; // Reset client to null
+        collection = null; // Reset collection to null
+    }
+};

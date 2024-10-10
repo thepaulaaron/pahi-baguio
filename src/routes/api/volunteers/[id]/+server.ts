@@ -1,37 +1,15 @@
-// src/routes/api/volunteers/[id]/+server.ts
+// src/routes/api/volunteers/+server.ts
+import { startMongo } from '$db/mongo';
 import type { RequestHandler } from '@sveltejs/kit';
-import { ObjectId } from 'mongodb';
-import { createMongoClient } from '$db/mongo';
+import { json } from '@sveltejs/kit';
 
-export const PUT: RequestHandler = async ({ request, params }) => {
-    const { id } = params;
-    const updatedVolunteer = await request.json();
-
+export const GET: RequestHandler = async () => {
     try {
-        const collection = await createMongoClient();  // Ensure the collection is retrieved
-        const { _id, ...updateData } = updatedVolunteer;
-
-        const result = await collection.updateOne(
-            { _id: new ObjectId(id) },
-            { $set: updateData }
-        );
-
-        if (result.modifiedCount === 0) {
-            return new Response(JSON.stringify({ message: 'Volunteer not updated' }), {
-                status: 404,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
-
-        return new Response(JSON.stringify({ message: 'Volunteer updated successfully' }), {
-            status: 200,
-            headers: { 'Content-Type': 'application/json' }
-        });
+        const collection = await startMongo();
+        const volunteers = await collection.find({}).toArray();
+        return json({ volunteers });
     } catch (error) {
-        console.error('Error updating volunteer:', error);
-        return new Response(JSON.stringify({ message: 'Internal Server Error' }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
+        console.error('Error fetching volunteers:', error);
+        return json({ error: 'Failed to fetch volunteers' }, { status: 500 });
     }
 };

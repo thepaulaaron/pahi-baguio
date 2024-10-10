@@ -6,6 +6,7 @@
   import { selectedVolunteerId } from '$lib/context'; // Import the selected volunteer ID store
   import { activeTab } from "$str"; // Import active tab store
 	import { Separator } from "$comp/ui/separator";
+	import { toast } from "svelte-sonner";
 
   // Prop received from parent
   export let data: Volunteer[];
@@ -41,6 +42,12 @@
 
   // Save changes to the server and update local data
   function saveChanges(index: number) { 
+
+    toast.warning("Saved!", {
+      duration: 2500
+      });
+      activeTab.set('database');
+
     const updatedVolunteer = { ...data[index] };
     const { _id, ...updateData } = updatedVolunteer;
 

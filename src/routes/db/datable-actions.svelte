@@ -98,8 +98,9 @@
                   <p>Middle Name: {getValue('Midname')}</p>
                   <p>Surname: {getValue('Surname')}</p>
                   <p>Suffix: {getValue('Suffixname')}</p>
+                  <p>Sex: {getValue('Sex')}</p>
                   <p>Birthday: {getValue('Birthday')}</p>
-                  <p>Mobile Num: {getValue('MobileNum')}</p>
+                  <p>Mobile Num: {getValue('MobNum')}</p>
                   <p>Personal Mail: {getValue('PersonalMail')}</p>
                   <p>Address: {getValue('Address')}</p>
                 </div>
@@ -110,10 +111,10 @@
                 <strong class="text-lg whiten">Campus Info</strong>
                 <div class="space-y-2 mt-2">
                   <p>UP Mail: {getValue('UPMail')}</p>
-                  <p>Student Number: {getValue('StudentNumber')}</p>
-                  <p>Degree Program: {getValue('DegreeProgram')}</p>
+                  <p>Student Number: {getValue('StudNum')}</p>
+                  <p>Degree Program: {getValue('DegProg')}</p>
                   <p>College: {getValue('College')}</p>
-                  <p>Department: {getValue('Department')}</p>
+                  <p>Department: {getValue('Dept')}</p>
                   <p>Designation: {getValue('Designation')}</p>
                 </div>
               </div>
@@ -123,9 +124,9 @@
                 <div class="box">
                   <strong class="text-lg whiten">Emergency Contact</strong>
                   <div class="space-y-2 mt-2">
-                    <p>Name: {getValue('EmergencyContactName')}</p>
-                    <p>Relationship: {getValue('EmergencyContactRelationship')}</p>
-                    <p>Contact Number: {getValue('EmergencyContactNumber')}</p>
+                    <p>Name: {getValue('EmergName')}</p>
+                    <p>Relationship: {getValue('Relationship')}</p>
+                    <p>Contact Number: {getValue('EmergNum')}</p>
                   </div>
                 </div>
 
@@ -133,8 +134,8 @@
                 <div class="box">
                   <strong class="text-lg whiten">Others</strong>
                   <div class="space-y-2 mt-2">
-                    <p>Volunteer Status: {getValue('VolunteerStatus')}</p>
-                    <p>Volunteer Since: {getValue('VolunteerSince')}</p>
+                    <p>Volunteer Status: {getValue('VolStatus')}</p>
+                    <p>Volunteer Since: {getValue('VolSince')}</p>
                     <p>Database ID: {getValue('DatabaseID')}</p>
                     <p>Notes: {getValue('Notes')}</p>
                   </div>

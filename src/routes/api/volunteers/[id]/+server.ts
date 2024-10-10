@@ -1,9 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import { MongoClient, ObjectId } from 'mongodb';
-
-const client = new MongoClient('mongodb+srv://paulgapud:lprXgZ0ZjVEqRxKF@pahibaguio.sazta.mongodb.net/');
-const db = client.db('pahi');
-const collection = db.collection('volunteers');
+import { ObjectId } from 'mongodb';
+import { volunteers } from '$db/mongo'; // Import the MongoDB collection from mongo.ts
 
 export const PUT: RequestHandler = async ({ request, params }) => {
   const { id } = params;
@@ -12,8 +9,8 @@ export const PUT: RequestHandler = async ({ request, params }) => {
   try {
     const { _id, ...updateData } = updatedVolunteer;
 
-    // Ensure the _id is used correctly
-    const result = await collection.updateOne(
+    // Ensure the _id is correctly handled as an ObjectId
+    const result = await volunteers.updateOne(
       { _id: new ObjectId(id) },
       { $set: updateData }
     );

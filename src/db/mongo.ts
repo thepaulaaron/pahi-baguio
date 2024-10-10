@@ -1,13 +1,17 @@
 import { MongoClient, Collection } from 'mongodb';
-// import { MONGO_URL } from '$env/static/private';
+import dotenv from 'dotenv'; // Import dotenv
+dotenv.config(); // Load environment variables from .env file
 
-// Create a single MongoDB client
-const client = new MongoClient('mongodb+srv://paulgapud:lprXgZ0ZjVEqRxKF@pahibaguio.sazta.mongodb.net/');
+// Use the environment variable for MongoDB connection string
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://default-uri';
+const client = new MongoClient(MONGO_URI);
 const dbName = 'pahi';
 const collName = 'volunteers';
-const collection = client.db(dbName).collection(collName);
 
-// Function to start the MongoDB client
+// The collection used in the app
+const collection: Collection = client.db(dbName).collection(collName);
+
+// Function to start MongoDB client connection
 export async function startMongo() {
     let dbError = {
         hasError: false,
@@ -16,10 +20,11 @@ export async function startMongo() {
 
     try {
         await client.connect();
-        console.log('MongoDB connected');
+        console.log('MongoDB connected successfully');
     } catch (error: any) {
         dbError.hasError = true;
         dbError.error = error.message ?? "Error Connecting to DB";
+        console.error('Error connecting to MongoDB:', error.message);
     }
 
     return { dbError };
@@ -39,5 +44,5 @@ export async function returnURLsList(collection: Collection) {
     }
 }
 
-// Export the collection for direct use
+// Export the collection for use in other files
 export { collection as volunteers };

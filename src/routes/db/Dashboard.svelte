@@ -80,7 +80,7 @@
       </div>
 
       <Tabs.Content value="overview" class="space-y-4">
-        <Overview/>
+        <Overview {data}/>
       </Tabs.Content>
 
       <Tabs.Content value="database" class="space-y-4">

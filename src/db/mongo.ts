@@ -1,49 +1,30 @@
+// src/db/mongo.ts
 import { MongoClient, Collection } from 'mongodb';
 
-// Hardcoded MongoDB connection string
-const uri = 'mongodb+srv://paulgapud:lprXgZ0ZjVEqRxKF@pahibaguio.sazta.mongodb.net/pahi?retryWrites=true&w=majority';
-const client = new MongoClient(uri);
-
+const mongoURI = 'mongodb+srv://paulgapud:lprXgZ0ZjVEqRxKF@pahibaguio.sazta.mongodb.net/pahi?retryWrites=true&w=majority';
+const client = new MongoClient(mongoURI);
 const dbName = 'pahi';
 const collName = 'volunteers';
-const collection = client.db(dbName).collection(collName);
 
-let isConnected = false; // Track the connection state
-
-// Function to start the MongoDB client
-export async function startMongo() {
-    let dbError = {
-        hasError: false,
-        error: ''
-    };
-
+// Function to create and return the volunteers collection
+export async function createMongoClient(): Promise<Collection> {
+    // Connect to the client if not already connected
     try {
-        if (!isConnected) {
-            await client.connect();
-            isConnected = true; // Update connection state
-            console.log('MongoDB connected');
-        }
-    } catch (error: any) {
-        dbError.hasError = true;
-        dbError.error = error.message ?? "Error Connecting to DB";
+        await client.connect();
+        console.log('MongoDB connected');
+    } catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+        throw error; // Re-throw to handle it in the caller
     }
-
-    return { dbError };
+    return client.db(dbName).collection(collName);
 }
 
-// Utility function to retrieve URLs
-export async function returnURLsList(collection: Collection) {
-    try {
-        const urlList = await collection.find().toArray();
-        const serializedUrls = urlList.map(item =>
-            JSON.parse(JSON.stringify(item, (key, value) => key === '_id' ? value.toString() : value))
-        );
-        return serializedUrls;
-    } catch (error: any) {
-        console.error('Error retrieving URL List:', error.message);
-        throw error;
-    }
-}
+// Optional: Close MongoDB connection on server shutdown
+process.on('SIGINT', async () => {
+    console.log('Closing MongoDB connection...');
+    await client.close();
+    process.exit(0);
+});
 
-// Export the collection for direct use
-export { collection as volunteers };
+// Export the collection directly if needed
+export const volunteers = client.db(dbName).collection(collName);

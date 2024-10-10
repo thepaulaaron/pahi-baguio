@@ -1,24 +1,17 @@
+// src/routes/api/volunteers/[id]/+server.ts
 import type { RequestHandler } from '@sveltejs/kit';
-import { MongoClient, ObjectId } from 'mongodb';
-import { startMongo, volunteers } from '../../../../db/mongo'; // Adjust the import path as needed
+import { ObjectId } from 'mongodb';
+import { createMongoClient } from '$db/mongo';
 
 export const PUT: RequestHandler = async ({ request, params }) => {
     const { id } = params;
     const updatedVolunteer = await request.json();
 
     try {
-        const { dbError } = await startMongo(); // Ensure the database is connected
-
-        if (dbError.hasError) {
-            return new Response(JSON.stringify({ message: dbError.error }), {
-                status: 500,
-                headers: { 'Content-Type': 'application/json' }
-            });
-        }
-
+        const collection = await createMongoClient();  // Ensure the collection is retrieved
         const { _id, ...updateData } = updatedVolunteer;
 
-        const result = await volunteers.updateOne(
+        const result = await collection.updateOne(
             { _id: new ObjectId(id) },
             { $set: updateData }
         );

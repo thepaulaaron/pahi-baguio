@@ -15,6 +15,7 @@
   import { writable } from 'svelte/store';
   import SearchBar from "./search-bar.svelte";
   import Editor from "./editor.svelte";
+  import Adder from "./adder.svelte"
   import { onDestroy } from "svelte";
 
   let data: Volunteer[] = [];
@@ -69,6 +70,7 @@
           <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
           <Tabs.Trigger value="database">Database</Tabs.Trigger>
           <Tabs.Trigger value="editor">Editor</Tabs.Trigger>
+          <Tabs.Trigger value="add">Add</Tabs.Trigger>
           <Tabs.Trigger value="settings" disabled>Settings</Tabs.Trigger>
         </Tabs.List>
         
@@ -87,6 +89,10 @@
 
       <Tabs.Content value="editor" class="space-y-4">
         <Editor {data}/>
+      </Tabs.Content>
+
+      <Tabs.Content value="add" class="space-y-4">
+        <Adder {data}/>
       </Tabs.Content>
     </Tabs.Root>
   </div>

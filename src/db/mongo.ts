@@ -1,28 +1,26 @@
-import { MongoClient, ObjectId } from 'mongodb';
+// src/db/mongo.ts
+import { MongoClient, Db } from 'mongodb';
 
-// MongoDB connection URL and database name
-const uri = 'mongodb+srv://paulgapud:lprXgZ0ZjVEqRxKF@pahibaguio.sazta.mongodb.net/'; // Update with your MongoDB connection string
-const dbName = 'pahi'; // Update with your database name
+let client: MongoClient | null = null;
 
-// Create a new MongoClient
-const client = new MongoClient(uri);
-
-let db: any;
-
-// Function to start MongoDB connection
-export async function startMongo() {
-    if (!db) {
+export const startMongo = async (): Promise<Db> => {
+    if (!client) {
+        const uri = 'mongodb+srv://paulgapud:lprXgZ0ZjVEqRxKF@pahibaguio.sazta.mongodb.net/';
+        if (!uri) {
+            throw new Error('MONGODB_URI is not defined');
+        }
+        client = new MongoClient(uri);
         await client.connect();
-        db = client.db(dbName);
     }
-    return db.collection('volunteers'); // Ensure you return the 'volunteers' collection
-}
+    return client.db('pahi');
+};
 
-// Function to serialize MongoDB documents
-export function serializeDocument(doc: any) {
-    const { _id, ...rest } = doc;
-    return { id: _id.toString(), ...rest }; // Serialize _id to string
-}
+export const volunteers = async () => {
+    const db = await startMongo();
+    return db.collection('volunteers'); // Assuming this is the collection name
+};
 
-// Export the volunteers collection
-export const volunteers = () => startMongo().then(() => db.collection('volunteers'));
+// Optionally, you could export connectToDatabase if you need it elsewhere
+export const connectToDatabase = async (): Promise<Db> => {
+    return startMongo();
+};

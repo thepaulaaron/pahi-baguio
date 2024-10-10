@@ -1,7 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { MongoClient, ObjectId } from 'mongodb';
 
-const client = new MongoClient('mongodb://localhost:27017');
+const client = new MongoClient('mongodb+srv://paulgapud:lprXgZ0ZjVEqRxKF@pahibaguio.sazta.mongodb.net/');
 const db = client.db('pahi');
 const collection = db.collection('volunteers');
 

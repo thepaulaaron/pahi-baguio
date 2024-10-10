@@ -1,24 +1,28 @@
-// src/db/mongo.ts
-import { MongoClient, Collection } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 
-let client: MongoClient | null = null; // Initialize as null
-let collection: Collection | null = null; // Initialize as null
+// MongoDB connection URL and database name
+const uri = 'mongodb+srv://paulgapud:lprXgZ0ZjVEqRxKF@pahibaguio.sazta.mongodb.net/'; // Update with your MongoDB connection string
+const dbName = 'pahi'; // Update with your database name
 
-const uri = 'mongodb+srv://paulgapud:lprXgZ0ZjVEqRxKF@pahibaguio.sazta.mongodb.net/'; // Replace with your actual MongoDB connection string
+// Create a new MongoClient
+const client = new MongoClient(uri);
 
-export const startMongo = async () => {
-    if (!client) {
-        client = new MongoClient(uri);
+let db: any;
+
+// Function to start MongoDB connection
+export async function startMongo() {
+    if (!db) {
         await client.connect();
-        collection = client.db('pahi').collection('volunteers'); // Replace with your actual DB and collection
+        db = client.db(dbName);
     }
-    return collection!;
-};
+    return db.collection('volunteers'); // Ensure you return the 'volunteers' collection
+}
 
-export const closeMongo = async () => {
-    if (client) {
-        await client.close();
-        client = null; // Reset client to null
-        collection = null; // Reset collection to null
-    }
-};
+// Function to serialize MongoDB documents
+export function serializeDocument(doc: any) {
+    const { _id, ...rest } = doc;
+    return { id: _id.toString(), ...rest }; // Serialize _id to string
+}
+
+// Export the volunteers collection
+export const volunteers = () => startMongo().then(() => db.collection('volunteers'));

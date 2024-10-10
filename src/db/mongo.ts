@@ -1,17 +1,16 @@
 import { MongoClient, Collection } from 'mongodb';
-import dotenv from 'dotenv'; // Import dotenv
-dotenv.config(); // Load environment variables from .env file
 
-// Use the environment variable for MongoDB connection string
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://default-uri';
-const client = new MongoClient(MONGO_URI);
+// Hardcoded MongoDB connection string
+const uri = 'mongodb+srv://paulgapud:lprXgZ0ZjVEqRxKF@pahibaguio.sazta.mongodb.net/pahi?retryWrites=true&w=majority';
+const client = new MongoClient(uri);
+
 const dbName = 'pahi';
 const collName = 'volunteers';
+const collection = client.db(dbName).collection(collName);
 
-// The collection used in the app
-const collection: Collection = client.db(dbName).collection(collName);
+let isConnected = false; // Track the connection state
 
-// Function to start MongoDB client connection
+// Function to start the MongoDB client
 export async function startMongo() {
     let dbError = {
         hasError: false,
@@ -19,12 +18,14 @@ export async function startMongo() {
     };
 
     try {
-        await client.connect();
-        console.log('MongoDB connected successfully');
+        if (!isConnected) {
+            await client.connect();
+            isConnected = true; // Update connection state
+            console.log('MongoDB connected');
+        }
     } catch (error: any) {
         dbError.hasError = true;
         dbError.error = error.message ?? "Error Connecting to DB";
-        console.error('Error connecting to MongoDB:', error.message);
     }
 
     return { dbError };
@@ -44,5 +45,5 @@ export async function returnURLsList(collection: Collection) {
     }
 }
 
-// Export the collection for use in other files
+// Export the collection for direct use
 export { collection as volunteers };

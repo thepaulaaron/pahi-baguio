@@ -1,26 +1,22 @@
-// src/db/mongo.ts
 import { MongoClient, Db } from 'mongodb';
 
-let client: MongoClient | null = null;
+// const uri = 'mongodb+srv://paulgapud:lprXgZ0ZjVEqRxKF@pahibaguio.sazta.mongodb.net/'; // Connection string from MongoDB Atlas
 
-export const startMongo = async (): Promise<Db> => {
+const uri = 'mongodb+srv://paulgapud:oc9I69pj0WCljX59@moversveltecluster.80qss.mongodb.net'
+let client: MongoClient;
+
+export async function startMongo(): Promise<Db> {
     if (!client) {
-        const uri = 'mongodb+srv://paulgapud:lprXgZ0ZjVEqRxKF@pahibaguio.sazta.mongodb.net/';
-        if (!uri) {
-            throw new Error('MONGODB_URI is not defined');
-        }
         client = new MongoClient(uri);
         await client.connect();
     }
-    return client.db('pahi');
-};
+    return client.db('pahi'); // Replace with your actual database name
+}
 
-export const volunteers = async () => {
+// Optionally, export the collection directly (if you need it)
+export async function getVolunteersCollection() {
     const db = await startMongo();
-    return db.collection('volunteers'); // Assuming this is the collection name
-};
+    return db.collection('volunteers'); // Returns the volunteers collection
+}
 
-// Optionally, you could export connectToDatabase if you need it elsewhere
-export const connectToDatabase = async (): Promise<Db> => {
-    return startMongo();
-};
+export { client };

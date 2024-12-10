@@ -5,8 +5,8 @@
   import Header from "../lib/components/Header.svelte";
   
   // Default: Light
-	import { userPrefersMode } from "mode-watcher";
-  userPrefersMode.set('light');
+	// import { userPrefersMode } from "mode-watcher";
+  // userPrefersMode.set('light');
 </script>
 
 <main>

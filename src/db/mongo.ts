@@ -1,27 +1,33 @@
 import { MongoClient, Db } from 'mongodb';
 
-const mongoURI = 'mongodb+srv://paulgapud:oc9I69pj0WCljX59@moversveltecluster.80qss.mongodb.net/?retryWrites=true&w=majority&appName=moversveltecluster';
-const client = new MongoClient(mongoURI);
+const client = new MongoClient('mongodb+srv://paulgapud:oc9I69pj0WCljX59@moversveltecluster.80qss.mongodb.net/?retryWrites=true&w=majority&appName=moversveltecluster');
+// const client = new MongoClient('mongodb+srv://paulgapud:lprXgZ0ZjVEqRxKF@pahibaguio.sazta.mongodb.net/');
 const dbName = 'moversveltedatabase';
-const collName = 'moversveltecollection';
 
-// Function to create and return the volunteers collection
-export async function createMongoClient(): Promise<Collection> {
-    // Connect to the client if not already connected
+export async function startMongo() {
     try {
+        // Connect to the MongoDB server
         await client.connect();
-        console.log('MongoDB connected: ' + dbName);
-    } catch (error) {
-        console.error('Error connecting to MongoDB:', error);
-        throw error; // Re-throw to handle it in the caller
+        
+        // List all databases to check if the dbName exists
+        const databases = await client.db().admin().listDatabases();
+        
+        // Check if the specified dbName exists in the list
+        const dbExists = databases.databases.some(db => db.name === dbName);
+        
+        if (!dbExists) {
+            console.error(`Database "${dbName}" does not exist.`);
+            throw new Error(`Database "${dbName}" does not exist.`);
+        } else {
+            console.warn(`Database "${dbName}" does exist!`);
+        }
+
+        // Return the database instance
+        const db: Db = client.db(dbName);
+        return db;
+
+    } catch (error: any) {
+        console.error('Database connection error:', error.message);
+        throw new Error('Failed to connect to MongoDB');
     }
-    return client.db(dbName).collection(collName);
 }
-
-// Optionally, export the collection directly (if you need it)
-export async function getVolunteersCollection() {
-    const db = await startMongo();
-    return db.collection('volunteers'); // Returns the volunteers collection
-}
-
-export { client };

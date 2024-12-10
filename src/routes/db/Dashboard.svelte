@@ -1,8 +1,9 @@
 <script lang="ts">
-  import {
-    Search,
-    UserNav,
-  } from "../../lib/components/dashboard/index.js";
+  import { onDestroy } from 'svelte';
+  import { writable } from 'svelte/store';
+  
+  // Import components
+  import { Search, UserNav } from "../../lib/components/dashboard/index.js";
   import Overview from "./overview.svelte";
   import DarkToggle from "$comp/dark-toggle.svelte";
   import { Button } from "$comp/ui/button/index.js";
@@ -12,17 +13,16 @@
   import { array } from './sort';
   import type { Volunteer } from './sort';
   import { activeTab } from '$str';
-  import { writable } from 'svelte/store';
   import SearchBar from "./search-bar.svelte";
   import Editor from "./editor.svelte";
-  import Adder from "./adder.svelte"
-  import { onDestroy } from "svelte";
+  import Adder from "./adder.svelte";
 
+  // Data and filter setup
   let data: Volunteer[] = [];
   const filterValue = writable('');
   let selectedVolType = writable('All');
   let dark: boolean;
-  
+
   // Subscribe to array store to get the initial data
   const unsubscribe = array.subscribe(value => {
     data = value;
@@ -59,7 +59,7 @@
       </h2>
       
       <div class="flex items-center space-x-2">
-        <DarkToggle/>
+        <DarkToggle />
         <UserNav />
       </div>
     </div>
@@ -80,19 +80,19 @@
       </div>
 
       <Tabs.Content value="overview" class="space-y-4">
-        <Overview {data}/>
+        <Overview {data} />
       </Tabs.Content>
 
       <Tabs.Content value="database" class="space-y-4">
-        <Datable on:reload={handleReload} {data} {filterValue} {selectedVolType}/>
+        <Datable on:reload={handleReload} {data} {filterValue} {selectedVolType} />
       </Tabs.Content>
 
       <Tabs.Content value="editor" class="space-y-4">
-        <Editor {data}/>
+        <Editor {data} />
       </Tabs.Content>
 
       <Tabs.Content value="add" class="space-y-4">
-        <Adder {data}/>
+        <Adder {data} />
       </Tabs.Content>
     </Tabs.Root>
   </div>

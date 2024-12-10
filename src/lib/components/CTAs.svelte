@@ -21,7 +21,7 @@
   function handleSignIn() {
     if (username === acceptedCredentials.username && password === acceptedCredentials.password) {
       isAuthenticated.set(true); // Update authentication state
-      goto('/vercy');
+      goto('/db');
     } else {
       alert('Invalid username or password');
     }

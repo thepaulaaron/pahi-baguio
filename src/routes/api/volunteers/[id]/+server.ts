@@ -1,21 +1,39 @@
-import { getVolunteersCollection } from '$db/mongo'; // Import the function to get the volunteers collection
-import type { RequestHandler } from '@sveltejs/kit';
-import { json } from '@sveltejs/kit';
+import { startMongo } from '../../../../db/mongo'; // Adjust the path if needed
+import { ObjectId } from 'mongodb';
 
-export const GET: RequestHandler = async () => {
-    try {
-        const collection = await getVolunteersCollection(); // Get the volunteers collection
-        const volunteers = await collection.find({}).toArray(); // Fetch the volunteers
+export async function GET({ params }) {
+  const { id } = params;  // This is the dynamic ID from the URL
+  
+  try {
+    const db = await startMongo(); // Get the database instance
+    
+    // Fetch the volunteer by _id
+    const volunteer = await db.collection('moversveltecollection').findOne({ _id: new ObjectId(id) });
 
-        // Convert ObjectId to string for serialization
-        const serializableVolunteers = volunteers.map(volunteer => ({
-            ...volunteer,
-            _id: volunteer._id.toString() // Convert _id to string
-        }));
-
-        return json({ volunteers: serializableVolunteers });
-    } catch (error) {
-        console.error('Error fetching volunteers:', error);
-        return json({ error: 'Failed to fetch volunteers' }, { status: 500 });
+    if (!volunteer) {
+      return new Response(
+        JSON.stringify({ error: 'Volunteer not found' }),
+        { status: 404, headers: { 'Content-Type': 'application/json' } }
+      );
     }
-};
+
+    // Serialize ObjectId to string and return as JSON
+    return new Response(
+      JSON.stringify({
+        _id: volunteer._id.toString(),
+        Surname: volunteer.Surname,
+        Fname: volunteer.Fname,
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  } catch (error) {
+    console.error('Error fetching volunteer:', error);
+    return new Response(
+      JSON.stringify({ error: 'Failed to fetch volunteer' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+}

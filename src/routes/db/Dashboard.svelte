@@ -1,7 +1,7 @@
 <script lang="ts">
 	import DarkToggle from "$lib/components/dark-toggle.svelte";
 	import { UserNav } from "$lib/components/dashboard";
-	import Datable from "./Datable.svelte";
+	import Datable from "./datable.svelte";
 
   export let data: Record<string, any>[] = [];
 

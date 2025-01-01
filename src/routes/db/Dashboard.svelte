@@ -5,7 +5,7 @@
 </script>
 
 <div>
-  <h2>Dashboard</h2>
+  <h2>Dashbsoard</h2>
   {#if data.length > 0}
 
   <Datable {data} />

@@ -8,6 +8,7 @@
   import ArrowUpDown from "lucide-svelte/icons/arrow-up-down";
   import { Button } from "$lib/components/ui/button/index.js";
 	import type { Volunteer } from "./sort";
+	import Input from "$lib/components/ui/input/input.svelte";
 
   export let data: Record<string, any>[] = []; // MongoDB data
   const dataStore = writable<Volunteer[]>([]);
@@ -19,23 +20,47 @@
     sort: addSortBy({
 			toggleOrder: ["asc", "desc"],
 		}),
+    filter: addTableFilter({
+      fn: ({ filterValue, value }) => value.toLowerCase().includes(filterValue.toLowerCase())
+    }),
   });
 
   const columns = table.createColumns([
     table.column({
       header: "Surname",
       accessor: "Surname",
-      plugins: { sort: { disable: false } },
+      plugins: {
+        sort: {
+          disable: false
+        },
+        filter: {
+          exclude: false
+        }
+      },
     }),
     table.column({
       header: "Student Number",
       accessor: "StudNum",
-      plugins: { sort: { disable: false } },
+      plugins: {
+        sort: {
+          disable: false
+        },
+        filter: {
+          exclude: false
+        }
+      },
     }),
     table.column({
       header: "Email",
       accessor: "UPMail",
-      plugins: { sort: { disable: false } },
+      plugins: {
+        sort: {
+          disable: false
+        },
+        filter: {
+          exclude: false
+        }
+      },
     }),
     table.column({
       header: "Phone",
@@ -64,11 +89,29 @@
   // const { filterValue } = pluginStates.filter;
   // const { selectedDataIds } = pluginStates.select;
 
-  const { headerRows, pageRows, tableAttrs, tableBodyAttrs } =
+  const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } =
     table.createViewModel(columns);
+  
+  const { filterValue } = pluginStates.filter;
 </script>
 
-<div class="rounded-md border">
+<div class="flex items-center justify-between">
+  <div class="flex flex-1 items-center space-x-2">
+    <Input
+      placeholder="Search..."
+      class="h-8 w-[150px] lg:w-[250px]"
+      type="search"
+      bind:value={$filterValue}
+    />
+
+  <div>dedef</div>
+  </div>
+
+  <div>dedesf</div>
+</div>
+
+
+<!-- <div class="rounded-md border">
   <Table.Root>
     <Table.Header>
       <Table.Row>
@@ -87,7 +130,7 @@
       {/each}
     </Table.Body>
   </Table.Root>
-</div>
+</div> -->
 
 <div class="rounded-md border">
   <Table.Root {...$tableAttrs}>

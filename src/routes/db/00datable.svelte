@@ -17,7 +17,7 @@
   import { Button } from "$comp/ui/button";
   import * as DropdownMenu from "$comp/ui/dropdown-menu";
   import * as Dialog from "$comp/ui/dialog";
-  import DatableActions from "./datable-actions.svelte";
+  import DatableActions from "./00datable-actions.svelte";
 
   // Types
   import type { Volunteer } from './sort'; // Import the type directly from sort.ts

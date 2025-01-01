@@ -1,102 +1,100 @@
 <script lang="ts">
   import * as Table from "$lib/components/ui/table";
   import DatableActions from "./datable-actions.svelte";
+  import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 
-  import { createRender, createTable, Render, Subscribe  } from "svelte-headless-table";
-  import { addSortBy, addPagination, addTableFilter } from "svelte-headless-table/plugins";
-  import { readable, writable } from "svelte/store";
-  import ArrowUpDown from "lucide-svelte/icons/arrow-up-down";
   import { Button } from "$lib/components/ui/button/index.js";
-	import type { Volunteer } from "./sort";
-	import Input from "$lib/components/ui/input/input.svelte";
+  import Input from "$lib/components/ui/input/input.svelte";
 
-  export let data: Record<string, any>[] = []; // MongoDB data
-  const dataStore = writable<Volunteer[]>([]);
+  import { readable, writable } from "svelte/store";
+  
+  
+  import { createRender, createTable, Render, Subscribe } from "svelte-headless-table";
+  import { addSortBy, addPagination, addTableFilter, addHiddenColumns } from "svelte-headless-table/plugins";
+  import ArrowUpDown from "lucide-svelte/icons/arrow-up-down";
 
-  $: dataStore.set(data as Volunteer[]);
+  // Data Store
+  export let data: Record<string, any>[] = [];
+const dataStore = writable(data);
 
-  // const dataStore = writable(data);
+$: {
+  dataStore.set(data); // Update the store whenever `data` changes
+}
+
+  // Initialize the table
   const table = createTable(dataStore, {
     sort: addSortBy({
-			toggleOrder: ["asc", "desc"],
-		}),
-    filter: addTableFilter({
-      fn: ({ filterValue, value }) => value.toLowerCase().includes(filterValue.toLowerCase())
+      toggleOrder: ["asc", "desc"],
     }),
+    filter: addTableFilter({
+      fn: ({ filterValue, value }) => value.toLowerCase().includes(filterValue.toLowerCase()),
+    }),
+    hide: addHiddenColumns(),
   });
 
-  const columns = table.createColumns([
-    table.column({
-      header: "Surname",
-      accessor: "Surname",
-      plugins: {
-        sort: {
-          disable: false
+  // Column configuration
+  type ColumnConfig = {
+    accessor: string; // Using 'string' for accessor to accommodate all column names
+    header: string;
+    sort: boolean;
+    filter: boolean;
+    customRender?: (value: any, row: any) => any; // Optional custom render function
+  };
+
+  const columnsConfig: ColumnConfig[] = [
+    { accessor: "Surname", header: "Surname", sort: true, filter: true },
+    { accessor: "StudNum", header: "Student Number", sort: true, filter: true },
+    { accessor: "UPMail", header: "Email", sort: true, filter: true },
+    { accessor: "MobNum", header: "Phone", sort: true, filter: false },
+    { accessor: "Name", header: "Name", sort: true, filter: true },
+    { accessor: "Birthday", header: "Birthday", sort: true, filter: true },
+    { accessor: "VolType", header: "Volunteer Type", sort: false, filter: true },
+    { accessor: "_id", header: "ID", sort: false, filter: false },
+    {
+		accessor: "action",
+		header: "",
+		customRender: (value: any, row: any) => createRender(DatableActions, { id: row._id }),
+		sort: false,
+		filter: false
+	},
+  ];
+
+  const columns = table.createColumns(
+    columnsConfig.map(({ accessor, header, sort, filter, customRender }) =>
+      table.column({
+        accessor,
+        header,
+        cell: customRender
+          ? ({ value, row }: { value: any; row: any }) => customRender(value, row)
+          : undefined,
+        plugins: {
+          sort: { disable: !sort },
+          filter: { exclude: !filter },
         },
-        filter: {
-          exclude: false
-        }
-      },
-    }),
-    table.column({
-      header: "Student Number",
-      accessor: "StudNum",
-      plugins: {
-        sort: {
-          disable: false
-        },
-        filter: {
-          exclude: false
-        }
-      },
-    }),
-    table.column({
-      header: "Email",
-      accessor: "UPMail",
-      plugins: {
-        sort: {
-          disable: false
-        },
-        filter: {
-          exclude: false
-        }
-      },
-    }),
-    table.column({
-      header: "Phone",
-      accessor: "MobNum",
-      plugins: { sort: { disable: false } },
-    }),
-    
-    table.column({
-      accessor: "_id",
-      header: "ideh",
-    }),
+      })
+    )
+  );
 
-    table.column({
-      accessor: ({ _id }) => _id,
-      header: "",
-      cell: ({ value }) => {
-        return createRender(DatableActions, { id: value });
-      },
-    }),
-  ]);
-
-  // const { rows, headerRows, tableAttrs, tableBodyAttrs, pluginStates } = table.createViewModel(columns);
-
-  // const { sortKeys } = pluginStates.sort;
-  // const { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
-  // const { filterValue } = pluginStates.filter;
-  // const { selectedDataIds } = pluginStates.select;
-
-  const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates } =
-    table.createViewModel(columns);
-  
+  // Table ViewModel
+  const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates, flatColumns } = table.createViewModel(columns);
   const { filterValue } = pluginStates.filter;
+  const { hiddenColumnIds } = pluginStates.hide;
+  const ids = flatColumns.map((col) => col.id);
+
+  const hidableCols = ["Birthday", "VolType", "_id", 'StudNum'];
+  const initiallyVisibleColumns = ['Name', 'Surname', 'StudNum', 'Birthday', 'VolType', "_id", "action"];
+  let hideForId = Object.fromEntries(ids.map((id) => [id, initiallyVisibleColumns.includes(id)]));
+
+  $: $hiddenColumnIds = Object.entries(hideForId)
+    .filter(([, hide]) => !hide)
+    .map(([id]) => id);
 </script>
 
+<div class="space-y-3">
+
+  <!-- Search and Column Visibility Dropdown -->
 <div class="flex items-center justify-between">
-  <div class="flex flex-1 items-center space-x-2">
+  <div class="flex flex-1 items-center space-x-3">
     <Input
       placeholder="Search..."
       class="h-8 w-[150px] lg:w-[250px]"
@@ -104,77 +102,86 @@
       bind:value={$filterValue}
     />
 
-  <div>dedef</div>
+    <div>asds</div>
   </div>
 
-  <div>dedesf</div>
+  <div>
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild let:builder>
+        <Button
+          variant="outline"
+          class="ml-auto py-4"
+          size="sm" builders={[builder]}>
+          Columns&nbsp;
+          <i class="fa-solid fa-chevron-down text-l]"></i>
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        {#each flatColumns as col}
+          {#if hidableCols.includes(col.id)}
+            <DropdownMenu.CheckboxItem bind:checked={hideForId[col.id]}>
+              {col.header}
+            </DropdownMenu.CheckboxItem>
+          {/if}
+        {/each}
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  </div>
 </div>
 
-
-<!-- <div class="rounded-md border">
-  <Table.Root>
-    <Table.Header>
-      <Table.Row>
-        <Table.Head>Name</Table.Head>
-        <Table.Head>Birthday</Table.Head>
-        <Table.Head>Volunteer Type</Table.Head>
-      </Table.Row>
-    </Table.Header>
-    <Table.Body>
-      {#each $dataStore as volunteer (volunteer._id)}
-        <Table.Row>
-          <Table.Cell>{volunteer.Fname} {volunteer.Midname} {volunteer.Surname}</Table.Cell>
-          <Table.Cell>{volunteer.Birthday}</Table.Cell>
-          <Table.Cell>{volunteer.VolType}</Table.Cell>
-        </Table.Row>
-      {/each}
-    </Table.Body>
-  </Table.Root>
-</div> -->
-
-<div class="rounded-md border">
-  <Table.Root {...$tableAttrs}>
-    <Table.Header>
-      {#each $headerRows as headerRow}
-        <Subscribe rowAttrs={headerRow.attrs()}>
-          <Table.Row>
-            {#each headerRow.cells as cell (cell.id)}
-              <Subscribe
-                attrs={cell.attrs()}
-                let:attrs
-                props={cell.props()}
-                let:props
-              >
-                <Table.Head {...attrs}>
-                  {#if cell.id === "Surname"}
-                    <Button variant="ghost" on:click={props.sort.toggle}>
+<!-- Table Display -->
+<div>
+  <div class="rounded-md border">
+    <Table.Root {...$tableAttrs}>
+      <Table.Header>
+        {#each $headerRows as headerRow}
+          <Subscribe rowAttrs={headerRow.attrs()}>
+            <Table.Row>
+              {#each headerRow.cells as cell (cell.id)}
+                <Subscribe attrs={cell.attrs()} let:attrs props={cell.props()} let:props>
+                  <Table.Head {...attrs}>
+                    {#if cell.id === "Surname" || cell.id === "StudNum"}
+                      <div class="flex items-center p-1 h-8 w-[150px] lg:w-[250px]">
+                        <Render of={cell.render()} />
+                        <Button
+                          variant="ghost"
+                          on:click={props.sort.toggle}
+                          class="ml-1 p-0.5 h-5 w-7"
+                        >
+                          <ArrowUpDown class="w-4" />
+                        </Button>
+                      </div>
+                    {:else}
+                      <div class="flex items-center p-1">
+                        <Render of={cell.render()} />
+                      </div>
+                    {/if}
+                  </Table.Head>
+                </Subscribe>
+              {/each}
+            </Table.Row>
+          </Subscribe>
+        {/each}
+      </Table.Header>
+      <Table.Body {...$tableBodyAttrs}>
+        {#each $pageRows as row (row.id)}
+          <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
+            <Table.Row {...rowAttrs}>
+              {#each row.cells as cell (cell.id)}
+                <Subscribe attrs={cell.attrs()} let:attrs>
+                  <Table.Cell {...attrs}>
+                    <div class="flex items-center pl-1">
                       <Render of={cell.render()} />
-                      <ArrowUpDown class={"ml-2 h-4 w-4"} />
-                    </Button>
-                  {:else}
-                    <Render of={cell.render()} />
-                  {/if}
-                </Table.Head>
-              </Subscribe>
-            {/each}
-          </Table.Row>
-        </Subscribe>
-      {/each}
-    </Table.Header>
-    <Table.Body {...$tableBodyAttrs}>
-      {#each $pageRows as row (row.id)}
-        <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-          <Table.Row {...rowAttrs}>
-            {#each row.cells as cell (cell.id)}
-              <Subscribe attrs={cell.attrs()} let:attrs>
-                <Table.Cell {...attrs}>
-                  <Render of={cell.render()} />
-                </Table.Cell>
-              </Subscribe>
-            {/each}
-          </Table.Row>
-        </Subscribe>
-      {/each}
-    </Table.Body>
-  </Table.Root>
+                    </div>
+                  </Table.Cell>
+                </Subscribe>
+              {/each}
+            </Table.Row>
+          </Subscribe>
+        {/each}
+      </Table.Body>
+    </Table.Root>
+  </div>
+</div>
+
 </div>

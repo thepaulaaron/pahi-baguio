@@ -1,17 +1,25 @@
 <script lang="ts">
+	import DarkToggle from "$lib/components/dark-toggle.svelte";
 	import { UserNav } from "$lib/components/dashboard";
 	import Datable from "./Datable.svelte";
 
   export let data: Record<string, any>[] = [];
+
+  import { mode } from 'mode-watcher';
+  $: dark = $mode != 'light';
 </script>
 
-<div class="h-full flex-1 flex-col space-y-8 p-8 md:flex">
+<div class="h-full flex-1 flex-col space-y-5 p-8 md:flex">
 	<div class="flex items-center justify-between space-y-2">
 		<div>
-			<h2 class="text-2xl font-bold tracking-tight">Welcome back!</h2>
-			<p class="text-muted-foreground">This is Pahinungód's Volunteer Database.</p>
+      <h2 class="text-3xl font-bold flex items-center">
+        <span class={(dark ? "text-3xl text-[#3578ca]" : "text-3xl text-pahi-blue")}>Pahi</span><span class={(dark ? "text-3xl text-[#ebebeb]" : "text-3xl text-black-300")}>Baguio</span>
+        <span class="text-xl font-normal">&nbsp;|&nbsp;Dashboard</span>
+      </h2>
+			<p class="text-muted-foreground">Pahinungód Volunteer Database</p>
 		</div>
 		<div class="flex items-center space-x-2">
+      <DarkToggle />
 			<UserNav />
 		</div>
 	</div>

@@ -3,7 +3,7 @@
   import Header from "$comp/Header.svelte";
   import Dashboard from "./Dashboard.svelte";
   import TestNav from "$comp/dashboard/main-nav.svelte";
-  import Datable from "./datable.svelte";
+  import Datable from "./00datable.svelte";
   
   // Shadcn-Svelte imports
   import * as Avatar from "$comp/ui/avatar";

@@ -1,11 +1,16 @@
 <script lang="ts">
+	import Datable from "./Datable.svelte";
+
   export let data: Record<string, any>[] = [];
 </script>
 
 <div>
   <h2>Dashboard</h2>
   {#if data.length > 0}
-    <table>
+
+  <Datable {data} />
+
+    <!-- <table>
       <thead>
         <tr>
           <th>Key</th>
@@ -25,7 +30,8 @@
           {/each}
         {/each}
       </tbody>
-    </table>
+    </table> -->
+    
   {:else}
     <p>No data available.</p>
   {/if}

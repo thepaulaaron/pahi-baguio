@@ -1,25 +1,18 @@
-import { startMongo } from '../../../db/mongo'; // Adjust the path if needed
+import { startMongo } from '../../../db/mongo';
 import type { WithId, Document } from 'mongodb';
-
-interface Volunteer extends Document {
-  _id: string;
-  Surname: string;
-  Fname: string;
-}
 
 export async function GET() {
   try {
     const db = await startMongo(); // Get the database instance
-    
+
     // Fetch all volunteers
     const data = await db.collection('moversveltecollection').find({}).toArray();
 
-    // Serialize ObjectId to string
-    const serializedData: Volunteer[] = data.map((item: WithId<Document>) => ({
-      _id: item._id.toString(),
-      Surname: item.Surname,
-      Fname: item.Fname,
-    }));
+    // Serialize ObjectId to string and include all metadata dynamically
+    const serializedData = data.map((item: WithId<Document>) => {
+      const { _id, ...rest } = item; // Exclude _id for conversion
+      return { _id: _id.toString(), ...rest }; // Convert _id and spread the rest
+    });
 
     // Return response as JSON
     return new Response(JSON.stringify(serializedData), {

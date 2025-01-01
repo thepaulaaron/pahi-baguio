@@ -1,12 +1,20 @@
-import { startMongo } from '../../../../db/mongo'; // Adjust the path if needed
+import { startMongo } from '../../../../db/mongo';
 import { ObjectId } from 'mongodb';
 
-export async function GET({ params }) {
-  const { id } = params;  // This is the dynamic ID from the URL
+export async function GET({ params }: { params: { id: string } }) {
+  const { id } = params; // Dynamic ID from the URL
   
   try {
     const db = await startMongo(); // Get the database instance
-    
+
+    // Validate ObjectId
+    if (!ObjectId.isValid(id)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid ID format' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Fetch the volunteer by _id
     const volunteer = await db.collection('moversveltecollection').findOne({ _id: new ObjectId(id) });
 
@@ -17,13 +25,15 @@ export async function GET({ params }) {
       );
     }
 
-    // Serialize ObjectId to string and return as JSON
+    // Serialize ObjectId to string and include all metadata dynamically
+    const { _id, ...rest } = volunteer; // Destructure _id and keep other fields
+    const serializedVolunteer = {
+      _id: _id.toString(),
+      ...rest, // Add the rest of the fields without re-adding _id
+    };
+
     return new Response(
-      JSON.stringify({
-        _id: volunteer._id.toString(),
-        Surname: volunteer.Surname,
-        Fname: volunteer.Fname,
-      }),
+      JSON.stringify(serializedVolunteer),
       {
         status: 200,
         headers: { 'Content-Type': 'application/json' },

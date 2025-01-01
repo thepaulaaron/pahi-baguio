@@ -8,11 +8,11 @@
   import { Badge } from "$comp/ui/badge";
 
   import type { PageData } from "../$types";
-	import Dashboard from "$routes/db/Dashboard.svelte";
+	import Dashboard from "$routes/db/00Dashboard.svelte";
   import TestNav from "$comp/dashboard/main-nav.svelte";
 
-  export let data: PageData;
-  $: volunteers = data.volunteers;
+  // export let data: PageData;
+  // $: volunteers = data.volunteers;
 </script>
 
 <TestNav/>

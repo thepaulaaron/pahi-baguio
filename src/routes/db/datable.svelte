@@ -71,15 +71,12 @@
   };
 
   const columnsConfig: ColumnConfig[] = [
-    { accessor: "Fname",      header: "First",            sort: true,   filter: true },
-    { accessor: "Midname",    header: "Middle",           sort: true,   filter: true },
-    { accessor: "Surname",    header: "Surname",          sort: true,   filter: true },
     { accessor: "Name",       header: "Name",             sort: true,   filter: true },
-    { accessor: "StudNum",    header: "Student Number",   sort: true,   filter: true },
-    { accessor: "UPMail",     header: "Email",            sort: true,   filter: true },
+    { accessor: "StudNum",    header: "Student Num",   sort: true,   filter: true },
+    { accessor: "UPMail",     header: "UP Mail",            sort: true,   filter: true },
+    { accessor: "PersonalMail",     header: "Personal Mail",            sort: true,   filter: false },
     { accessor: "MobNum",     header: "Phone",            sort: true,   filter: false },
     { accessor: "Birthday",   header: "Birthday",         sort: true,   filter: true },
-    { accessor: "VolType",    header: "Volunteer Type",   sort: false,  filter: true },
     { accessor: "_id",        header: "ID",               sort: false,  filter: false },
     {
 		accessor: "action",
@@ -112,8 +109,8 @@
   const { hiddenColumnIds } = pluginStates.hide;
   const ids = flatColumns.map((col) => col.id);
 
-  const hidableCols = ["Birthday", "VolType", "_id", 'StudNum'];
-  const initiallyVisibleColumns = ['Name', 'Fname', 'Midname', 'Surname', 'StudNum', 'Birthday', 'VolType', "_id", "action"];
+  const hidableCols = ["Birthday", "VolType", "_id", 'StudNum', "MobNum"];
+  const initiallyVisibleColumns = ['Name', 'StudNum', "MobNum", 'UPMail', 'PersonalMail', 'Birthday', "action"];
   let hideForId = Object.fromEntries(ids.map((id) => [id, initiallyVisibleColumns.includes(id)]));
 
   $: $hiddenColumnIds = Object.entries(hideForId)
@@ -201,40 +198,37 @@ function toggleNameFormat() {
               {#each headerRow.cells as cell (cell.id)}
                 <Subscribe attrs={cell.attrs()} let:attrs props={cell.props()} let:props>
                   <Table.Head {...attrs}>
-                    {#if cell.id === "Surname" || cell.id === "StudNum"}
-                      <div class="flex justify-between items-center p-1 h-8 w-[100px] lg:w-[200px]">
+                    {#if cell.id === "StudNum"}
+                      <div class="flex justify-between items-center p-1 h-8 w-13
+                                whitespace-nowrap sm:whitespace-normal
+                                md:whitespace-nowrap lg:whitespace-nowrap">
                         <Render of={cell.render()} />
                         <Button
                           variant="ghost"
                           on:click={props.sort.toggle}
-                          class="ml-1 p-0.5 h-5 w-7 -mr-14"
+                          class="ml-1 p-0.5 h-5"
                         >
                           <ArrowUpDown class="w-4" />
                         </Button>
                       </div>
                     {:else if cell.id === "Name"}
-                    <div class="flex justify-between items-center p-1 h-8 w-[150px] lg:w-[250px]">
-                      <Render of={cell.render()} />
+                      <div class="flex justify-between items-center p-1 h-8">
+                        <Render of={cell.render()} />
 
-                        <div class="flex -mr-16">
+                        <div class="flex">
                           <Button 
                           variant="ghost"
                           on:click={toggleNameFormat}
                           class="ml-1 p-0.5 h-5 w-7">
                           <Settings2 class="w-4"/>
-                        </Button>
+                          </Button>
 
-                        <Button
-                          variant="ghost"
-                          on:click={props.sort.toggle}
-                          class="ml-1 p-0.5 h-5 w-7">
-                          <ArrowUpDown class="w-4" />
-                        </Button>
-
-                        <!-- <div class="text-sm text-gray-500 ml-2">
-                          {cell.row.values.VolType}
-                        </div> -->
-
+                          <Button
+                            variant="ghost"
+                            on:click={props.sort.toggle}
+                            class="ml-1 p-0.5 h-5 w-7">
+                            <ArrowUpDown class="w-4" />
+                          </Button>
                         </div>
                       </div>
                     {:else}

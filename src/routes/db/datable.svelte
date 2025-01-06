@@ -13,6 +13,7 @@
   import { addSortBy, addPagination, addTableFilter, addHiddenColumns } from "svelte-headless-table/plugins";
   import ArrowUpDown from "lucide-svelte/icons/arrow-up-down";
 	import Settings2 from "lucide-svelte/icons/settings-2";
+	import { Badge } from "$lib/components/ui/badge";
 
   // ------------------ LET-TERS
 
@@ -124,6 +125,30 @@
 function toggleNameFormat() {
   nameFormat.update(current => current === 'firstLast' ? 'lastFirst' : 'firstLast');
 }
+
+  // ----- For VolType Badges
+
+  function getVolTypeByRowId(row: any): string | null {
+  // Access the row data from row.original
+  const rowData = row.original; 
+  return rowData?.VolType || null;  // Return the VolType from the row data
+}
+
+
+
+  // Define a mapping of volunteer types to their corresponding classes
+  const volTypeClasses: Record<string, string> = {
+    Student: 'student',
+    Faculty: 'faculty',
+    Staff: 'staff',
+    Alumnus: 'alumnus',
+    Friend: 'friend'
+  };
+
+  // Function to get the class for a given volunteer type
+  function getBadgeClass(volType: string): string {
+    return "volunteer-badge " + volTypeClasses[volType] || ''; // Return an empty string if no class is found
+  }
 </script>
 
 <div class="space-y-3">
@@ -205,8 +230,13 @@ function toggleNameFormat() {
                           class="ml-1 p-0.5 h-5 w-7">
                           <ArrowUpDown class="w-4" />
                         </Button>
+
+                        <!-- <div class="text-sm text-gray-500 ml-2">
+                          {cell.row.values.VolType}
+                        </div> -->
+
+                        </div>
                       </div>
-                    </div>
                     {:else}
                       <div class="flex items-center p-1">
                         <Render of={cell.render()} />
@@ -227,7 +257,21 @@ function toggleNameFormat() {
                 <Subscribe attrs={cell.attrs()} let:attrs>
                   <Table.Cell {...attrs}>
                     <div class="flex items-center pl-1">
+                      
+
+                      {#if cell.id === 'Name'}
+                      <div class="flex justify-between items-center w-full">
+                        <Render of={cell.render()} />
+
+                        <Badge 
+                          variant="secondary" 
+                          class={`mr-2 ${getBadgeClass(getVolTypeByRowId(row) || '')}`}>
+                          {getVolTypeByRowId(row) || 'N/A'}
+                        </Badge>
+                      </div>
+                    {:else}
                       <Render of={cell.render()} />
+                    {/if}
                     </div>
                   </Table.Cell>
                 </Subscribe>

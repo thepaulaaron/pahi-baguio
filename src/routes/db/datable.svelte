@@ -21,15 +21,26 @@
   const dataStore = writable<Record<string, any>[]>([]);
 
   $: {
+
+   // Filter out rows where all values are invalid (undefined, null, or empty)
+   const validData = data.filter((record) => {
+    // Check if there is at least one valid value in the row (excluding _id)
+    return Object.entries(record)
+      .filter(([key]) => key !== "_id") // Exclude the '_id' key
+      .some(([_, value]) => value !== undefined && value !== null && value !== ""); // Check the value
+  });
+
   // Process data to add 'Name' field dynamically
-  const processedData = data.map((record) => ({
+  const processedData = validData.map((record) => ({
     ...record,
     Name: [
       record.Fname      || "", // Use empty string if `FirstName` is undefined
       record.Midname    || "",   // Use empty string if `MidName` is undefined
       record.Surname    || "",
       record.Suffixname || ""    // Use empty string if `Surname` is undefined
-    ].filter(Boolean).join(" "), // Filter out empty strings and join with a space
+    ]
+    .filter((entry) => entry && entry.trim() !== "") // Purge empty or invalid values
+    .join(" "),
   }));
   dataStore.set(processedData); // Update the store with processed data
 }
@@ -55,16 +66,16 @@
   };
 
   const columnsConfig: ColumnConfig[] = [
-    { accessor: "Fname", header: "First", sort: true, filter: true },
-    { accessor: "Midname", header: "Middle", sort: true, filter: true },
-    { accessor: "Surname", header: "Surname", sort: true, filter: true },
-    { accessor: "Name", header: "Name", sort: true, filter: true },
-    { accessor: "StudNum", header: "Student Number", sort: true, filter: true },
-    { accessor: "UPMail", header: "Email", sort: true, filter: true },
-    { accessor: "MobNum", header: "Phone", sort: true, filter: false },
-    { accessor: "Birthday", header: "Birthday", sort: true, filter: true },
-    { accessor: "VolType", header: "Volunteer Type", sort: false, filter: true },
-    { accessor: "_id", header: "ID", sort: false, filter: false },
+    { accessor: "Fname",      header: "First",            sort: true,   filter: true },
+    { accessor: "Midname",    header: "Middle",           sort: true,   filter: true },
+    { accessor: "Surname",    header: "Surname",          sort: true,   filter: true },
+    { accessor: "Name",       header: "Name",             sort: true,   filter: true },
+    { accessor: "StudNum",    header: "Student Number",   sort: true,   filter: true },
+    { accessor: "UPMail",     header: "Email",            sort: true,   filter: true },
+    { accessor: "MobNum",     header: "Phone",            sort: true,   filter: false },
+    { accessor: "Birthday",   header: "Birthday",         sort: true,   filter: true },
+    { accessor: "VolType",    header: "Volunteer Type",   sort: false,  filter: true },
+    { accessor: "_id",        header: "ID",               sort: false,  filter: false },
     {
 		accessor: "action",
 		header: "",
@@ -155,7 +166,7 @@
               {#each headerRow.cells as cell (cell.id)}
                 <Subscribe attrs={cell.attrs()} let:attrs props={cell.props()} let:props>
                   <Table.Head {...attrs}>
-                    {#if cell.id === "Surname" || cell.id === "StudNum"}
+                    {#if cell.id === "Surname" || cell.id === "StudNum" || cell.id === "Name"}
                       <div class="flex items-center p-1 h-8 w-[150px] lg:w-[250px]">
                         <Render of={cell.render()} />
                         <Button

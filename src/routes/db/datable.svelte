@@ -177,33 +177,35 @@ function toggleNameFormat() {
                 <Subscribe attrs={cell.attrs()} let:attrs props={cell.props()} let:props>
                   <Table.Head {...attrs}>
                     {#if cell.id === "Surname" || cell.id === "StudNum"}
-                      <div class="flex items-center p-1 h-8 w-[150px] lg:w-[250px]">
+                      <div class="flex justify-between items-center p-1 h-8 w-[100px] lg:w-[200px]">
                         <Render of={cell.render()} />
                         <Button
                           variant="ghost"
                           on:click={props.sort.toggle}
-                          class="ml-1 p-0.5 h-5 w-7"
+                          class="ml-1 p-0.5 h-5 w-7 -mr-14"
                         >
                           <ArrowUpDown class="w-4" />
                         </Button>
                       </div>
                     {:else if cell.id === "Name"}
-                    <div class="flex items-center p-1 h-8 w-[150px] lg:w-[250px]">
+                    <div class="flex justify-between items-center p-1 h-8 w-[150px] lg:w-[250px]">
                       <Render of={cell.render()} />
 
-                      <Button 
-                        variant="ghost"
-                        on:click={toggleNameFormat}
-                        class="ml-1 p-0.5 h-5 w-7">
-                        <Settings2 class="w-4"/>
-                      </Button>
+                        <div class="flex -mr-16">
+                          <Button 
+                          variant="ghost"
+                          on:click={toggleNameFormat}
+                          class="ml-1 p-0.5 h-5 w-7">
+                          <Settings2 class="w-4"/>
+                        </Button>
 
-                      <Button
-                        variant="ghost"
-                        on:click={props.sort.toggle}
-                        class="ml-1 p-0.5 h-5 w-7">
-                        <ArrowUpDown class="w-4" />
-                      </Button>
+                        <Button
+                          variant="ghost"
+                          on:click={props.sort.toggle}
+                          class="ml-1 p-0.5 h-5 w-7">
+                          <ArrowUpDown class="w-4" />
+                        </Button>
+                      </div>
                     </div>
                     {:else}
                       <div class="flex items-center p-1">

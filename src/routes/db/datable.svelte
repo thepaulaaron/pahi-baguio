@@ -12,6 +12,9 @@
   import { createRender, createTable, Render, Subscribe } from "svelte-headless-table";
   import { addSortBy, addPagination, addTableFilter, addHiddenColumns } from "svelte-headless-table/plugins";
   import ArrowUpDown from "lucide-svelte/icons/arrow-up-down";
+	import Settings2 from "lucide-svelte/icons/settings-2";
+
+  // ------------------ LET-TERS
 
   // Data Store
   export let data: Record<string, any>[] = [];
@@ -20,28 +23,29 @@
   // Initialize the writable store with an explicit type
   const dataStore = writable<Record<string, any>[]>([]);
 
-  $: {
+  // State for toggling name display format
+  let nameFormat = writable<'firstLast' | 'lastFirst'>('firstLast');
 
-   // Filter out rows where all values are invalid (undefined, null, or empty)
-   const validData = data.filter((record) => {
-    // Check if there is at least one valid value in the row (excluding _id)
+  $: {
+  // Filter out rows where all values are invalid (undefined, null, or empty), excluding _id
+  const validData = data.filter((record) => {
     return Object.entries(record)
       .filter(([key]) => key !== "_id") // Exclude the '_id' key
       .some(([_, value]) => value !== undefined && value !== null && value !== ""); // Check the value
   });
 
-  // Process data to add 'Name' field dynamically
+  // Process data to add 'Name' field dynamically based on the selected format
   const processedData = validData.map((record) => ({
     ...record,
-    Name: [
-      record.Fname      || "", // Use empty string if `FirstName` is undefined
-      record.Midname    || "",   // Use empty string if `MidName` is undefined
-      record.Surname    || "",
-      record.Suffixname || ""    // Use empty string if `Surname` is undefined
-    ]
-    .filter((entry) => entry && entry.trim() !== "") // Purge empty or invalid values
-    .join(" "),
+    Name: $nameFormat === 'firstLast'
+      // Format: First name first
+      ? [record.Fname || "", record.Midname || "", record.Surname || "", record.Suffixname || ""].filter(Boolean).join(" ")
+      // Format: Surname first
+      : [record.Surname ? `${record.Surname},` : "",
+         record.Fname || "", record.Midname || "", record.Suffixname || ""]
+      .filter(Boolean).join(" ")
   }));
+
   dataStore.set(processedData); // Update the store with processed data
 }
 
@@ -114,6 +118,12 @@
   $: $hiddenColumnIds = Object.entries(hideForId)
     .filter(([, hide]) => !hide)
     .map(([id]) => id);
+
+// ------------------ FUNCTIONS
+
+function toggleNameFormat() {
+  nameFormat.update(current => current === 'firstLast' ? 'lastFirst' : 'firstLast');
+}
 </script>
 
 <div class="space-y-3">
@@ -166,7 +176,7 @@
               {#each headerRow.cells as cell (cell.id)}
                 <Subscribe attrs={cell.attrs()} let:attrs props={cell.props()} let:props>
                   <Table.Head {...attrs}>
-                    {#if cell.id === "Surname" || cell.id === "StudNum" || cell.id === "Name"}
+                    {#if cell.id === "Surname" || cell.id === "StudNum"}
                       <div class="flex items-center p-1 h-8 w-[150px] lg:w-[250px]">
                         <Render of={cell.render()} />
                         <Button
@@ -177,6 +187,24 @@
                           <ArrowUpDown class="w-4" />
                         </Button>
                       </div>
+                    {:else if cell.id === "Name"}
+                    <div class="flex items-center p-1 h-8 w-[150px] lg:w-[250px]">
+                      <Render of={cell.render()} />
+
+                      <Button 
+                        variant="ghost"
+                        on:click={toggleNameFormat}
+                        class="ml-1 p-0.5 h-5 w-7">
+                        <Settings2 class="w-4"/>
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        on:click={props.sort.toggle}
+                        class="ml-1 p-0.5 h-5 w-7">
+                        <ArrowUpDown class="w-4" />
+                      </Button>
+                    </div>
                     {:else}
                       <div class="flex items-center p-1">
                         <Render of={cell.render()} />

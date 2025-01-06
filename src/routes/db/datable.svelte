@@ -15,10 +15,23 @@
 
   // Data Store
   export let data: Record<string, any>[] = [];
-const dataStore = writable(data);
+  console.log(data);
 
-$: {
-  dataStore.set(data); // Update the store whenever `data` changes
+  // Initialize the writable store with an explicit type
+  const dataStore = writable<Record<string, any>[]>([]);
+
+  $: {
+  // Process data to add 'Name' field dynamically
+  const processedData = data.map((record) => ({
+    ...record,
+    Name: [
+      record.Fname      || "", // Use empty string if `FirstName` is undefined
+      record.Midname    || "",   // Use empty string if `MidName` is undefined
+      record.Surname    || "",
+      record.Suffixname || ""    // Use empty string if `Surname` is undefined
+    ].filter(Boolean).join(" "), // Filter out empty strings and join with a space
+  }));
+  dataStore.set(processedData); // Update the store with processed data
 }
 
   // Initialize the table
@@ -42,11 +55,13 @@ $: {
   };
 
   const columnsConfig: ColumnConfig[] = [
+    { accessor: "Fname", header: "First", sort: true, filter: true },
+    { accessor: "Midname", header: "Middle", sort: true, filter: true },
     { accessor: "Surname", header: "Surname", sort: true, filter: true },
+    { accessor: "Name", header: "Name", sort: true, filter: true },
     { accessor: "StudNum", header: "Student Number", sort: true, filter: true },
     { accessor: "UPMail", header: "Email", sort: true, filter: true },
     { accessor: "MobNum", header: "Phone", sort: true, filter: false },
-    { accessor: "Name", header: "Name", sort: true, filter: true },
     { accessor: "Birthday", header: "Birthday", sort: true, filter: true },
     { accessor: "VolType", header: "Volunteer Type", sort: false, filter: true },
     { accessor: "_id", header: "ID", sort: false, filter: false },
@@ -82,7 +97,7 @@ $: {
   const ids = flatColumns.map((col) => col.id);
 
   const hidableCols = ["Birthday", "VolType", "_id", 'StudNum'];
-  const initiallyVisibleColumns = ['Name', 'Surname', 'StudNum', 'Birthday', 'VolType', "_id", "action"];
+  const initiallyVisibleColumns = ['Name', 'Fname', 'Midname', 'Surname', 'StudNum', 'Birthday', 'VolType', "_id", "action"];
   let hideForId = Object.fromEntries(ids.map((id) => [id, initiallyVisibleColumns.includes(id)]));
 
   $: $hiddenColumnIds = Object.entries(hideForId)

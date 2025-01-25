@@ -197,7 +197,7 @@ function toggleNameFormat() {
             <Table.Row>
               {#each headerRow.cells as cell (cell.id)}
                 <Subscribe attrs={cell.attrs()} let:attrs props={cell.props()} let:props>
-                  <Table.Head {...attrs}>
+                  <Table.Head {...attrs} class="header-cell">
                     {#if cell.id === "StudNum"}
                       <div class="flex justify-between items-center p-1 h-8 w-13
                                 whitespace-nowrap sm:whitespace-normal

@@ -521,3 +521,26 @@ html.dark {
 .input-ten {
   width: calc(.1 * (100% - 3rem));
 }
+
+
+/* 01-25-25 : Back to Work */
+
+.dark .header-cell {
+  background-color: #051f4d;
+  text-align: center;
+}
+
+.header-cell {
+  background-color: var(--pahi-blue);
+  text-align: center;
+  color: var(--paul-white);
+}
+
+  /* Rounded corners for the first and last header cells */
+  .header-cell:first-child {
+    border-top-left-radius: 8px; /* Match the table's top-left corner */
+  }
+
+  .header-cell:last-child {
+    border-top-right-radius: 8px; /* Match the table's top-right corner */
+  }

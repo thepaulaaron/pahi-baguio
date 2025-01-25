@@ -1,9 +1,11 @@
 <script lang="ts">
   import Ellipsis from "lucide-svelte/icons/ellipsis";
-  import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-  import { Button } from "$lib/components/ui/button";
+  import * as DropdownMenu from "$comp/ui/dropdown-menu";
+  import * as Dialog from "$comp/ui/dialog";
+  import { Button } from "$comp/ui/button";
   
-  export let id: string;
+  export let row: any;
+  let origRow = row?.original;
  </script>
   
  <DropdownMenu.Root>
@@ -21,12 +23,18 @@
   <DropdownMenu.Content>
    <DropdownMenu.Group>
     <DropdownMenu.Label>Actions</DropdownMenu.Label>
-    <DropdownMenu.Item on:click={() => navigator.clipboard.writeText(id)}>
+    <DropdownMenu.Item on:click={() => navigator.clipboard.writeText(origRow?._id)}>
      Copy payment ID
     </DropdownMenu.Item>
    </DropdownMenu.Group>
    <DropdownMenu.Separator />
-   <DropdownMenu.Item>View customer</DropdownMenu.Item>
+   <DropdownMenu.Item>
+
+    <Dialog.Root>
+      <!-- todo -->
+    </Dialog.Root>
+
+   </DropdownMenu.Item>
    <DropdownMenu.Item>View payment details</DropdownMenu.Item>
   </DropdownMenu.Content>
  </DropdownMenu.Root>

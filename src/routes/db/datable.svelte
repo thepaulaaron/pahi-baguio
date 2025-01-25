@@ -7,8 +7,6 @@
   import Input from "$lib/components/ui/input/input.svelte";
 
   import { readable, writable } from "svelte/store";
-  
-  
   import { createRender, createTable, Render, Subscribe } from "svelte-headless-table";
   import { addSortBy, addPagination, addTableFilter, addHiddenColumns } from "svelte-headless-table/plugins";
   import ArrowUpDown from "lucide-svelte/icons/arrow-up-down";
@@ -19,10 +17,13 @@
 
   // Data Store
   export let data: Record<string, any>[] = [];
-  console.log(data);
+  
+  // console.log(data);
 
   // Initialize the writable store with an explicit type
   const dataStore = writable<Record<string, any>[]>([]);
+  const selectedVolunteer = writable<Record<string, any> | null>(null);
+  const showPopup = writable(false);
 
   // State for toggling name display format
   let nameFormat = writable<'firstLast' | 'lastFirst'>('firstLast');
@@ -50,7 +51,7 @@
   dataStore.set(processedData); // Update the store with processed data
 }
 
-  // Initialize the table
+  // TABLE: Initialization
   const table = createTable(dataStore, {
     sort: addSortBy({
       toggleOrder: ["asc", "desc"],
@@ -81,8 +82,15 @@
     {
 		accessor: "action",
 		header: "",
-		customRender: (value: any, row: any) => createRender(DatableActions, { id: row._id }),
-		sort: false,
+    customRender: (value: any, row: any) => {
+
+      // ----- for indiv id
+      // const id = row.original._id;
+      // return createRender(DatableActions, { id });
+
+      return createRender(DatableActions, { row });  // Pass the entire row
+    },
+		sort: false,  
 		filter: false
 	},
   ];
@@ -110,7 +118,7 @@
   const ids = flatColumns.map((col) => col.id);
 
   const hidableCols = ["Birthday", "VolType", "_id", 'StudNum', "MobNum"];
-  const initiallyVisibleColumns = ['Name', 'StudNum', "MobNum", 'UPMail', 'PersonalMail', 'Birthday', "action"];
+  const initiallyVisibleColumns = ['Name', 'StudNum', "MobNum", 'UPMail', 'PersonalMail', 'Birthday', "action", "_id"];
   let hideForId = Object.fromEntries(ids.map((id) => [id, initiallyVisibleColumns.includes(id)]));
 
   $: $hiddenColumnIds = Object.entries(hideForId)
@@ -145,6 +153,18 @@ function toggleNameFormat() {
   // Function to get the class for a given volunteer type
   function getBadgeClass(volType: string): string {
     return "volunteer-badge " + volTypeClasses[volType] || ''; // Return an empty string if no class is found
+  }
+
+  // For Pop-up
+
+  function openPopup(volunteer: Record<string, any>) {
+    selectedVolunteer.set(volunteer);
+    showPopup.set(true);
+  }
+
+  function closePopup() {
+    selectedVolunteer.set(null);
+    showPopup.set(false);
   }
 </script>
 
@@ -252,19 +272,24 @@ function toggleNameFormat() {
                   <Table.Cell {...attrs}>
                     <div class="flex items-center pl-1">
                       
-
                       {#if cell.id === 'Name'}
-                      <div class="flex justify-between items-center w-full">
-                        <Render of={cell.render()} />
+                        <div class="flex justify-between items-center w-full">
+                          <Render of={cell.render()} />
 
-                        <Badge 
-                          variant="secondary" 
-                          class={`mr-2 ${getBadgeClass(getVolTypeByRowId(row) || '')}`}>
-                          {getVolTypeByRowId(row) || 'N/A'}
-                        </Badge>
-                      </div>
-                    {:else}
-                      <Render of={cell.render()} />
+                          <Badge 
+                            variant="secondary" 
+                            class={`mr-2 ${getBadgeClass(getVolTypeByRowId(row) || '')}`}>
+                            {getVolTypeByRowId(row) || 'N/A'}
+                          </Badge>
+                        </div>
+
+                      <!-- {:else if cell.id === 'action'}
+                        <DatableActions 
+                          id={row.id}
+                          volunteer={row.props()} /> -->
+                      
+                      {:else}
+                        <Render of={cell.render()} />
                     {/if}
                     </div>
                   </Table.Cell>

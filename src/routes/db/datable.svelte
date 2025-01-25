@@ -118,7 +118,7 @@
   const ids = flatColumns.map((col) => col.id);
 
   const hidableCols = ["Birthday", "VolType", "_id", 'StudNum', "MobNum"];
-  const initiallyVisibleColumns = ['Name', 'StudNum', "MobNum", 'UPMail', 'PersonalMail', 'Birthday', "action", "_id"];
+  const initiallyVisibleColumns = ['Name', 'StudNum', "MobNum", 'UPMail', 'PersonalMail', 'Birthday', "action"];
   let hideForId = Object.fromEntries(ids.map((id) => [id, initiallyVisibleColumns.includes(id)]));
 
   $: $hiddenColumnIds = Object.entries(hideForId)

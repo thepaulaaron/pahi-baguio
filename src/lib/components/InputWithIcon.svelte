@@ -3,6 +3,7 @@
   export let icon: any;
   export let id = '';
   export let value = '';
+  export let readonly = false;
 
   import { Label } from "./ui/label";
   import { Input } from "./ui/input";
@@ -14,6 +15,6 @@
     {#if icon}
       <svelte:component this={icon} class="input-icon ml-3 mr-3 h-5 w-5" />
     {/if}
-    <Input id={id} type="text" class="border-0" value={value} />
+    <Input id={id} type="text" class="border-0" value={value} readonly={readonly} />
   </div>
 </div>

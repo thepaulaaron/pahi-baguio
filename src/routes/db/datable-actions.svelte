@@ -7,6 +7,16 @@
     CircleUser, 
     Users,
     Fingerprint,
+    Mail,
+	  MailPlus,
+	  GraduationCap,
+	  BookUser,
+	  Building,
+	  School,
+	  BriefcaseBusiness,
+	  HandHeart,
+	  HandMetal,
+	  MapPin,
   } from "lucide-svelte/icons";
 
   import * as DropdownMenu from "$comp/ui/dropdown-menu";
@@ -17,6 +27,7 @@
 	import ScrollArea from "$comp/ui/scroll-area/scroll-area.svelte";
 	import { Label } from "$lib/components/ui/label";
 	import { Input } from "$lib/components/ui/input";
+  
 	import InputWithIcon from "$lib/components/InputWithIcon.svelte";
   
   export let row: any;
@@ -140,6 +151,9 @@
               <!-- Personal Info -->
               <div class="vert flex flex-col space-y-2">
                 <strong class="info-heading text-lg">Personal Info</strong>
+
+                <Separator />
+
                 <Label for="fname">First Name</Label>
                 <Input id="fname" type="text" value={getValue('Fname')} />
 
@@ -152,53 +166,44 @@
                 <Label for="suffixname">Suffix</Label>
                 <Input id="suffixname" type="text" value={getValue('Suffixname')} />
 
-                <Label for="sex">Sex</Label>
-                <Input id="sex" type="text" value={getValue('Sex')} />
-                
-                <Label for="birthday" class="flex">Birthday</Label>
-                <div class="input-box flex items-center border rounded-md">
-                  <CalendarIcon class="input-icon ml-3 mr-3 h-5 w-5" />
-                  <Input id="birthday" type="text" class="border-0" value={getValue('Birthday')} />
-                </div>
+                <InputWithIcon label="Sex" icon={Fingerprint} id="sex" value={getValue('Sex')} />
 
-                <Label for="mobnum" class="flex">Mobile Number</Label>
-                <div class="input-box flex items-center border rounded-md bg-[#1f2937]">
-                  <PhoneIcon class="input-icon ml-3 mr-3 h-5 w-5" />
-                  <Input id="mobnum" type="text"  class="border-0" value={getValue('MobNum')} />
-                </div>
+                <InputWithIcon label="Birthday" icon={CalendarIcon} id="birthday" value={getValue('Birthday')} />
 
-                <Label for="personalmail">Personal Mail</Label>
-                <Input id="personalmail" type="email" value={getValue('PersonalMail')} />
+                <InputWithIcon label="Mobile Number" icon={PhoneIcon} id="mobnum" value={getValue('MobNum')} />
 
-                <Label for="address">Address</Label>
-                <Input id="address" type="text" value={getValue('Address')} />
+                <InputWithIcon label="Personal Mail" icon={Mail} id="personalmail" value={getValue('PersonalMail')} />
+
+                <InputWithIcon label="Address" icon={MapPin} id="address" value={getValue('Address')} />
+
               </div>
 
               <!-- Campus Info -->
               <div class="vert flex flex-col space-y-2">
                 <strong class="info-heading text-lg">Campus Info</strong>
-                <Label for="upmail">UP Mail</Label>
-                <Input id="upmail" type="email" value={getValue('UPMail')} />
 
-                <Label for="studnum">Student Number</Label>
-                <Input id="studnum" type="text" value={getValue('StudNum')} />
+                <Separator />
 
-                <Label for="degprog">Degree Program</Label>
-                <Input id="degprog" type="text" value={getValue('DegProg')} />
+                <InputWithIcon label="UP Mail" icon={MailPlus} id="upmail" value={getValue('UPMail')} />
 
-                <Label for="college">College</Label>
-                <Input id="college" type="text" value={getValue('College')} />
+                <InputWithIcon label="Student Number" icon={BookUser} id="studnum" value={getValue('StudNum')} />
 
-                <Label for="dept">Department</Label>
-                <Input id="dept" type="text" value={getValue('Dept')} />
+                <InputWithIcon label="Degree Program" icon={GraduationCap} id="degprog" value={getValue('DegProg')} />
 
-                <Label for="designation">Designation</Label>
-                <Input id="designation" type="text" value={getValue('Designation')} />
+                <InputWithIcon label="College" icon={Building} id="college" value={getValue('College')} />            
+                
+                <InputWithIcon label="Department" icon={School} id="dept" value={getValue('Dept')} />
+
+                <InputWithIcon label="Designation" icon={BriefcaseBusiness} id="designation" value={getValue('Designation')} />
               </div>
+
+              <!-- Emergency Contact -->
 
               <div class="vert flex flex-col space-y-2">
                 <strong class="info-heading text-lg">Emergency Contact</strong>
                   
+                <Separator />
+
                 <Label for="emergname" class="flex">Name</Label>
                 <div class="input-box flex items-center border rounded-md bg-[#1f2937]">
                   <CircleUser class="input-icon ml-3 mr-3 h-5 w-5" />
@@ -222,11 +227,12 @@
                 <div class="h-5"></div>
 
                   <strong class="info-heading text-lg">Others</strong>
-                  <Label for="volstatus">Volunteer Status</Label>
-                  <Input id="volstatus" type="text" value={getValue('VolStatus')} />
 
-                  <Label for="volsince">Volunteer Since</Label>
-                  <Input id="volsince" type="text" value={getValue('VolSince')} />
+                  <Separator />
+
+                  <InputWithIcon label="Volunteer Status" icon={HandMetal} id="volstatus" value={getValue('VolStatus')} />
+
+                  <InputWithIcon label="Volunteer Since" icon={HandHeart} id="volsince" value={getValue('VolSince')} />
 
                   <Label for="databaseid">Database ID</Label>
                   <Input id="databaseid" type="text" value={getValue('DatabaseID')} />

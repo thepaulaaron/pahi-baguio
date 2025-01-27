@@ -420,26 +420,27 @@ html.dark {
 }
 
 .volunteer-dialog {
-  /* width: 80%; */
   max-width: 1200px;
   height: 600px;
+  display: flex;
+  flex-direction: column; /* Ensure proper stacking */
+  overflow: hidden; /* Prevent outer overflow */
 }
 
 .volunteer-dialog .dialog-title {
   font-family: 'Poppins', sans-serif;
   font-weight: bolder;
-  font-size: 2rem; /* Example: Change font size */
-  color: #3578ca;       /* Example: Change text color */
+  font-size: 2rem;
+  color: #3578ca;
 }
 
 .volunteer-dialog .vert {
-  height: 100%;
+  flex: 1; /* Allow flexible height */
   width: 33%;
-  /* background-color: yellow; */
 }
 
-.volunteer-dialog .vert .box {
-  /* background-color: blue; */
+.volunteer-dialog .vert .info-heading {
+  color: var(--paul-gray-light);
 }
 
 .whiten {
@@ -522,6 +523,13 @@ html.dark {
   width: calc(.1 * (100% - 3rem));
 }
 
+.volunteer-dialog .vert Input {
+  /* font-family: 'Merriweather', sans-serif; */
+}
+
+.volunteer-dialog .vert Input:focus {
+  color: var(--paul-gray-light);
+}
 
 /* 01-25-25 : Back to Work */
 

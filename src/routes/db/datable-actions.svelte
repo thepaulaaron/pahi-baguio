@@ -8,19 +8,32 @@
   
   export let row: any;
 
-  const isOpen = writable(false);
+  const isOpenVIEW = writable(false);
+  const isOpenEDIT = writable(false);
   let dialogWrapper: HTMLDivElement;
 
-  function openDialog() {
-    isOpen.set(true);
+  function openVIEW() {
+    isOpenVIEW.set(true);
   }
 
-  function closeDialog() {
-    isOpen.set(false);
+  function closeVIEW() {
+    isOpenVIEW.set(false);
   }
 
   function handleViewVolunteer() {
-    openDialog();
+    openVIEW();
+  }
+
+  function openEDIT() {
+    isOpenEDIT.set(true);
+  }
+
+  function closeEDIT() {
+    isOpenEDIT.set(false);
+  }
+
+  function handleEditVolunteer() {
+    openEDIT();
   }
 
   function getValue(property: any) {
@@ -28,9 +41,10 @@
   }
  </script>
 
-<Dialog.Root open={$isOpen} onOpenChange={(open) => { if (!open) closeDialog(); }}>
-  <div bind:this={dialogWrapper} class="dialog-wrapper">
+<!-- VIEW Dialog -->
 
+<Dialog.Root open={$isOpenVIEW} onOpenChange={(open) => { if (!open) closeVIEW(); }}>
+  <div bind:this={dialogWrapper} class="dialog-wrapper">
 
       <Dialog.Content class="volunteer-dialog p-10">
         <Dialog.Header>
@@ -95,7 +109,77 @@
           </Dialog.Description>
         </Dialog.Header>
       </Dialog.Content>    
+  </div>
+</Dialog.Root>
 
+<!-- Edit Dialog -->
+
+<Dialog.Root open={$isOpenEDIT} onOpenChange={(open) => { if (!open) closeEDIT(); }}>
+  <div bind:this={dialogWrapper} class="dialog-wrapper">
+
+      <Dialog.Content class="volunteer-dialog p-10">
+        <Dialog.Header>
+          <Dialog.Title class="dialog-title">Editing {getValue('Name')}</Dialog.Title>
+          <Dialog.Description>
+            <Separator class="my-5" />
+            <div class="flex space-x-4 text-base">
+              
+              <!-- Personal Info -->
+              <div class="vert">
+                <strong class="text-lg whiten">Personal Info</strong>
+                <div class="space-y-2 mt-2">
+                  <p>First Name: {getValue('Fname')}</p>
+                  <p>Middle Name: {getValue('Midname')}</p>
+                  <p>Surname: {getValue('Surname')}</p>
+                  <p>Suffix: {getValue('Suffixname')}</p>
+                  <p>Sex: {getValue('Sex')}</p>
+                  <p>Birthday: {getValue('Birthday')}</p>
+                  <p>Mobile Num: {getValue('MobNum')}</p>
+                  <p>Personal Mail: {getValue('PersonalMail')}</p>
+                  <p>Address: {getValue('Address')}</p>
+                </div>
+              </div>
+
+              <!-- Campus Info -->
+              <div class="vert">
+                <strong class="text-lg whiten">Campus Info</strong>
+                <div class="space-y-2 mt-2">
+                  <p>UP Mail: {getValue('UPMail')}</p>
+                  <p>Student Number: {getValue('StudNum')}</p>
+                  <p>Degree Program: {getValue('DegProg')}</p>
+                  <p>College: {getValue('College')}</p>
+                  <p>Department: {getValue('Dept')}</p>
+                  <p>Designation: {getValue('Designation')}</p>
+                </div>
+              </div>
+
+              <div class="vert space-y-10">
+                <!-- Emergency Contact -->
+                <div class="box">
+                  <strong class="text-lg whiten">Emergency Contact</strong>
+                  <div class="space-y-2 mt-2">
+                    <p>Name: {getValue('EmergName')}</p>
+                    <p>Relationship: {getValue('Relationship')}</p>
+                    <p>Contact Number: {getValue('EmergNum')}</p>
+                  </div>
+                </div>
+
+                <!-- Others -->
+                <div class="box">
+                  <strong class="text-lg whiten">Others</strong>
+                  <div class="space-y-2 mt-2">
+                    <p>Volunteer Status: {getValue('VolStatus')}</p>
+                    <p>Volunteer Since: {getValue('VolSince')}</p>
+                    <p>Database ID: {getValue('DatabaseID')}</p>
+                    <p>Notes: {getValue('Notes')}</p>
+                  </div>
+                </div>
+              </div>            
+
+            </div>
+          </Dialog.Description>
+        </Dialog.Header>
+      </Dialog.Content>    
   </div>
 </Dialog.Root>
   
@@ -125,6 +209,6 @@
    <DropdownMenu.Item>
 
    </DropdownMenu.Item>
-   <DropdownMenu.Item>View payment details</DropdownMenu.Item>
+   <DropdownMenu.Item on:click={handleEditVolunteer}>Edit Volunteer</DropdownMenu.Item>
   </DropdownMenu.Content>
  </DropdownMenu.Root>

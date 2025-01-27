@@ -139,8 +139,6 @@ function toggleNameFormat() {
   return rowData?.VolType || null;  // Return the VolType from the row data
 }
 
-
-
   // Define a mapping of volunteer types to their corresponding classes
   const volTypeClasses: Record<string, string> = {
     Student: 'student',
@@ -153,18 +151,6 @@ function toggleNameFormat() {
   // Function to get the class for a given volunteer type
   function getBadgeClass(volType: string): string {
     return "volunteer-badge " + volTypeClasses[volType] || ''; // Return an empty string if no class is found
-  }
-
-  // For Pop-up
-
-  function openPopup(volunteer: Record<string, any>) {
-    selectedVolunteer.set(volunteer);
-    showPopup.set(true);
-  }
-
-  function closePopup() {
-    selectedVolunteer.set(null);
-    showPopup.set(false);
   }
 </script>
 

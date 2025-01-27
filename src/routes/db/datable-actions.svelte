@@ -1,5 +1,14 @@
 <script lang="ts">
-  import Ellipsis from "lucide-svelte/icons/ellipsis";
+
+  import { 
+    Ellipsis, 
+    CalendarIcon, 
+    PhoneIcon, 
+    CircleUser, 
+    Users,
+    Fingerprint,
+  } from "lucide-svelte/icons";
+
   import * as DropdownMenu from "$comp/ui/dropdown-menu";
   import * as Dialog from "$comp/ui/dialog";
   import { Button } from "$comp/ui/button";
@@ -8,6 +17,7 @@
 	import ScrollArea from "$comp/ui/scroll-area/scroll-area.svelte";
 	import { Label } from "$lib/components/ui/label";
 	import { Input } from "$lib/components/ui/input";
+	import InputWithIcon from "$lib/components/InputWithIcon.svelte";
   
   export let row: any;
 
@@ -144,12 +154,18 @@
 
                 <Label for="sex">Sex</Label>
                 <Input id="sex" type="text" value={getValue('Sex')} />
+                
+                <Label for="birthday" class="flex">Birthday</Label>
+                <div class="input-box flex items-center border rounded-md">
+                  <CalendarIcon class="input-icon ml-3 mr-3 h-5 w-5" />
+                  <Input id="birthday" type="text" class="border-0" value={getValue('Birthday')} />
+                </div>
 
-                <Label for="birthday">Birthday</Label>
-                <Input id="birthday" type="text" value={getValue('Birthday')} />
-
-                <Label for="mobnum">Mobile Num</Label>
-                <Input id="mobnum" type="text" value={getValue('MobNum')} />
+                <Label for="mobnum" class="flex">Mobile Number</Label>
+                <div class="input-box flex items-center border rounded-md bg-[#1f2937]">
+                  <PhoneIcon class="input-icon ml-3 mr-3 h-5 w-5" />
+                  <Input id="mobnum" type="text"  class="border-0" value={getValue('MobNum')} />
+                </div>
 
                 <Label for="personalmail">Personal Mail</Label>
                 <Input id="personalmail" type="email" value={getValue('PersonalMail')} />
@@ -183,14 +199,23 @@
               <div class="vert flex flex-col space-y-2">
                 <strong class="info-heading text-lg">Emergency Contact</strong>
                   
-                  <Label for="emergname">Name</Label>
-                  <Input id="emergname" type="text" value={getValue('EmergName')} />
+                <Label for="emergname" class="flex">Name</Label>
+                <div class="input-box flex items-center border rounded-md bg-[#1f2937]">
+                  <CircleUser class="input-icon ml-3 mr-3 h-5 w-5" />
+                  <Input id="emergname" type="text"  class="border-0" value={getValue('EmergName')} />
+                </div>
 
-                  <Label for="relationship">Relationship</Label>
-                  <Input id="relationship" type="text" value={getValue('Relationship')} />
+                <Label for="relationship" class="flex">Relationship</Label>
+                <div class="input-box flex items-center border rounded-md bg-[#1f2937]">
+                  <Users class="input-icon ml-3 mr-3 h-5 w-5" />
+                  <Input id="relationship" type="text"  class="border-0" value={getValue('Relationship')} />
+                </div>
 
-                  <Label for="emergnum">Contact Number</Label>
-                  <Input id="emergnum" type="text" value={getValue('EmergNum')} />
+                  <Label for="emergnum" class="flex">Contact Number</Label>
+                  <div class="input-box flex items-center border rounded-md bg-[#1f2937]">
+                    <PhoneIcon class="input-icon ml-3 mr-3 h-5 w-5" />
+                    <Input id="emergnum" type="text"  class="border-0" value={getValue('EmergNum')} />
+                  </div>
 
                 <!-- Others -->
 

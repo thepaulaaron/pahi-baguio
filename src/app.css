@@ -21,6 +21,9 @@
     --paul-violet: #422271;
     --paul-violet-dark: #261c37;
 
+    --bakgrawn-dark: #030712;
+    --forgrawn-dark: #e5e7eb;
+
     --github-green: #238636;
     --github-violet: #302441;
 
@@ -523,14 +526,6 @@ html.dark {
   width: calc(.1 * (100% - 3rem));
 }
 
-.volunteer-dialog .vert Input {
-  /* font-family: 'Merriweather', sans-serif; */
-}
-
-.volunteer-dialog .vert Input:focus {
-  color: var(--paul-gray-light);
-}
-
 /* 01-25-25 : Back to Work */
 
 .dark .header-cell {
@@ -552,3 +547,25 @@ html.dark {
   .header-cell:last-child {
     border-top-right-radius: 8px; /* Match the table's top-right corner */
   }
+
+  
+.volunteer-dialog .vert Input {
+  background-color: #030712;
+}
+
+.volunteer-dialog .vert Input:focus {
+  color: var(--paul-gray-light);
+}
+
+.volunteer-dialog .vert .input-box {
+  background-color: #1f2937;
+}
+
+.volunteer-dialog .vert .input-box:focus-within {
+  background-color: var(--forgrawn-dark);
+  transition: all .3s;
+}
+
+.volunteer-dialog .vert .input-box:focus-within .input-icon {
+  color: var(--bakgrawn-dark);
+}

@@ -15,5 +15,5 @@
     <Hero/>
   </SectionWrapper>
 
- <About/>
+ <!-- <About/> -->
 </main>

@@ -63,6 +63,10 @@
   function getValue(property: any) {
     return row?.original?.[property] ?? "N/A";
   }
+
+  function sendEmail(toAddress: any) {
+    window.location.href = `mailto:${toAddress}`;
+  }
  </script>
 
 <!-- VIEW Dialog -->
@@ -241,14 +245,25 @@
   <DropdownMenu.Content>
    <DropdownMenu.Group>
     <DropdownMenu.Label>Actions</DropdownMenu.Label>
-    <DropdownMenu.Item on:click={() => navigator.clipboard.writeText(getValue("_id"))}>
-     Copy user ID
+    <DropdownMenu.Item on:click={() => navigator.clipboard.writeText(getValue("StudNum"))}>
+      <!-- Copy Stud # <div class="italic">&nbsp;{getValue("StudNum")}</div> -->
+       Copy Stud #
     </DropdownMenu.Item>
-    <DropdownMenu.Item on:click={handleViewVolunteer}>
-      View Volunteer
+    <DropdownMenu.Item on:click={() => navigator.clipboard.writeText(getValue("StudNum"))}>
+      Copy Phone #
     </DropdownMenu.Item>
+    <DropdownMenu.Item on:click={() => sendEmail(getValue("UPMail"))}>
+     Send email <div class="italic">&nbsp;(@up.edu)</div>
+    </DropdownMenu.Item>
+    <DropdownMenu.Item on:click={() => sendEmail(getValue("PersonalMail"))}>
+      Send email <div class="italic">&nbsp;(@gmail)</div>
+     </DropdownMenu.Item>
+    
    </DropdownMenu.Group>
    <DropdownMenu.Separator />
+   <DropdownMenu.Item on:click={handleViewVolunteer}>
+    View Volunteer
+  </DropdownMenu.Item>
    <DropdownMenu.Item on:click={handleEditVolunteer}>Edit Details</DropdownMenu.Item>
   </DropdownMenu.Content>
  </DropdownMenu.Root>

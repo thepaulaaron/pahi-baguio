@@ -25,6 +25,7 @@
   // Initialize the writable store with an explicit type
   const dataStore = writable<Record<string, any>[]>([]);
   const selectedVolunteer = writable<Record<string, any> | null>(null);
+  const selectedVolType = writable<string | null>(null);
   const showPopup = writable(false);
 
   // State for toggling name display format
@@ -38,8 +39,12 @@
       .some(([_, value]) => value !== undefined && value !== null && value !== ""); // Check the value
   });
 
-  // Process data to add 'Name' field dynamically based on the selected format
-  const processedData = validData.map((record) => ({
+  // Apply volType filter
+  const filteredByVolType = $selectedVolType
+  ? validData.filter(record => record.VolType === $selectedVolType)
+  : validData;
+
+  const finalData = filteredByVolType.map((record) => ({
     ...record,
     Name: $nameFormat === 'firstLast'
       // Format: First name first
@@ -50,7 +55,7 @@
       .filter(Boolean).join(" ")
   }));
 
-  dataStore.set(processedData); // Update the store with processed data
+  dataStore.set(finalData);
 }
 
   // TABLE: Initialization
@@ -150,6 +155,14 @@ function toggleNameFormat() {
     Friend: 'friend'
   };
 
+  const volTypes = Object.keys(volTypeClasses);
+
+  function handleTypeSelect(type: any) {
+    selectedVolType.set(type);
+  }
+
+  $: selectedTypeDisplay = $selectedVolType ?? 'All Types';
+
   // Function to get the class for a given volunteer type
   function getBadgeClass(volType: string): string {
     return "volunteer-badge " + volTypeClasses[volType] || ''; // Return an empty string if no class is found
@@ -162,25 +175,53 @@ function toggleNameFormat() {
 
 <div class="space-y-3">
 
-  <!-- Search and Column Visibility Dropdown -->
+<!-- Table Modifiers, Filters, etc. -->
 <div class="flex items-center justify-between">
-  <div class="flex flex-1 items-center space-x-3">
+
+  <div id="LEFT" class="flex flex-1 items-center space-x-3">
+    
+    <!-- Search Bar -->
     <Input
       placeholder="Search..."
       class="h-8 w-[150px] lg:w-[250px]"
       type="search"
       bind:value={$filterValue}
     />
-
-    <div>asds</div>
     
+    <!-- Add User -->
     <Button variant="default" size="sm" on:click={() => showAddUserModal.set(true)}>
-      Add New User
+      Add New
     </Button>    
 
   </div>
 
-  <div>
+  <div id="RIGHT" >
+    <!-- VolType Filter Dropdown -->
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild let:builder>
+        <Button
+          variant="outline"
+          class="h-8 px-2 border rounded justify-between min-w-[6rem]"
+          size="sm"
+          builders={[builder]}>
+          <span>{selectedTypeDisplay}</span>
+          <i class="fa-solid fa-chevron-down ml-2"></i>
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Content class="z-50">
+        <DropdownMenu.Item on:click={() => handleTypeSelect(null)}>
+          All Types
+        </DropdownMenu.Item>
+        {#each volTypes as type}
+          <DropdownMenu.Item on:click={() => handleTypeSelect(type)}>
+            {type}
+          </DropdownMenu.Item>
+        {/each}
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+
+    <!-- Show/Hide Columns -->
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild let:builder>
         <Button

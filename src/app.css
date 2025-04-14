@@ -427,7 +427,7 @@ html.dark {
   height: 600px;
   display: flex;
   flex-direction: column; /* Ensure proper stacking */
-  overflow: hidden; /* Prevent outer overflow */
+  overflow: auto;
 }
 
 .volunteer-dialog .dialog-title {

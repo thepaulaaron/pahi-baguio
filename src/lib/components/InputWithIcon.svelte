@@ -15,6 +15,6 @@
     {#if icon}
       <svelte:component this={icon} class="input-icon ml-3 mr-3 h-5 w-5" />
     {/if}
-    <Input id={id} type="text" class="border-0" value={value} readonly={readonly} />
+    <Input id={id} type="text" class="border-0" bind:value={value} readonly={readonly} />
   </div>
 </div>

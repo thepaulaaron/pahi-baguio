@@ -1,7 +1,8 @@
 import { startMongo } from '../../../db/mongo';
 import type { WithId, Document } from 'mongodb';
+import type { RequestHandler } from '@sveltejs/kit';
 
-export async function GET() {
+export const GET: RequestHandler = async () => {
   try {
     const db = await startMongo(); // Get the database instance
 
@@ -21,12 +22,35 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Error loading volunteers:', error);
-    return new Response(
-      JSON.stringify({ error: 'Failed to load volunteers' }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
+    return new Response(JSON.stringify({ error: 'Failed to load volunteers' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
-}
+};
+
+// ✅ This is the new handler
+export const POST: RequestHandler = async ({ request }) => {
+  try {
+    const newVolunteer = await request.json();
+
+    const db = await startMongo();
+    const result = await db.collection('moversveltecollection').insertOne(newVolunteer);
+
+    const created = {
+      _id: result.insertedId.toString(),
+      ...newVolunteer
+    };
+
+    return new Response(JSON.stringify(created), {
+      status: 201,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Error adding volunteer:', error);
+    return new Response(JSON.stringify({ error: 'Failed to add volunteer' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+};

@@ -1,6 +1,7 @@
 <script lang="ts">
   import * as Table from "$lib/components/ui/table";
   import DatableActions from "./datable-actions.svelte";
+  import AddUser from "./adder.svelte"
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 
   import { Button } from "$lib/components/ui/button/index.js";
@@ -12,6 +13,7 @@
   import ArrowUpDown from "lucide-svelte/icons/arrow-up-down";
 	import Settings2 from "lucide-svelte/icons/settings-2";
 	import { Badge } from "$lib/components/ui/badge";
+	import { showAddUserModal } from "$str";
 
   // ------------------ LET-TERS
 
@@ -154,6 +156,10 @@ function toggleNameFormat() {
   }
 </script>
 
+{#if $showAddUserModal}
+  <AddUser on:close={() => showAddUserModal.set(false)} />
+{/if}
+
 <div class="space-y-3">
 
   <!-- Search and Column Visibility Dropdown -->
@@ -167,6 +173,11 @@ function toggleNameFormat() {
     />
 
     <div>asds</div>
+    
+    <Button variant="default" size="sm" on:click={() => showAddUserModal.set(true)}>
+      Add New User
+    </Button>    
+
   </div>
 
   <div>
@@ -288,5 +299,7 @@ function toggleNameFormat() {
     </Table.Root>
   </div>
 </div>
+
+
 
 </div>

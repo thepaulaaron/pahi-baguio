@@ -1,319 +1,138 @@
 <script lang="ts">
-  import { writable } from "svelte/store";
-  import ConfirmDialog from "$comp/confirm-dialog.svelte";
-  import type { Volunteer } from "./sort";
-  import { updateData as updator } from './sort';
-  import { selectedVolunteerId } from '$lib/context'; // Import the selected volunteer ID store
-  import { activeTab } from "$str"; // Import active tab store
+  import { createEventDispatcher } from 'svelte';
+  import { showAddUserModal } from "$str";
 	import { Separator } from "$comp/ui/separator";
+	import { ScrollArea } from "$comp/ui/scroll-area";
+	import { Label } from "$lib/components/ui/label";
+	import { Input } from "$lib/components/ui/input";
+  import * as Dialog from "$comp/ui/dialog";
+  let dialogWrapper: HTMLDivElement;
 
-  // Prop received from parent
-  export let data: Volunteer[];
+  import InputWithIcon from "$lib/components/InputWithIcon.svelte";
 
-  // Track the currently selected volunteer's ID
-  let volunteerId: string | undefined;
-  $: $selectedVolunteerId, volunteerId = $selectedVolunteerId;
+  import { 
+    Ellipsis, 
+    CalendarIcon, 
+    PhoneIcon, 
+    CircleUser, 
+    Users,
+    Fingerprint,
+    Mail,
+	  MailPlus,
+	  GraduationCap,
+	  BookUser,
+	  Building,
+	  School,
+	  BriefcaseBusiness,
+	  HandHeart,
+	  HandMetal,
+	  MapPin,
+  } from "lucide-svelte/icons";
 
-  // Find the selected volunteer based on the ID
-  let selectedVolunteer: Volunteer | undefined;
-  $: selectedVolunteer = data.find(volunteer => volunteer._id === volunteerId);
+  const dispatch = createEventDispatcher();
 
-  // Dialog visibility state
-  const isOpen = writable(false);
-  let currentIndex: number | null = null;
-
-  // Open the confirmation dialog for the selected volunteer
-  function openDialog(index: number) {
-    currentIndex = index;
-    isOpen.set(true);
+  function closeModal() {
+    dispatch('close');
   }
 
-  function closeDialog() {
-    isOpen.set(false);
-  }
-
-  // Update the local data with the modified volunteer information
-  function updateLocalData(updatedVolunteer: Volunteer) {
-    data = data.map(volunteer =>
-      volunteer._id === updatedVolunteer._id ? updatedVolunteer : volunteer
-    );
-  }
-
-  // Save changes to the server and update local data
-  function saveChanges(index: number) { 
-    const updatedVolunteer = { ...data[index] };
-    const { _id, ...updateData } = updatedVolunteer;
-
-    // Update data for +page.svelte
-    updator(data);
-
-    console.log('Saving volunteer with ID:', _id);
-
-    fetch(`/api/volunteers/${_id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updateData),
-    })
-      .then(response => {
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        return response.json();
-      })
-      .then(updatedData => {
-        console.log('Data saved:', updatedData);
-        updateLocalData({ ...updatedVolunteer, ...updatedData });
-
-        // Update selected volunteer directly if it's currently selected
-        if (selectedVolunteer) {
-          Object.assign(selectedVolunteer, updatedData);
-        }
-      })
-      .catch(error => console.error('Error saving data:', error));
-  }
-
-  // Handle confirmation from the dialog
-  function handleConfirm(param: number | null) {
-    if (param !== null) {
-      saveChanges(param);
-    }
-    currentIndex = null;
-    isOpen.set(false);
-  }
-
-  // Handle cancellation of the dialog
-  function handleCancel() {
-    currentIndex = null;
-    isOpen.set(false);
-  }
-
-  // Handle closing of the dialog
-  function handleDialogClose() {
-    isOpen.set(false);
+  function submitForm() {
+    // Handle your form submission logic here
+    closeModal(); // Optional: close after submission
   }
 </script>
 
-{#if selectedVolunteer}
-  <div class="volunteer">
+<Dialog.Root open={$showAddUserModal} onOpenChange={(open) => { if (!open) closeModal(); }}>
+  <div bind:this={dialogWrapper} class="dialog-wrapper">
+    <Dialog.Content class="volunteer-dialog p-10">
+      <Dialog.Header>
+        <Dialog.Title class="dialog-title">Add New User</Dialog.Title>
+        <Dialog.Description>
 
-    <div class="space-y-6">
-      <div>
-        <div class="flex justify-between">
-          <div class="text-lg font-medium">Add Volunteer</div>
-          <div>
-            <!-- Trigger the save operation -->
-            <!-- <button on:click={() => openDialog(data.findIndex(volunteer => volunteer._id === selectedVolunteer._id))}> -->
-            <button>
-              Save
-            </button>
-          </div>
-        </div>
-        <!-- <p class="text-muted-foreground text-sm">Details of {selectedVolunteer.Name}</p> -->
+<ScrollArea class="mt-4 pl-5 pr-5 h-[calc(100%-180px)] w-full">
+  <div class="ml-1 mb-1 flex space-x-4 text-base">
+    
+    <!-- Personal Info -->
+    <div class="vert flex flex-col space-y-2">
+      <strong class="info-heading text-lg">Personal Info</strong> 
+      <Separator />
+
+      <Label for="fname">First Name</Label>
+      <Input id="fname" type="text"/>
+
+      <Label for="midname">Middle Name</Label>
+      <Input id="midname" type="text"/>
+
+      <Label for="surname">Surname</Label>
+      <Input id="surname" type="text"/>
+
+      <Label for="suffixname">Suffix</Label>
+      <Input id="suffixname" type="text"/>
+
+      <InputWithIcon label="Sex" icon={Fingerprint} id="sex"/> 
+      <InputWithIcon label="Birthday" icon={CalendarIcon} id="birthday"/> 
+      <InputWithIcon label="Mobile Number" icon={PhoneIcon} id="mobnum"/> 
+      <InputWithIcon label="Personal Mail" icon={Mail} id="personalmail"/> 
+      <InputWithIcon label="Address" icon={MapPin} id="address" /> 
+    </div>
+
+    <!-- Campus Info -->
+    <div class="vert flex flex-col space-y-2">
+      <strong class="info-heading text-lg">Campus Info</strong> 
+      <Separator />
+
+      <InputWithIcon label="UP Mail" icon={MailPlus} id="upmail" />
+      <InputWithIcon label="Student Number" icon={BookUser} id="studnum"/>
+      <InputWithIcon label="Degree Program" icon={GraduationCap} id="degprog"/>
+      <InputWithIcon label="College" icon={Building} id="college" />                       
+      <InputWithIcon label="Department" icon={School} id="dept"/> 
+      <InputWithIcon label="Designation" icon={BriefcaseBusiness} id="designation"/>
+    </div>
+
+    <!-- Emergency Contact --> 
+    <div class="vert flex flex-col space-y-2">
+      <strong class="info-heading text-lg">Emergency Contact</strong>                   
+      <Separator />
+
+      <InputWithIcon label="Name" icon={CircleUser} id="emergname"/>
+      <InputWithIcon label="Relationship" icon={Users} id="relationship"/>
+      <InputWithIcon label="Contact Number" icon={PhoneIcon} id="emergnum"/>                
+
+      <!-- Others --> 
+      <div class="h-5"></div> 
+        <strong class="info-heading text-lg">Others</strong> 
         <Separator />
-      </div>
 
-      <!-- <div id="empty"></div> -->
+        <InputWithIcon label="Volunteer Status" icon={HandMetal} id="volstatus" />
+        <InputWithIcon label="Volunteer Since" icon={HandHeart} id="volsince"/>
 
-      <div id="name"
-        class="flex space-x-4 pahi-input">
-        <div class="input-thirty">
-          <p class="text-muted-foreground text-sm">First Name</p>
-          <input bind:value={selectedVolunteer.Fname} placeholder="First Name"/>
-          <!-- <input placeholder="First Name"/> -->
-        </div>
+        <Label for="databaseid">Database ID</Label>
+        <Input id="databaseid" type="text"/>
 
-        <div class="input-thirty">
-          <p class="text-muted-foreground text-sm">Middle Name</p>
-          <!-- <input bind:value={selectedVolunteer.Midname} placeholder="Middle Name"/> -->
-          <input placeholder="Middle Name"/>
-        </div>
-
-        <div class="input-thirty">
-          <p class="text-muted-foreground text-sm">Last Name</p>
-          <!-- <input bind:value={selectedVolunteer.Surname} placeholder="Last Name"/> -->
-          <input placeholder="Last Name"/>
-        </div>
-        
-        <div class="input-ten">
-          <p class="text-muted-foreground text-sm">Suffix</p>
-          <!-- <input bind:value={selectedVolunteer.Suffixname} placeholder="Suffix"/> -->
-          <input placeholder="Suffix"/>
-        </div>
-      </div>
-
-      <div id="row2"
-        class="flex space-x-4 pahi-input">
-
-        <div id="voltype"
-          class="input-ten">
-          <p class="text-muted-foreground text-sm">Volunteer Type</p>
-          <input placeholder="Student, Faculty," />
-        </div>
-
-        <!-- be inclusive of pronouns? -->
-        <div id="sex"
-          style="width: 8rem">
-          <p class="text-muted-foreground text-sm">Sex</p>
-          <input placeholder="Male, Female, etc." />
-        </div>
-
-        <div id="bday"
-          class="input-ten">
-          <p class="text-muted-foreground text-sm">Birthday</p>
-          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
-          <input placeholder="MM/DD/YY" />
-        </div>
-
-        <div id="email1"
-          class="input-thirty">
-          <p class="text-muted-foreground text-sm">UP Mail</p>
-          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
-          <input placeholder="@up.edu.ph" />
-        </div>
-
-        <div id="email2"
-          class="input-thirty">
-          <p class="text-muted-foreground text-sm">Personal Mail</p>
-          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
-          <input placeholder="@gmail.com" />
-        </div>
-
-        <div id="phone-num"
-          class="input-ten">
-          <p class="text-muted-foreground text-sm">Mobile Number</p>
-          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
-          <input placeholder="09xx-xxx-xxxx" />
-        </div>
-
-      </div>
-
-      <div id="row3"
-        class="flex space-x-4 pahi-input">
-
-        <div id="stud-num"
-          class="input-ten">
-          <p class="text-muted-foreground text-sm">Student Number</p>
-          <input placeholder="xxxx-xxxxx" />
-        </div>
-
-        <div id="college"
-          style="width: 8rem">
-          <p class="text-muted-foreground text-sm">College</p>
-          <input placeholder="CS, CAC, CSS" />
-        </div>
-
-        <div id="program"
-          class="input-ten">
-          <p class="text-muted-foreground text-sm">Degree Program</p>
-          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
-          <input placeholder="BS Computer Science" />
-        </div>
-
-        <div id="address"
-          class="input-thirty">
-          <p class="text-muted-foreground text-sm">Address</p>
-          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
-          <input placeholder="Street, City, Province" />
-        </div>
-
-        <div id="emergency-contact"
-          style="width:19rem;">
-          <p class="text-muted-foreground text-sm">Emergency Contact</p>
-          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
-          <input placeholder="Contact Name" />
-        </div>
-
-        <div id="relationship"
-          style="width:10rem;">
-          <p class="text-muted-foreground text-sm">Relationship</p>
-          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
-          <input placeholder="Mother, Father, etc." />
-        </div>
-
-        <div id="phone-num2"
-          class="input-ten">
-          <p class="text-muted-foreground text-sm">Mobile Number</p>
-          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
-          <input placeholder="09xx-xxx-xxxx" />
-        </div>
-      </div>
-
-      <div id="row4"
-        class="flex space-x-4 pahi-input">
-        <div id="department"
-          style="width:14.25rem;">
-          <p class="text-muted-foreground text-sm">Department</p>
-          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
-          <input placeholder="DMCS, DB, DPS, etc." />
-        </div>
-
-        <div id="designation"
-          style="width:14.5rem;">
-          <p class="text-muted-foreground text-sm">Designation</p>
-          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
-          <input placeholder="Professor, Lecturer, etc." />
-        </div>
-
-        <div id="volunteer-status"
-          style="width:14rem;">
-          <p class="text-muted-foreground text-sm">Volunteer Status</p>
-          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
-          <input placeholder="Active, Inactive" />
-        </div>
-
-        <div id="volunteer-since"
-          style="width:15rem;">
-          <p class="text-muted-foreground text-sm">Volunteer Since</p>
-          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
-          <input placeholder="MM/DD/YY" />
-        </div>
-
-        <div id="volunteer-since"
-          style="width:41rem;
-            height:20rem;">
-          <p class="text-muted-foreground text-sm">Notes:</p>
-          <!-- <input bind:value={selectedVolunteer.Birthday} placeholder="Birthday:" /> -->
-          <input/>
-        </div>
-
-      </div>
+        <Label for="notes">Notes</Label>
+        <Input id="notes" type="text"/>
     </div>
-  <div>
-
-
-
-      
-      
-      <!-- <input bind:value={selectedVolunteer.MobileNum} placeholder="Mobile Num:" />
-      <input bind:value={selectedVolunteer.PersonalMail} placeholder="Personal Mail:" />
-      <input bind:value={selectedVolunteer.Address} placeholder="Address:" />
-      <input bind:value={selectedVolunteer.UPMail} placeholder="UP Mail:" />
-      <input bind:value={selectedVolunteer.StudentNumber} placeholder="Student Number:" />
-      <input bind:value={selectedVolunteer.DegreeProgram} placeholder="Degree Program:" />
-      <input bind:value={selectedVolunteer.College} placeholder="College:" />
-      <input bind:value={selectedVolunteer.Department} placeholder="Department:" />
-      <input bind:value={selectedVolunteer.Designation} placeholder="Designation:" />
-      <input bind:value={selectedVolunteer.EmergencyContactName} placeholder="Emergency Contact Name:" />
-      <input bind:value={selectedVolunteer.EmergencyContactRelationship} placeholder="Relationship:" />
-      <input bind:value={selectedVolunteer.EmergencyContactNumber} placeholder="Contact Number:" />
-      <input bind:value={selectedVolunteer.VolunteerStatus} placeholder="Volunteer Status:" />
-      <input bind:value={selectedVolunteer.VolunteerSince} placeholder="Volunteer Since:" />
-      <input bind:value={selectedVolunteer.DatabaseID} placeholder="Database ID:" />
-      <input bind:value={selectedVolunteer.Notes} placeholder="Notes:" /> -->
-    </div>
-
-
   </div>
-<!-- {:else} -->
-  <!-- <p>No volunteer selected</p> -->
-{/if}
+</ScrollArea>
 
-<!-- {#if $isOpen} -->
-  <ConfirmDialog
-    content="Are you sure you want to proceed?"
-    buttonText="Yes"
-    open={$isOpen}
-    onConfirm={handleConfirm}
-    onCancel={handleCancel}
-    confirmParam={currentIndex}
-    on:close={handleDialogClose}
-  />
-<!-- {/if} -->
+</Dialog.Description>
+</Dialog.Header>
+</Dialog.Content>
+</div>
+</Dialog.Root>
+
+<div class="fixed -top-5 left-0 w-screen h-screen flex items-center justify-center bg-black/50 z-50">
+  <div class="bg-white p-6 rounded shadow-lg w-full max-w-md">
+    <h2 class="text-lg font-semibold mb-4">Add New User</h2>
+    <form on:submit|preventDefault={submitForm}>
+      <!-- Add your inputs here -->
+      <input class="mb-2 w-full border p-2" placeholder="First Name" />
+      <input class="mb-2 w-full border p-2" placeholder="Last Name" />
+      <!-- Add more fields as needed -->
+
+      <div class="flex justify-end gap-2 mt-4">
+        <button type="button" class="px-4 py-2 bg-gray-300 rounded" on:click={closeModal}>Cancel</button>
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -30,7 +30,7 @@
 		</DropdownMenu.Label>
 		<DropdownMenu.Separator />
 		<DropdownMenu.Group>
-			<DropdownMenu.Item class="cursor-pointer">Settings</DropdownMenu.Item>
+			<!-- <DropdownMenu.Item class="cursor-pointer">Settings</DropdownMenu.Item> -->
 			<DropdownMenu.Item class="btn-logout" on:click={handleLogout}>Sign Out</DropdownMenu.Item>
 		</DropdownMenu.Group>
 	</DropdownMenu.Content>

@@ -162,30 +162,33 @@
     <DropdownMenu.Group>
       <DropdownMenu.Label>Actions</DropdownMenu.Label>
       
-      <DropdownMenu.Item on:click={() => navigator.clipboard.writeText(getValue("StudNum"))}>
+      <DropdownMenu.Item class="cursor-pointer" on:click={() => navigator.clipboard.writeText(getValue("StudNum"))}>
         Copy Stud #
       </DropdownMenu.Item>
       
-      <DropdownMenu.Item on:click={() => navigator.clipboard.writeText(getValue("StudNum"))}>
+      <DropdownMenu.Item class="cursor-pointer" on:click={() => navigator.clipboard.writeText(getValue("StudNum"))}>
         Copy Phone #
       </DropdownMenu.Item>
       
-      <DropdownMenu.Item on:click={() => sendEmail(getValue("UPMail"))}>
+      <DropdownMenu.Item class="cursor-pointer" on:click={() => sendEmail(getValue("UPMail"))}>
         Send email <div class="italic">&nbsp;(@up.edu)</div>
       </DropdownMenu.Item>
       
-      <DropdownMenu.Item on:click={() => sendEmail(getValue("PersonalMail"))}>
+      <DropdownMenu.Item class="cursor-pointer" on:click={() => sendEmail(getValue("PersonalMail"))}>
       Send email <div class="italic">&nbsp;(@gmail)</div>
       </DropdownMenu.Item>
     
     </DropdownMenu.Group>
     <DropdownMenu.Separator />
     
-    <DropdownMenu.Item on:click={handleViewVolunteer}>
+    <DropdownMenu.Item class="transition duration-200 data-[highlighted]:bg-green-800 data-[highlighted]:text-white cursor-pointer" on:click={handleViewVolunteer}>
       View Volunteer
     </DropdownMenu.Item>
-    <DropdownMenu.Item on:click={() => openEDIT(row)}>
+    <DropdownMenu.Item class="transition duration-200 data-[highlighted]:bg-blue-900 data-[highlighted]:text-white cursor-pointer" on:click={() => openEDIT(row)}>
       Edit Details
+    </DropdownMenu.Item>
+    <DropdownMenu.Item class="transition duration-200 data-[highlighted]:bg-red-800 data-[highlighted]:text-white cursor-pointer" on:click={() => openEDIT(row)}>
+      Delete
     </DropdownMenu.Item>
   </DropdownMenu.Content>
 </DropdownMenu.Root>

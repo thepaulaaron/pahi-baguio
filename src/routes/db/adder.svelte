@@ -75,7 +75,7 @@
 
 <Dialog.Root open={$showAddUserModal} onOpenChange={(open) => { if (!open) closeModal(); }}>
   <div bind:this={dialogWrapper} class="dialog-wrapper">
-    <Dialog.Content class="volunteer-dialog p-10">
+    <Dialog.Content class="volunteer-dialog p-10 overflow-auto">
       <Dialog.Header>
         <Dialog.Title class="dialog-title mb-2">Add New User</Dialog.Title>
         <!-- <Dialog.Description> -->

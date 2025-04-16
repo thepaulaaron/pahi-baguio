@@ -1,5 +1,7 @@
 import { startMongo } from '../../../../db/mongo';
 import { ObjectId } from 'mongodb';
+import { json } from '@sveltejs/kit';
+import type { RequestHandler } from '@sveltejs/kit';
 
 export async function GET({ params }: { params: { id: string } }) {
   const { id } = params; // Dynamic ID from the URL
@@ -41,9 +43,41 @@ export async function GET({ params }: { params: { id: string } }) {
     );
   } catch (error) {
     console.error('Error fetching volunteer:', error);
-    return new Response(
-      JSON.stringify({ error: 'Failed to fetch volunteer' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    return json({ error: 'Failed to fetch volunteer' }, { status: 500 });
   }
 }
+
+export const PUT: RequestHandler = async ({ params, request }) => {
+  const id = params.id!;
+  const data = await request.json();
+
+  console.log("Received data:", data);
+
+  try {
+    const db = await startMongo();
+
+    // Validate ObjectId
+    if (!ObjectId.isValid(id)) {
+      return json({ error: 'Invalid ID format' }, { status: 400 });
+    }
+
+    // Remove _id if it exists in the incoming data
+    delete data._id;
+
+    // Update the volunteer in the database
+    const result = await db.collection('moversveltecollection').updateOne(
+      { _id: new ObjectId(id) },
+      { $set: data }
+    );
+
+    if (result.matchedCount === 0) {
+      return json({ error: 'Volunteer not found' }, { status: 404 });
+    }
+
+    // Return the result of the update operation
+    return json({ success: result.modifiedCount > 0 });
+  } catch (err) {
+    console.error('Server error:', err);
+    return json({ error: 'Failed to update volunteer' }, { status: 500 });
+  }
+};

@@ -29,7 +29,6 @@ export const GET: RequestHandler = async () => {
   }
 };
 
-// ✅ This is the new handler
 export const POST: RequestHandler = async ({ request }) => {
   try {
     const newVolunteer = await request.json();

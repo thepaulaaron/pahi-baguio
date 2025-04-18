@@ -154,6 +154,7 @@
 
                   <InputWithIcon label="Volunteer Status" icon={HandMetal} id="volstatus" value={getValue('VolStatus')} readonly={true} />
                   <InputWithIcon label="Volunteer Since" icon={HandHeart} id="volsince" value={getValue('VolSince')} readonly={true} />
+                  <InputWithIcon label="Volunteer Type" icon={HandHeart} id="voltype" value={getValue('VolType')} readonly={true} />
 
                   <Label for="databaseid">Database ID</Label>
                   <Input id="databaseid" type="text" value={getValue('DatabaseID')} readonly={true} />

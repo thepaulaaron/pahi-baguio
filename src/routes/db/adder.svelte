@@ -10,7 +10,8 @@
   let dialogWrapper: HTMLDivElement;
 
   import InputWithIcon from "$lib/components/InputWithIcon.svelte";
-  import { type Volunteer, createBlankVolunteer } from '$lib/models/volunteerModel';
+  import InputWithIconOnly from '$lib/components/InputWithIconOnly.svelte';
+  import { type Volunteer, createBlankVolunteer, VOL_TYPES } from '$lib/models/volunteerModel';
 
   import { 
     Ellipsis, 
@@ -114,6 +115,19 @@
             
                 <InputWithIcon label="Volunteer Status" icon={HandMetal} id="volstatus" bind:value={newUser.VolStatus}/>
                 <InputWithIcon label="Volunteer Since" icon={HandHeart} id="volsince" bind:value={newUser.VolSince}/>
+
+                <InputWithIconOnly label="Volunteer Type" icon={HandHeart}>
+              <select
+                id="voltype"
+                class="p-2 rounded-md w-full bg-[#030712]"
+                bind:value={newUser.VolType}
+              >
+                <option value="">Select Type</option>
+                {#each VOL_TYPES as type}
+                  <option value={type}>{type}</option>
+                {/each}
+              </select>
+            </InputWithIconOnly>
             
                 <Label for="databaseid">Database ID</Label>
                 <Input id="databaseid" type="text" bind:value={newUser.DatabaseID}/>

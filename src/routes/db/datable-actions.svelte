@@ -38,6 +38,7 @@
   const isOpenEDIT = writable(false);
   let dialogWrapper: HTMLDivElement;
   let selectedRow: any;
+  // export let row: Volunteer;
   export let handleDelete: (row: Volunteer) => void;
 
   function openVIEW() {
@@ -77,6 +78,7 @@
     alert('An unexpected error occurred.');
   }
 }
+
 
   function getValue(property: any) {
     return row?.original?.[property] ?? "N/A";

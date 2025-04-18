@@ -40,6 +40,7 @@
   let selectedRow: any;
   // export let row: Volunteer;
   export let handleDelete: (row: Volunteer) => void;
+  export let handleEdit: (row: Volunteer) => void;
 
   function openVIEW() {
     isOpenVIEW.set(true);
@@ -78,7 +79,6 @@
     alert('An unexpected error occurred.');
   }
 }
-
 
   function getValue(property: any) {
     return row?.original?.[property] ?? "N/A";
@@ -217,4 +217,5 @@
   row={selectedRow}
   bind:open={$isOpenEDIT}
   onClose={closeEDIT}
+  exportHandleEdit={handleEdit}
 />

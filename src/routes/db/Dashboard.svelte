@@ -1,24 +1,53 @@
 <script lang="ts">
 	import DarkToggle from "$lib/components/dark-toggle.svelte";
 	import { UserNav } from "$lib/components/dashboard";
-	import { onMount } from "svelte";
+	import { onMount, createEventDispatcher } from "svelte";
+  import { toast } from "svelte-sonner";
 	import Datable from "./datable.svelte";
-
-  // export let data: Record<string, any>[] = [];
 
   import { mode } from 'mode-watcher';
 	import type { Volunteer } from "$lib/models/volunteerModel";
-  $: dark = $mode != 'light';
 
+  // export let data: Record<string, any>[] = [];
   let data: Volunteer[] = [];
+  const dispatch = createEventDispatcher();
+
+  $: dark = $mode != 'light';
 
   onMount(async () => {
     const res = await fetch('/api/volunteers');
     data = await res.json();
   });
 
+  async function handleEdit(row: any) {
+    console.log("Received in Dashboard [edit]: ", row);
+
+    try {
+      const res = await fetch(`/api/volunteers/${row._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(row)
+      });
+
+      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+
+      const updated = await res.json();
+      dispatch("saved", updated);
+      console.log("Updated: ", JSON.stringify(row, null, 2));
+
+      // Update the data for the table
+      data = data.map(v => v._id === row._id ? row : v);
+
+      toast.warning("Updated!", {
+        duration: 2500
+      });
+    } catch (err) {
+      console.error('Failed to update volunteer:', err);
+    }
+  }
+
   async function handleDelete(row_id : any) {
-    console.log("Received in Dashboard: ", row_id);
+    // console.log("Received in Dashboard: ", row_id);
     
     const res = await fetch(`/api/volunteers/${row_id}`, {
       method: 'DELETE',
@@ -51,7 +80,7 @@
 			<UserNav />
 		</div>
 	</div>
-	<Datable {data} {handleDelete} />
+	<Datable {data} {handleDelete} {handleEdit} />
 </div>
 
 <!-- <div>

@@ -61,6 +61,7 @@
 }
 
   export let handleDelete: (row_id: any) => void;
+  export let handleEdit: (row: any) => void;
 
   // TABLE: Initialization
   const table = createTable(dataStore, {
@@ -99,7 +100,7 @@
       // const id = row.original._id;
       // return createRender(DatableActions, { id });
 
-      return createRender(DatableActions, { row, handleDelete });  // Pass the entire row
+      return createRender(DatableActions, { row, handleDelete, handleEdit });  // Pass the entire row
     },
 		sort: false,  
 		filter: false

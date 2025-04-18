@@ -10,9 +10,6 @@
     DialogDescription
   } from "$comp/ui/dialog";
   import { Separator } from "$comp/ui/separator";
-  import { Label } from "$lib/components/ui/label";
-  import { toast } from "svelte-sonner";
-  import { tick } from 'svelte';
   import { createEventDispatcher } from "svelte";
   import InputWithIconOnly from "./InputWithIconOnly.svelte";
 
@@ -42,6 +39,7 @@
   export let onClose: () => void;
   export let row: any;
   export let volunteer: Volunteer = {} as Volunteer;
+  export let exportHandleEdit: (row: Volunteer) => void;
 
 	$: if (row) {
 	  volunteer = { ...row.original };
@@ -55,23 +53,9 @@
 
   async function handleSave() {
     try {
-      const res = await fetch(`/api/volunteers/${volunteer._id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(volunteer)
-      });
-
-      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-
-      const updated = await res.json();
-      dispatch("saved", updated);
-      console.log("Updated: ", JSON.stringify(volunteer, null, 2));
-      window.location.reload();
+      console.log("Passing from EditModal: ", volunteer)
+      exportHandleEdit(volunteer);
       onClose();
-
-      toast.warning("Updated!", {
-        duration: 2500
-      });
     } catch (err) {
       console.error('Failed to update volunteer:', err);
     }

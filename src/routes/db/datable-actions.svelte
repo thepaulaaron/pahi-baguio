@@ -30,6 +30,7 @@
 
 	import InputWithIcon from "$lib/components/InputWithIcon.svelte";
   import EditVolunteerModal from "$lib/components/EditVolunteerModal.svelte";
+	import type { Volunteer } from "$lib/models/volunteerModel";
   
   export let row: any;
 
@@ -37,6 +38,7 @@
   const isOpenEDIT = writable(false);
   let dialogWrapper: HTMLDivElement;
   let selectedRow: any;
+  export let handleDelete: (row: Volunteer) => void;
 
   function openVIEW() {
     isOpenVIEW.set(true);
@@ -60,31 +62,21 @@
     isOpenEDIT.set(false);
   }
 
-  async function handleDelete(row: any) {
+  async function onDeleteClick(row: any) {
   const confirmed = confirm(`Are you sure you want to delete ${row.name}?`);
   if (!confirmed) return;
 
   try {
-    const res = await fetch(`/api/volunteers/${row.original._id}`, {
-      method: 'DELETE'
-    });
+    // console.log("Actions passing: ", row.original?._id);
+    handleDelete(row.original._id);
 
-    if (!res.ok) {
-      const errorText = await res.text(); // Only read once
-      console.error('Delete failed:', errorText);
-      alert('Delete failed: ' + errorText);
-      return;
-    }
-
-    const result = await res.json();
+    // const result = await res.json();
     alert('Deleted successfully!');
-    // Refresh UI here if needed
   } catch (err) {
     console.error('Error deleting volunteer:', err);
     alert('An unexpected error occurred.');
   }
 }
-
 
   function getValue(property: any) {
     return row?.original?.[property] ?? "N/A";
@@ -93,7 +85,7 @@
   function sendEmail(toAddress: any) {
     window.location.href = `mailto:${toAddress}`;
   }
- </script>
+</script>
 
 <!-- VIEW Dialog -->
 
@@ -213,7 +205,7 @@
     <DropdownMenu.Item class="transition duration-200 data-[highlighted]:bg-blue-900 data-[highlighted]:text-white cursor-pointer" on:click={() => openEDIT(row)}>
       Edit Details
     </DropdownMenu.Item>
-    <DropdownMenu.Item class="transition duration-200 data-[highlighted]:bg-red-800 data-[highlighted]:text-white cursor-pointer" on:click={() => handleDelete(row)}>
+    <DropdownMenu.Item class="transition duration-200 data-[highlighted]:bg-red-800 data-[highlighted]:text-white cursor-pointer" on:click={() => onDeleteClick(row)}>
       Delete
     </DropdownMenu.Item>
   </DropdownMenu.Content>

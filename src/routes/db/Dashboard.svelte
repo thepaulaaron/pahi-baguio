@@ -1,12 +1,40 @@
 <script lang="ts">
 	import DarkToggle from "$lib/components/dark-toggle.svelte";
 	import { UserNav } from "$lib/components/dashboard";
+	import { onMount } from "svelte";
 	import Datable from "./datable.svelte";
 
-  export let data: Record<string, any>[] = [];
+  // export let data: Record<string, any>[] = [];
 
   import { mode } from 'mode-watcher';
+	import type { Volunteer } from "$lib/models/volunteerModel";
   $: dark = $mode != 'light';
+
+  let data: Volunteer[] = [];
+
+  onMount(async () => {
+    const res = await fetch('/api/volunteers');
+    data = await res.json();
+  });
+
+  async function handleDelete(row_id : any) {
+    console.log("Received in Dashboard: ", row_id);
+    
+    const res = await fetch(`/api/volunteers/${row_id}`, {
+      method: 'DELETE',
+      headers: { "Content-Type": "application/json" }
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text(); // Only read once
+      console.error('Delete failed:', errorText);
+      alert('Delete failed: ' + errorText);
+      return;
+    }
+
+    // ✅ Update local data to remove the deleted row
+    data = data.filter(v => v._id !== row_id);
+  }
 </script>
 
 <div class="h-full flex-1 flex-col space-y-5 p-8 md:flex">
@@ -23,7 +51,7 @@
 			<UserNav />
 		</div>
 	</div>
-	<Datable {data} />
+	<Datable {data} {handleDelete} />
 </div>
 
 <!-- <div>

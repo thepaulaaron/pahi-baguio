@@ -14,11 +14,13 @@
 	import Settings2 from "lucide-svelte/icons/settings-2";
 	import { Badge } from "$lib/components/ui/badge";
 	import { showAddUserModal } from "$str";
+	import type { Volunteer } from "$lib/models/volunteerModel";
 
   // ------------------ LET-TERS
 
   // Data Store
-  export let data: Record<string, any>[] = [];
+  // export let data: Record<string, any>[] = [];
+  export let data: Volunteer[] = [];
   
   // console.log(data);
 
@@ -58,6 +60,8 @@
   dataStore.set(finalData);
 }
 
+  export let handleDelete: (row_id: any) => void;
+
   // TABLE: Initialization
   const table = createTable(dataStore, {
     sort: addSortBy({
@@ -95,7 +99,7 @@
       // const id = row.original._id;
       // return createRender(DatableActions, { id });
 
-      return createRender(DatableActions, { row });  // Pass the entire row
+      return createRender(DatableActions, { row, handleDelete });  // Pass the entire row
     },
 		sort: false,  
 		filter: false

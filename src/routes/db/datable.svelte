@@ -62,6 +62,7 @@
 
   export let handleDelete: (row_id: any) => void;
   export let handleEdit: (row: any) => void;
+  export let handleAdd: (row: any) => void;
 
   // TABLE: Initialization
   const table = createTable(dataStore, {
@@ -175,7 +176,7 @@ function toggleNameFormat() {
 </script>
 
 {#if $showAddUserModal}
-  <AddUser on:close={() => showAddUserModal.set(false)} />
+  <AddUser on:close={() => showAddUserModal.set(false)} exportHandleAdd={handleAdd} />
 {/if}
 
 <div class="space-y-3">

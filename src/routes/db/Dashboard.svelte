@@ -19,6 +19,31 @@
     data = await res.json();
   });
 
+  async function handleAdd(row: any) {
+    const { _id, ...newVolunteerData } = row;
+
+    try {
+      const res = await fetch('/api/volunteers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newVolunteerData)
+      });
+
+      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+      const createdVolunteer = await res.json();
+      console.log("Created: ", JSON.stringify(createdVolunteer, null, 2));
+
+      // 👇 Add the new row to the top (or end) of your data array
+      data = [createdVolunteer, ...data]; // or [...data, createdVolunteer]
+
+      toast.success("Volunteer added!", {
+        duration: 2500
+      });
+    } catch (err) {
+      console.error('Failed to add volunteer:', err);
+    }
+  }
+
   async function handleEdit(row: any) {
     // console.log("Received in Dashboard [edit]: ", row);
 
@@ -84,7 +109,7 @@
 			<UserNav />
 		</div>
 	</div>
-	<Datable {data} {handleDelete} {handleEdit} />
+	<Datable {data} {handleDelete} {handleEdit} {handleAdd} />
 </div>
 
 <!-- <div>

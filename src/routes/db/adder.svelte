@@ -10,7 +10,7 @@
   let dialogWrapper: HTMLDivElement;
 
   import InputWithIcon from "$lib/components/InputWithIcon.svelte";
-  import { createBlankVolunteer } from '$lib/models/volunteerModel';
+  import { type Volunteer, createBlankVolunteer } from '$lib/models/volunteerModel';
 
   import { 
     Ellipsis, 
@@ -32,44 +32,22 @@
   } from "lucide-svelte/icons";
 
   const dispatch = createEventDispatcher();
+  export let exportHandleAdd: (row: Volunteer) => void;
 
   function closeModal() {
     dispatch('close');
   }
 
-  // function submitForm() {
-  //   // Handle your form submission logic here
-  //   closeModal(); // Optional: close after submission
-  // }
-
   let newUser = createBlankVolunteer();
 
-  async function addVolunteer() {
-    const { _id, ...newVolunteerData } = newUser;
+  async function handleAddClick() {
+    // console.log("Passing from AddUserModal: ", newUser);
+    exportHandleAdd(newUser);
 
-    try {
-      const res = await fetch('/api/volunteers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newVolunteerData)
-      });
-
-      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-      const createdVolunteer = await res.json();
-      console.log("Created: ", JSON.stringify(createdVolunteer, null, 2));
-      
-
-      // Clear form
-      newUser = createBlankVolunteer();
-
-      // Optionally close the modal here too
-      closeModal();
-
-    } catch (err) {
-      console.error('Failed to add volunteer:', err);
-    }
+    // Clear form
+    newUser = createBlankVolunteer();
+    closeModal();
   }
-
 
 </script>
 
@@ -150,7 +128,7 @@
       </Dialog.Header>
 
       <Dialog.Footer class="">
-        <Button type="button" on:click={addVolunteer}>Save new user</Button>
+        <Button type="button" on:click={handleAddClick}>Save new user</Button>
       </Dialog.Footer>
       
     </Dialog.Content>

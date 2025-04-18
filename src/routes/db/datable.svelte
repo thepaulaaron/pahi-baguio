@@ -3,7 +3,7 @@
   import DatableActions from "./datable-actions.svelte";
   import AddUser from "./adder.svelte"
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-
+  import ImportModal from "$lib/components/ImportModal.svelte";
   import { Button } from "$lib/components/ui/button/index.js";
   import Input from "$lib/components/ui/input/input.svelte";
 
@@ -29,6 +29,7 @@
   const selectedVolunteer = writable<Record<string, any> | null>(null);
   const selectedVolType = writable<string | null>(null);
   const showPopup = writable(false);
+  const isOpenImport = writable(false);
 
   // State for toggling name display format
   let nameFormat = writable<'firstLast' | 'lastFirst'>('firstLast');
@@ -173,11 +174,30 @@ function toggleNameFormat() {
   function getBadgeClass(volType: string): string {
     return "volunteer-badge " + volTypeClasses[volType] || ''; // Return an empty string if no class is found
   }
+
+  function handleImported(newData: any) {
+    console.log("Imported rows:", newData.detail);
+  }
+
+  function openIMPORT() {
+    isOpenImport.set(true);
+  }
+
+  function closeIMPORT () {
+    isOpenImport.set(false);
+  }
 </script>
 
 {#if $showAddUserModal}
   <AddUser on:close={() => showAddUserModal.set(false)} exportHandleAdd={handleAdd} />
 {/if}
+
+
+<ImportModal
+  on:imported={handleImported}
+  bind:open={$isOpenImport}
+  onClose={closeIMPORT}
+/>
 
 <div class="space-y-3">
 
@@ -197,7 +217,11 @@ function toggleNameFormat() {
     <!-- Add User -->
     <Button variant="default" size="sm" on:click={() => showAddUserModal.set(true)}>
       Add New
-    </Button>    
+    </Button>
+
+    <Button variant="default" size="sm" on:click={openIMPORT}>
+      Import
+    </Button>
 
   </div>
 
@@ -346,7 +370,5 @@ function toggleNameFormat() {
     </Table.Root>
   </div>
 </div>
-
-
 
 </div>

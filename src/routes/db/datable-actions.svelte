@@ -60,6 +60,32 @@
     isOpenEDIT.set(false);
   }
 
+  async function handleDelete(row: any) {
+  const confirmed = confirm(`Are you sure you want to delete ${row.name}?`);
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch(`/api/volunteers/${row.original._id}`, {
+      method: 'DELETE'
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text(); // Only read once
+      console.error('Delete failed:', errorText);
+      alert('Delete failed: ' + errorText);
+      return;
+    }
+
+    const result = await res.json();
+    alert('Deleted successfully!');
+    // Refresh UI here if needed
+  } catch (err) {
+    console.error('Error deleting volunteer:', err);
+    alert('An unexpected error occurred.');
+  }
+}
+
+
   function getValue(property: any) {
     return row?.original?.[property] ?? "N/A";
   }
@@ -187,7 +213,7 @@
     <DropdownMenu.Item class="transition duration-200 data-[highlighted]:bg-blue-900 data-[highlighted]:text-white cursor-pointer" on:click={() => openEDIT(row)}>
       Edit Details
     </DropdownMenu.Item>
-    <DropdownMenu.Item class="transition duration-200 data-[highlighted]:bg-red-800 data-[highlighted]:text-white cursor-pointer" on:click={() => openEDIT(row)}>
+    <DropdownMenu.Item class="transition duration-200 data-[highlighted]:bg-red-800 data-[highlighted]:text-white cursor-pointer" on:click={() => handleDelete(row)}>
       Delete
     </DropdownMenu.Item>
   </DropdownMenu.Content>

@@ -81,3 +81,25 @@ export const PUT: RequestHandler = async ({ params, request }) => {
     return json({ error: 'Failed to update volunteer' }, { status: 500 });
   }
 };
+
+export const DELETE: RequestHandler = async ({ params }) => {
+  const id = params.id!;
+  try {
+    const db = await startMongo();
+
+    if (!ObjectId.isValid(id)) {
+      return json({ error: 'Invalid ID format' }, { status: 400 });
+    }
+
+    const result = await db.collection('moversveltecollection').deleteOne({ _id: new ObjectId(id) });
+
+    if (result.deletedCount === 0) {
+      return json({ error: 'Volunteer not found' }, { status: 404 });
+    }
+
+    return json({ success: true });
+  } catch (err) {
+    console.error('Error deleting volunteer:', err);
+    return json({ error: 'Failed to delete volunteer' }, { status: 500 });
+  }
+};

@@ -93,6 +93,16 @@
       console.error('Failed to delete volunteer:', err);
     }
   }
+
+  async function handleImport(importedData: any) {
+    console.log("Dash received import! ", importedData)
+
+    data = [...importedData, ...data];
+
+    toast.success("Volunteer imported!", {
+      duration: 2500
+    });
+  }
 </script>
 
 <div class="h-full flex-1 flex-col space-y-5 p-8 md:flex">
@@ -109,7 +119,7 @@
 			<UserNav />
 		</div>
 	</div>
-	<Datable {data} {handleDelete} {handleEdit} {handleAdd} />
+	<Datable {data} {handleDelete} {handleEdit} {handleAdd} {handleImport} />
 </div>
 
 <!-- <div>

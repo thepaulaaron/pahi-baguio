@@ -10,10 +10,12 @@
     DialogDescription
   } from "$comp/ui/dialog";
 	import Button from './ui/button/button.svelte';
+	import { toast } from 'svelte-sonner';
 
   export let open = false;
   let dialogWrapper;
   export let onClose: () => void;
+  export let exportHandleImport: (row: any) => void;
 
   const dispatch = createEventDispatcher();
   let fileInput: HTMLInputElement;
@@ -33,6 +35,16 @@
   }
 
   async function submitData() {
+    if (!fileInput?.files?.length) {
+      toast.warning("No file selected!");
+      return;
+    }
+
+    if(!previewData.length) {
+      toast.warning("No volunteer to import!");
+      return;
+    }
+
     for (const row of previewData) {
       try {
         const res = await fetch('/api/volunteers', {
@@ -46,8 +58,15 @@
       }
     }
 
-    dispatch("imported", previewData); // you can use this to refresh table
+    exportHandleImport(previewData);
+    // dispatch("imported", previewData);
     onClose();
+  }
+
+  // Reset
+  $: if (open === true) {
+    previewData = [];
+    if (fileInput) fileInput.value = "";
   }
 </script>
   

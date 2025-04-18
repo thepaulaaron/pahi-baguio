@@ -64,6 +64,7 @@
   export let handleDelete: (row_id: any) => void;
   export let handleEdit: (row: any) => void;
   export let handleAdd: (row: any) => void;
+  export let handleImport: (row: any) => void;
 
   // TABLE: Initialization
   const table = createTable(dataStore, {
@@ -175,10 +176,6 @@ function toggleNameFormat() {
     return "volunteer-badge " + volTypeClasses[volType] || ''; // Return an empty string if no class is found
   }
 
-  function handleImported(newData: any) {
-    console.log("Imported rows:", newData.detail);
-  }
-
   function openIMPORT() {
     isOpenImport.set(true);
   }
@@ -194,9 +191,9 @@ function toggleNameFormat() {
 
 
 <ImportModal
-  on:imported={handleImported}
   bind:open={$isOpenImport}
   onClose={closeIMPORT}
+  exportHandleImport={handleImport}
 />
 
 <div class="space-y-3">

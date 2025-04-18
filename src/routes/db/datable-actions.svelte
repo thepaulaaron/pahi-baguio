@@ -65,20 +65,20 @@
   }
 
   async function onDeleteClick(row: any) {
-  const confirmed = confirm(`Are you sure you want to delete ${row.name}?`);
-  if (!confirmed) return;
+    const confirmed = confirm(`Are you sure you want to delete ${row.name}?`);
+    if (!confirmed) return;
 
-  try {
-    // console.log("Actions passing: ", row.original?._id);
-    handleDelete(row.original._id);
+    try {
+      // console.log("Actions passing: ", row.original?._id);
+      handleDelete(row.original._id);
 
-    // const result = await res.json();
-    alert('Deleted successfully!');
-  } catch (err) {
-    console.error('Error deleting volunteer:', err);
-    alert('An unexpected error occurred.');
+      // const result = await res.json();
+      alert('Deleted successfully!');
+    } catch (err) {
+      console.error('Error deleting volunteer:', err);
+      alert('An unexpected error occurred.');
+    }
   }
-}
 
   function getValue(property: any) {
     return row?.original?.[property] ?? "N/A";

@@ -53,7 +53,7 @@
 
   async function handleSave() {
     try {
-      console.log("Passing from EditModal: ", volunteer)
+      // console.log("Passing from EditModal: ", volunteer)
       exportHandleEdit(volunteer);
       onClose();
     } catch (err) {

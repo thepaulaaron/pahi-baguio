@@ -20,7 +20,7 @@
   });
 
   async function handleEdit(row: any) {
-    console.log("Received in Dashboard [edit]: ", row);
+    // console.log("Received in Dashboard [edit]: ", row);
 
     try {
       const res = await fetch(`/api/volunteers/${row._id}`, {
@@ -49,20 +49,24 @@
   async function handleDelete(row_id : any) {
     // console.log("Received in Dashboard: ", row_id);
     
-    const res = await fetch(`/api/volunteers/${row_id}`, {
-      method: 'DELETE',
-      headers: { "Content-Type": "application/json" }
-    });
+    try {
+      const res = await fetch(`/api/volunteers/${row_id}`, {
+        method: 'DELETE',
+        headers: { "Content-Type": "application/json" }
+      });
 
-    if (!res.ok) {
-      const errorText = await res.text(); // Only read once
-      console.error('Delete failed:', errorText);
-      alert('Delete failed: ' + errorText);
-      return;
+      if (!res.ok) {
+        const errorText = await res.text(); // Only read once
+        console.error('Delete failed:', errorText);
+        alert('Delete failed: ' + errorText);
+        return;
+      }
+
+      // ✅ Update local data to remove the deleted row
+      data = data.filter(v => v._id !== row_id);
+    } catch (err) {
+      console.error('Failed to delete volunteer:', err);
     }
-
-    // ✅ Update local data to remove the deleted row
-    data = data.filter(v => v._id !== row_id);
   }
 </script>
 

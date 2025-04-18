@@ -34,7 +34,7 @@
     Users
   } from "lucide-svelte/icons";
 
-  import type { Volunteer } from '$lib/models/volunteerModel';
+  import { VOL_TYPES, type Volunteer } from '$lib/models/volunteerModel';
 
   const dispatch = createEventDispatcher();
   let dialogWrapper;
@@ -191,6 +191,20 @@
         
             <InputWithIconOnly label="Volunteer Since" icon={HandHeart}>
               <Input id="volsince" value={volunteer.VolSince} on:input={inputHandler('VolSince')} />
+            </InputWithIconOnly>
+
+            <InputWithIconOnly label="Volunteer Type" icon={HandHeart}>
+              <select
+                id="voltype"
+                class="p-2 rounded-md w-full bg-[#030712]"
+                value={volunteer.VolType}
+                on:change={inputHandler('VolType')}
+              >
+                <option value="">Select Type</option>
+                {#each VOL_TYPES as type}
+                  <option value={type}>{type}</option>
+                {/each}
+              </select>
             </InputWithIconOnly>
         
             <InputWithIconOnly label="Database ID" icon={Fingerprint}>

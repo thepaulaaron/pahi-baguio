@@ -21,11 +21,19 @@ export interface Volunteer {
   Relationship: any;
   EmergNum: any;
   VolStatus: any;
-  VolType: string;
+  VolType: typeof VOL_TYPES[number] | '';
   VolSince: any;
   DatabaseID: any;
   Notes: any;
 }
+
+export const VOL_TYPES = [
+  "Student",
+  "Faculty",
+  "Staff",
+  "Alumnus",
+  "Friend",
+] as const;
 
 export function createBlankVolunteer(): Volunteer {
   return {
